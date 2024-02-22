@@ -1,3 +1,3 @@
 # miniRT
 
-##### yet another graphical project, woo. we love rendering.
+##### A raytracer in C, using a cursed graphics library, and a severe lack of math knowledge.
