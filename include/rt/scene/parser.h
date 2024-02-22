@@ -1,23 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   scene.h                                            :+:      :+:    :+:   */
+/*   parser.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kiroussa <oss@xtrm.me>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/22 02:33:41 by kiroussa          #+#    #+#             */
-/*   Updated: 2024/02/22 07:48:39 by kiroussa         ###   ########.fr       */
+/*   Created: 2024/02/22 07:37:43 by kiroussa          #+#    #+#             */
+/*   Updated: 2024/02/22 07:39:35 by kiroussa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef SCENE_H
-# define SCENE_H
+#ifndef PARSER_H
+# define PARSER_H
 
-typedef struct s_rt_scene
-{
-}	t_rt_scene;
+# include <rt/error.h>
+# include <rt/scene.h>
 
-void	rt_scene_init(t_rt_scene *scene);
-void	rt_scene_free(t_rt_scene *scene);
+t_rt_error	rt_scene_load(t_rt_scene *scene, const char *path);
 
-#endif // SCENE_H
+#endif // PARSER_H

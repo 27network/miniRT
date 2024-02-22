@@ -1,23 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   scene.h                                            :+:      :+:    :+:   */
+/*   rt_ok.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kiroussa <oss@xtrm.me>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/22 02:33:41 by kiroussa          #+#    #+#             */
-/*   Updated: 2024/02/22 07:48:39 by kiroussa         ###   ########.fr       */
+/*   Created: 2024/02/22 07:21:31 by kiroussa          #+#    #+#             */
+/*   Updated: 2024/02/22 07:40:32 by kiroussa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef SCENE_H
-# define SCENE_H
+#include <rt/error.h>
+#include <stddef.h>
 
-typedef struct s_rt_scene
+t_rt_error	rt_ok(void)
 {
-}	t_rt_scene;
-
-void	rt_scene_init(t_rt_scene *scene);
-void	rt_scene_free(t_rt_scene *scene);
-
-#endif // SCENE_H
+	return ((t_rt_error){.type = RT_OK, .data = NULL});
+}

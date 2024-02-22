@@ -1,23 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   scene.h                                            :+:      :+:    :+:   */
+/*   object.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kiroussa <oss@xtrm.me>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/22 02:33:41 by kiroussa          #+#    #+#             */
-/*   Updated: 2024/02/22 07:48:39 by kiroussa         ###   ########.fr       */
+/*   Created: 2024/02/22 07:26:18 by kiroussa          #+#    #+#             */
+/*   Updated: 2024/02/22 07:26:52 by kiroussa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef SCENE_H
-# define SCENE_H
+#ifndef OBJECT_H
+# define OBJECT_H
 
-typedef struct s_rt_scene
+typedef struct s_rt_object
 {
-}	t_rt_scene;
 
-void	rt_scene_init(t_rt_scene *scene);
-void	rt_scene_free(t_rt_scene *scene);
+}	t_rt_object;
 
-#endif // SCENE_H
+#endif // OBJECT_H

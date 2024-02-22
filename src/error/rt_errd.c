@@ -1,23 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   scene.h                                            :+:      :+:    :+:   */
+/*   rt_errd.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kiroussa <oss@xtrm.me>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/22 02:33:41 by kiroussa          #+#    #+#             */
-/*   Updated: 2024/02/22 07:48:39 by kiroussa         ###   ########.fr       */
+/*   Created: 2024/02/22 07:22:05 by kiroussa          #+#    #+#             */
+/*   Updated: 2024/02/22 07:22:09 by kiroussa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef SCENE_H
-# define SCENE_H
+#include <rt/error.h>
 
-typedef struct s_rt_scene
+t_rt_error	rt_errd(t_rt_error_type type, void *data)
 {
-}	t_rt_scene;
-
-void	rt_scene_init(t_rt_scene *scene);
-void	rt_scene_free(t_rt_scene *scene);
-
-#endif // SCENE_H
+	return ((t_rt_error){.type = type, .data = data});
+}
