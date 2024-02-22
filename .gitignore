@@ -1,0 +1,8 @@
+/miniRT
+*.swp
+valgrind-out.txt
+*.o
+*.so
+*.a
+*.out
+build/
