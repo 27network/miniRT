@@ -1,19 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   rt_scene_render.c                                  :+:      :+:    :+:   */
+/*   light.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kiroussa <oss@xtrm.me>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/22 07:51:17 by kiroussa          #+#    #+#             */
-/*   Updated: 2024/02/22 07:51:26 by kiroussa         ###   ########.fr       */
+/*   Created: 2024/02/23 03:20:58 by kiroussa          #+#    #+#             */
+/*   Updated: 2024/02/23 03:44:54 by kiroussa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <rt/scene/renderer.h>
+#ifndef LIGHT_H
+# define LIGHT_H
 
-t_rt_error	rt_scene_render(t_rt_scene *scene)
+# include <rt/scene/parser.h>
+
+typedef struct s_rt_light_params
 {
-	(void)scene;
-	return (rt_ok());
-}
+	float	brightness;
+	t_vec3i	color;
+}	t_rt_light_params;
+
+#endif // LIGHT_H

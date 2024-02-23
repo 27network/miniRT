@@ -6,15 +6,15 @@
 /*   By: kiroussa <oss@xtrm.me>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 02:29:41 by kiroussa          #+#    #+#             */
-/*   Updated: 2024/02/22 08:13:46 by kiroussa         ###   ########.fr       */
+/*   Updated: 2024/02/23 04:23:37 by kiroussa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <ft/print.h>
-#include <rt/scene.h>
-#include <rt/scene/parser.h>
-#include <rt/scene/renderer.h>
 #include <rt/error.h>
+#include <rt/parse/parser.h>
+#include <rt/renderer.h>
+#include <rt/scene.h>
 
 int	main(int argc, char *argv[])
 {
@@ -27,9 +27,9 @@ int	main(int argc, char *argv[])
 		return (-1);
 	}
 	rt_scene_init(&scene);
-	err = rt_scene_load(&scene, argv[1]);
+	err = rt_parse_scene(&scene, (const char *) argv[1]);
 	if (err.type == RT_OK)
-		err = rt_scene_render(&scene);
+		err = rt_render(&scene);
 	if (err.type != RT_OK)
 		rt_error_print(err);
 	rt_scene_free(&scene);

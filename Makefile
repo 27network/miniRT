@@ -6,11 +6,12 @@
 #    By: kiroussa <oss@xtrm.me>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/08/06 21:19:50 by kiroussa          #+#    #+#              #
-#    Updated: 2024/02/22 08:23:52 by kiroussa         ###   ########.fr        #
+#    Updated: 2024/02/23 04:26:26 by kiroussa         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME			=	miniRT	
+DEBUG			?=	0
 
 BUILD_DIR		=	build
 
@@ -18,10 +19,12 @@ SRC				=	error/rt_err.c \
 					error/rt_errd.c \
 					error/rt_error_print.c \
 					error/rt_ok.c \
-					scene/parse/rt_scene_load.c \
-					scene/render/rt_scene_render.c \
-					scene/rt_scene_free.c \
-					scene/rt_scene_init.c \
+					parse/scene/rt_parse_line.c \
+					parse/scene/rt_parse_scene.c \
+					parse/rt_parse_error.c \
+					render/rt_render.c \
+					rt_scene_free.c \
+					rt_scene_init.c \
 					main.c
 
 SRC_DIR			=	src
@@ -33,16 +36,19 @@ OBJ				:=	$(addprefix $(OBJ_DIR)/, $(OBJ))
 
 INCLUDE_DIR		= 	include
 
-MLX_DIR			=	MacroLibX
+MLX_DIR			=	third-party/MacroLibX
 MLX				=	$(MLX_DIR)/libmlx.so
 
-LIBFT_DIR		=	libft
+LIBFT_DIR		=	third-party/libft
 LIBFT			=	$(LIBFT_DIR)/libft.so
 
 CC				=	clang
 CFLAGS			= 	-Wall -Wextra -Werror
 ifeq ($(FUNMODE), 1)
 	CFLAGS		+=	-O3
+endif
+ifeq ($(DEBUG), 1)
+	CFLAGS		+=	-g3
 endif
 COPTS			= 	-I $(INCLUDE_DIR) -I $(MLX_DIR)/$(INCLUDE_DIR)s -I $(LIBFT_DIR)/$(INCLUDE_DIR)
 
@@ -73,10 +79,14 @@ $(NAME_BONUS):	$(LIBFT) $(MLX) $(OBJ_BONUS)
 	$(CC) $(CFLAGS) $(COPTS) -o $(NAME_BONUS) $(OBJ_BONUS) $(LIBFT) $(MLX) -lSDL2 -lm $(LINKER_ARGS)
 
 $(LIBFT):
-	$(MAKE_CMD) -j -C $(LIBFT_DIR) CFLAGS="$(CFLAGS)" all
+	$(MAKE_CMD) -j -C $(LIBFT_DIR) CFLAGS="$(CFLAGS)" all DEBUG="$(DEBUG)"
 
 $(MLX):
+ifeq ($(DEBUG), 1)
+	$(MAKE_CMD) -j -C $(MLX_DIR) DEBUG="true" all
+else
 	$(MAKE_CMD) -j -C $(MLX_DIR) all
+endif
 
 $(OBJ_DIR)/%.o:	$(SRC_DIR)/%.c
 	@mkdir -p $(@D)

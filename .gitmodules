@@ -1,6 +1,6 @@
-[submodule "libft"]
-	path = libft
-	url = https://github.com/27network/libft
 [submodule "MacroLibX"]
-	path = MacroLibX
+	path = third-party/MacroLibX
 	url = https://github.com/seekrs/MacroLibX
+[submodule "libft"]
+	path = third-party/libft
+	url = https://github.com/27network/libft
