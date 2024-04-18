@@ -6,30 +6,34 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 07:51:17 by kiroussa          #+#    #+#             */
-/*   Updated: 2024/04/18 13:29:20 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/04/18 15:46:32 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <ft/print.h>
 #include <rt/renderer.h>
 
 void	rt_setup_rendering(t_rt_scene *scene, t_rt_mlx_data *mlx)
 {
 	(void) scene;
-	mlx->rt_width = 1920;
-	mlx->rt_height = 1080;
+	mlx->rt_width = 1366;
+	mlx->rt_height = 768;
 }
 
 void	rt_start_rendering(t_rt_scene *scene, t_rt_mlx_data *mlx)
 {
-	t_rt_renderer	renderer;
+	t_rt_renderer		renderer;
+	t_rt_render_status	status;
 
-	renderer = (t_rt_renderer) {scene, mlx};
+	status = RT_RS_HOME;
+	renderer = (t_rt_renderer) {scene, mlx, &status};
 	mlx_on_event(mlx->rt_mlx, mlx->rt_win,
 		MLX_WINDOW_EVENT, rt_window_event, mlx);
 	mlx_on_event(mlx->rt_mlx, mlx->rt_win,
-		MLX_KEYDOWN, rt_keydown_event, mlx);
+		MLX_KEYDOWN, rt_keydown_event, &renderer);
 	mlx_loop_hook(mlx->rt_mlx, rt_render_update, &renderer);
 	rt_empty_scene(scene);
+	ft_printf("%p\n", renderer.mlx);
 	mlx_loop(mlx->rt_mlx);
 	mlx_destroy_image(mlx->rt_mlx, mlx->rt_imgs[0]);
 	mlx_destroy_image(mlx->rt_mlx, mlx->rt_imgs[1]);
@@ -37,15 +41,14 @@ void	rt_start_rendering(t_rt_scene *scene, t_rt_mlx_data *mlx)
 	mlx_destroy_display(mlx->rt_mlx);
 }
 
-void	rt_do_rendering(void *render)
+void	rt_do_rendering(t_rt_renderer *renderer)
 {
-	t_rt_renderer	*renderer;
-	t_rt_scene		*scene;
-	t_rt_mlx_data	*mlx;
-
-	renderer = (t_rt_renderer *) render;
-	scene = renderer->scene;
-	mlx = renderer->mlx;
+	if (*renderer->status == RT_RS_HOME)
+		rt_render_home(renderer);
+	else if (*renderer->status == RT_RS_SCENE)
+		rt_render_scene(renderer);
+	else
+		rt_render_editor(renderer);
 }
 
 t_rt_error	rt_mlx_init(t_rt_mlx_data *mlx)

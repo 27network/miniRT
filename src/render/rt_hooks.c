@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 11:10:38 by rgramati          #+#    #+#             */
-/*   Updated: 2024/04/18 13:28:15 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/04/18 15:46:20 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,14 +36,23 @@ int	rt_window_event(int key, void *mlx)
 	return (0);
 }
 
-int	rt_keydown_event(int key, void *mlx)
+int	rt_keydown_event(int key, void *render)
 {
-	t_rt_mlx_data	*mlx_data;
+	t_rt_renderer	*renderer;
 
-	mlx_data = (t_rt_mlx_data *) mlx;
+	renderer = (t_rt_renderer *) render;
+	ft_printf("key = %d, %d\n", key, *renderer->status);
+	if (*renderer->status == RT_RS_NONE)
+		*renderer->status = RT_RS_HOME;
+	if (*renderer->status == RT_RS_HOME && key == 40)
+	{
+		mlx_clear_window(renderer->mlx->rt_mlx, renderer->mlx->rt_win);
+		*renderer->status = RT_RS_SCENE;
+	}
 	if (key == 41)
 	{
-		mlx_loop_end(mlx_data->rt_mlx);
+		ft_printf("%p\n", renderer->mlx);
+		mlx_loop_end(renderer->mlx->rt_mlx);
 		return (0);
 	}
 	return (0);

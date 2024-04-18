@@ -6,7 +6,7 @@
 #    By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/08/06 21:19:50 by kiroussa          #+#    #+#              #
-#    Updated: 2024/04/18 11:20:39 by rgramati         ###   ########.fr        #
+#    Updated: 2024/04/18 14:50:15 by rgramati         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,6 +24,7 @@ SRC				=	error/rt_err.c					\
 					parse/rt_parse_error.c 			\
 					render/rt_render.c				\
 					render/rt_hooks.c				\
+					render/rt_rendering.c			\
 					rt_scene_free.c					\
 					rt_scene_init.c					\
 					main.c
