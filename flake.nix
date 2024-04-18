@@ -23,7 +23,13 @@
           buildInputs = with pkgs; [
             SDL2
             readline
+            vulkan-headers
+            vulkan-loader
+            vulkan-tools
           ];
+
+          LD_LIBRARY_PATH="${pkgs.vulkan-loader}/lib";
+
           nativeBuildInputs = with pkgs; [
             norminette
             valgrind
