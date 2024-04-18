@@ -1,4 +1,5 @@
 /miniRT
+.vscode/
 *.swp
 valgrind-out.txt
 *.o
