@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: kiroussa <oss@xtrm.me>                     +#+  +:+       +#+         #
+#    By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/08/06 21:19:50 by kiroussa          #+#    #+#              #
-#    Updated: 2024/02/23 04:26:26 by kiroussa         ###   ########.fr        #
+#    Updated: 2024/04/18 14:50:15 by rgramati         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,16 +15,18 @@ DEBUG			?=	0
 
 BUILD_DIR		=	build
 
-SRC				=	error/rt_err.c \
-					error/rt_errd.c \
-					error/rt_error_print.c \
-					error/rt_ok.c \
-					parse/scene/rt_parse_line.c \
-					parse/scene/rt_parse_scene.c \
-					parse/rt_parse_error.c \
-					render/rt_render.c \
-					rt_scene_free.c \
-					rt_scene_init.c \
+SRC				=	error/rt_err.c					\
+					error/rt_errd.c					\
+					error/rt_error_print.c			\
+					error/rt_ok.c					\
+					parse/scene/rt_parse_line.c		\
+					parse/scene/rt_parse_scene.c	\
+					parse/rt_parse_error.c 			\
+					render/rt_render.c				\
+					render/rt_hooks.c				\
+					render/rt_rendering.c			\
+					rt_scene_free.c					\
+					rt_scene_init.c					\
 					main.c
 
 SRC_DIR			=	src

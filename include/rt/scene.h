@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   scene.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kiroussa <oss@xtrm.me>                     +#+  +:+       +#+        */
+/*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 02:33:41 by kiroussa          #+#    #+#             */
-/*   Updated: 2024/02/23 03:53:54 by kiroussa         ###   ########.fr       */
+/*   Updated: 2024/04/18 14:25:42 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define SCENE_H
 
 # include <ft/math/vector.h>
+# include <rt/error.h>
 # include <stddef.h>
 
 typedef enum e_rt_object_type
@@ -40,7 +41,10 @@ typedef struct s_rt_scene
 	size_t			objects_size;
 }	t_rt_scene;
 
-void	rt_scene_init(t_rt_scene *scene);
+t_rt_error	rt_scene_init(t_rt_scene *scene);
+
 void	rt_scene_free(t_rt_scene *scene);
+
+t_rt_error	rt_empty_scene(t_rt_scene *scene);
 
 #endif // SCENE_H

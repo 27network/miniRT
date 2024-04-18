@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kiroussa <oss@xtrm.me>                     +#+  +:+       +#+        */
+/*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 02:29:41 by kiroussa          #+#    #+#             */
-/*   Updated: 2024/02/23 04:23:37 by kiroussa         ###   ########.fr       */
+/*   Updated: 2024/04/18 12:28:52 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ int	main(int argc, char *argv[])
 		ft_dprintf(2, "Error\nUsage: %s <path/to/scene.rt>\n", argv[0]);
 		return (-1);
 	}
-	rt_scene_init(&scene);
+	err = rt_scene_init(&scene);
 	err = rt_parse_scene(&scene, (const char *) argv[1]);
 	if (err.type == RT_OK)
 		err = rt_render(&scene);
