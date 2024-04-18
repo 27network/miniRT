@@ -1,0 +1,9 @@
+{
+	"files.associations": {
+		"parser.h": "c",
+		"scene.h": "c",
+		"vector.h": "c",
+		"errno.h": "c",
+		"mem.h": "c"
+	}
+}
