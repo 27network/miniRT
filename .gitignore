@@ -1,5 +1,7 @@
-/miniRT
+/miniRT*
+/rt*
 .vscode/
+.direnv/
 *.swp
 valgrind-out.txt
 *.o
