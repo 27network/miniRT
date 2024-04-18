@@ -1,21 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   rt_scene_free.c                                    :+:      :+:    :+:   */
+/*   box.h                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/22 07:49:03 by kiroussa          #+#    #+#             */
-/*   Updated: 2024/04/18 13:25:21 by rgramati         ###   ########.fr       */
+/*   Created: 2024/04/18 19:15:48 by rgramati          #+#    #+#             */
+/*   Updated: 2024/04/18 19:49:10 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
-#include <rt/scene.h>
+#ifndef BOX_H
+# define BOX_H
 
-void	rt_scene_free(t_rt_scene *scene)
+# include <ft/math/vector.h>
+
+typedef struct s_rt_obj_box
 {
-	if (!scene->objects_size)
-		return ;
-	free(scene->objects);
-}
+	t_vec3d	size;
+}	t_rt_obj_box;
+
+t_rt_obj_box	*rt_obj_box_init(double sx, double sy, double sz);
+
+#endif // BOX_H

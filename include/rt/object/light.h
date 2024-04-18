@@ -3,22 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   light.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kiroussa <oss@xtrm.me>                     +#+  +:+       +#+        */
+/*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 03:20:58 by kiroussa          #+#    #+#             */
-/*   Updated: 2024/02/23 03:44:54 by kiroussa         ###   ########.fr       */
+/*   Updated: 2024/04/18 19:48:56 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef LIGHT_H
 # define LIGHT_H
 
-# include <rt/scene/parser.h>
-
-typedef struct s_rt_light_params
+typedef struct s_rt_obj_light
 {
 	float	brightness;
-	t_vec3i	color;
-}	t_rt_light_params;
+}	t_rt_obj_light;
+
+t_rt_obj_light	*rt_obj_light_init(double brightness);
 
 #endif // LIGHT_H

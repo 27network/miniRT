@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 11:10:38 by rgramati          #+#    #+#             */
-/*   Updated: 2024/04/18 15:46:20 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/04/18 18:14:01 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,6 @@ int	rt_keydown_event(int key, void *render)
 	}
 	if (key == 41)
 	{
-		ft_printf("%p\n", renderer->mlx);
 		mlx_loop_end(renderer->mlx->rt_mlx);
 		return (0);
 	}

@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 07:51:17 by kiroussa          #+#    #+#             */
-/*   Updated: 2024/04/18 15:46:32 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/04/18 18:14:11 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,6 @@ void	rt_start_rendering(t_rt_scene *scene, t_rt_mlx_data *mlx)
 		MLX_KEYDOWN, rt_keydown_event, &renderer);
 	mlx_loop_hook(mlx->rt_mlx, rt_render_update, &renderer);
 	rt_empty_scene(scene);
-	ft_printf("%p\n", renderer.mlx);
 	mlx_loop(mlx->rt_mlx);
 	mlx_destroy_image(mlx->rt_mlx, mlx->rt_imgs[0]);
 	mlx_destroy_image(mlx->rt_mlx, mlx->rt_imgs[1]);
