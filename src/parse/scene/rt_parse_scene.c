@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   rt_parse_scene.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kiroussa <oss@xtrm.me>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 07:40:50 by kiroussa          #+#    #+#             */
-/*   Updated: 2024/04/18 12:31:32 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/04/18 19:33:59 by kiroussa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,25 +67,25 @@ static t_rt_error	rt_check_file(const char *path)
 
 static t_rt_error	rt_parse_scene0(t_rt_scene *scene, const char *file, int fd)
 {
-	t_rt_error	err;
-	char		*line;
-	int			line_number;
-	size_t		line_length;
+	t_rt_parse_ctx	context;
+	t_rt_error		err;
+	size_t			line_length;
 
-	line_number = 0;
+	context = (t_rt_parse_ctx){.file = file, .line = NULL,
+		.line_number = 0};
 	err = rt_ok();
 	while (1)
 	{
-		line = get_next_line(fd);
-		if (!line)
+		context.line = get_next_line(fd);
+		if (!context.line)
 			break ;
-		line_length = ft_strlen(line);
-		if (line_length > 0 && line[line_length - 1] == '\n')
-			line[line_length - 1] = '\0';
+		line_length = ft_strlen(context.line);
+		if (line_length > 0 && context.line[line_length - 1] == '\n')
+			context.line[line_length - 1] = '\0';
 		if (err.type == RT_OK)
-			err = rt_parse_line(scene, file, line, line_number);
-		free(line);
-		line_number++;
+			err = rt_parse_line(scene, &context);
+		free(context.line);
+		context.line_number++;
 	}
 	return (err);
 }

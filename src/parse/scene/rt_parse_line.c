@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   rt_parse_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kiroussa <oss@xtrm.me>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 21:15:42 by kiroussa          #+#    #+#             */
-/*   Updated: 2024/04/18 10:20:58 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/04/18 19:38:54 by kiroussa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,14 +18,22 @@
 //DEBUG
 #include <stdio.h>
 
-t_rt_error	rt_parse_line(
-		t_rt_scene *scene,
-		const char *file,
-		const char *line,
-		int line_number
+static t_rt_error	rt_handle_identifier(
+	t_rt_scene *scene __attribute__((unused)),
+	t_rt_parse_ctx *ctx __attribute__((unused)),
+	char *id __attribute__((unused))
 ) {
+	return (rt_errd(RT_ERROR_UNIMPLEMENTED, "Identifier handling"));
+}
+
+t_rt_error	rt_parse_line(
+	t_rt_scene *scene,
+	t_rt_parse_ctx *ctx
+) {
+	const char	*line = ctx->line;
 	int			col;
 	char		*id;
+	t_rt_error	err;
 
 	if (!*line)
 		return (rt_ok());
@@ -33,17 +41,17 @@ t_rt_error	rt_parse_line(
 	while (line[col] == ' ')
 		col++;
 	if (!line[col])
-		return (rt_parse_error(file, ft_vec2i(line_number, 0), line,
+		return (rt_parse_error(ctx->file, ft_vec2i(ctx->line_number, 0), line,
 				"Empty line with spaces"));
 	id = ft_strndup(line + col, ft_strchr(line + col, ' ') - (line + col));
 	if (!id || !*id)
 	{
-		free(id);
-		return (rt_parse_error(file, ft_vec2i(line_number, col), line,
+		if (id)
+			free(id);
+		return (rt_parse_error(ctx->file, ft_vec2i(ctx->line_number, col), line,
 				"Expected an identifier"));
 	}
-	(void) scene;
-	printf("id: %s\n", id);
+	err = rt_handle_identifier(scene, ctx, id);
 	free(id);
-	return (rt_ok());
+	return (err);
 }

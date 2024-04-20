@@ -6,7 +6,7 @@
 /*   By: kiroussa <oss@xtrm.me>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 07:52:04 by kiroussa          #+#    #+#             */
-/*   Updated: 2024/02/23 00:32:32 by kiroussa         ###   ########.fr       */
+/*   Updated: 2024/04/18 19:36:50 by kiroussa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,13 +32,14 @@ void	rt_error_print(t_rt_error error)
 	[RT_ERROR_SCENE_VALIDATION] = "Scene validation error",
 	[RT_ERROR_SCENE_RENDER] = "Scene rendering error",
 	[RT_ERROR_MLX] = "MLX error",
-	[RT_ERROR_NULLPTR] = "java.lang.NullPointerException :trollface:"
+	[RT_ERROR_NULLPTR] = "java.lang.NullPointerException :trollface:",
+	[RT_ERROR_UNIMPLEMENTED] = "Unimplemented feature"
 	};
 
 	if (error.type == RT_OK)
 		return ;
 	ft_putstr_fd(2, "Error\n");
-	if (error.type < RT_OK || error.type > RT_ERROR_NULLPTR)
+	if (error.type < RT_OK || error.type > RT_ERROR_UNIMPLEMENTED)
 		ft_putstr_fd(2, "Unknown error type\n");
 	else
 		ft_putstr_fd(2, error_messages[error.type]);

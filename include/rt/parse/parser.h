@@ -6,7 +6,7 @@
 /*   By: kiroussa <oss@xtrm.me>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 07:37:43 by kiroussa          #+#    #+#             */
-/*   Updated: 2024/02/23 04:14:14 by kiroussa         ###   ########.fr       */
+/*   Updated: 2024/04/18 20:09:45 by kiroussa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,15 +18,12 @@
 # include <rt/scene.h>
 # include <stdbool.h>
 
-typedef enum s_rt_primitive
+typedef struct s_rt_parse_ctx
 {
-	RT_PRIM_POSITION,		// vec3d: [-inf - inf, -inf - inf, -inf - inf]
-	RT_PRIM_NORMALIZED3D,	// vec3d: [-1.0 - 1.0, -1.0 - 1.0, -1.0 - 1.0]
-	RT_PRIM_COLOR,			// vec3i: [0 - 255, 0 - 255, 0 - 255]
-	RT_PRIM_RATIO,			// double: 0.0 - 1.0
-	RT_PRIM_FOV,			// double: 0.0 - 180.0
-	RT_PRIM_UFLOAT,			// double: 0.0 - inf
-}	t_rt_primitive;
+	const char	*file;
+	char		*line;
+	int			line_number;
+}	t_rt_parse_ctx;
 
 /**
  * Primitive parser, used to parse a single value from a string and store it in
@@ -44,21 +41,20 @@ typedef struct s_rt_parser
  * This is basically a wrapper for the list of primitive parsers, 
  * sorted in a strict order;
  */
-typedef struct s_rt_obj_parser
+typedef struct s_rt_object_parser
 {
 	const char			*id;
 	t_rt_primitive		*primitives;
 	size_t				primitives_count;
-}	t_rt_obj_parser;
+}	t_rt_object_parser;
 
 t_rt_error	rt_parse_scene(t_rt_scene *scene, const char *path);
-t_rt_error	rt_parse_line(t_rt_scene *scene, const char *file,
-				const char *line, int line_number);
+t_rt_error	rt_parse_line(t_rt_scene *scene, t_rt_parse_ctx *ctx);
 
 t_rt_error	rt_parse_error(const char *file, t_vec2i pos,
 				const char *line, const char *message);
 
-//void		rt_parser_register_type(const char *id, t_rt_parser_type type);
-//void		rt_parser_register_obj(const char *id, t_rt_obj_parser parser);
+void		rt_parser_register_type(const char *id, t_rt_parser_type type);
+void		rt_parser_register_obj(const char *id, t_rt_obj_parser parser);
 
 #endif // PARSER_H

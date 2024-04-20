@@ -1,17 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   features.h                                         :+:      :+:    :+:   */
+/*   rt_parse_register_prim.c                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kiroussa <oss@xtrm.me>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/22 02:40:06 by kiroussa          #+#    #+#             */
-/*   Updated: 2024/04/18 19:45:32 by kiroussa         ###   ########.fr       */
+/*   Created: 2024/04/18 20:18:08 by kiroussa          #+#    #+#             */
+/*   Updated: 2024/04/18 20:27:58 by kiroussa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FEATURES_H
-# define FEATURES_H
+#include <rt/parse/prims.h>
 
-
-#endif // FEATURES_H
+void	rt_parse_register_prim(t_rt_parser parser)
+{
+	(void)parser;
+}
