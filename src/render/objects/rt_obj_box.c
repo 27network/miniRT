@@ -1,26 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   camera.h                                           :+:      :+:    :+:   */
+/*   rt_obj_box.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/18 19:06:32 by rgramati          #+#    #+#             */
-/*   Updated: 2024/04/20 19:06:41 by rgramati         ###   ########.fr       */
+/*   Created: 2024/04/19 19:18:01 by rgramati          #+#    #+#             */
+/*   Updated: 2024/04/20 14:40:53 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef CAMERA_H
-# define CAMERA_H
+#include <ft/math.h>
+#include <ft/print.h>
+#include <rt/renderer.h>
 
-# include <ft/math/vector.h>
-
-typedef struct s_rt_obj_camera
+bool	rt_obj_box_intersect(t_rt_ray ray, t_rt_object *obj, t_rt_hit *hit)
 {
-	char	*name;
-	double	fov;
-}	t_rt_obj_camera;
-
-t_rt_obj_camera	*rt_obj_camera_init(char *name);
-
-#endif // CAMERA_H
+	(void) ray;
+	(void) obj;
+	(void) hit;
+	return (false);
+}

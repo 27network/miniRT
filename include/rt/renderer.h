@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 07:50:09 by kiroussa          #+#    #+#             */
-/*   Updated: 2024/04/18 15:44:44 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/04/20 19:14:00 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,9 @@
 # include <rt/scene.h>
 
 # define RENDER_FONT "assets/fonts/menu.ttf"
+# define MAX_BOUNCES 1
+# define PRECISION 0.00001f
+# define RT_PI 3.14159265358979323846
 
 typedef enum e_rt_render_status
 {
@@ -32,8 +35,6 @@ typedef struct s_rt_mlx_data
 	void	*rt_mlx;
 	void	*rt_win;
 	void	*rt_imgs[2];
-	int		rt_width;
-	int		rt_height;
 }	t_rt_mlx_data;
 
 typedef struct s_rt_renderer
@@ -42,6 +43,20 @@ typedef struct s_rt_renderer
 	t_rt_mlx_data		*mlx;
 	t_rt_render_status	*status;
 }	t_rt_renderer;
+
+typedef struct s_rt_hit
+{
+	t_vec3d		position;
+	t_rt_object	*hit_object;
+}	t_rt_hit;
+
+typedef struct s_rt_ray
+{
+	t_color	color;
+	t_vec3d	origin;
+	t_vec3d	direction;
+	uint8_t	bounces;
+}	t_rt_ray;
 
 void		rt_do_rendering(t_rt_renderer *renderer);
 
@@ -55,7 +70,7 @@ void		rt_start_rendering(t_rt_scene *scene, t_rt_mlx_data *mlx_data);
 
 void		rt_setup_rendering(t_rt_scene *scene, t_rt_mlx_data *mlx_data);
 
-t_rt_error	rt_mlx_init(t_rt_mlx_data *mlx_data);
+t_rt_error	rt_mlx_init(t_rt_scene *scene, t_rt_mlx_data *mlx_data);
 
 t_rt_error	rt_render(t_rt_scene *scene);
 
@@ -65,5 +80,9 @@ int			rt_window_event(int key, void *mlx);
 
 int			rt_keydown_event(int key, void *mlx);
 
+
+t_color		rt_get_ray(t_rt_scene *scene, t_rt_ray ray);
+
+void		rt_init_ray(t_rt_scene *scene, t_rt_ray *ray, int x, int y);
 
 #endif // RENDERER_H

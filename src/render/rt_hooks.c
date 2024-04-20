@@ -6,12 +6,13 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 11:10:38 by rgramati          #+#    #+#             */
-/*   Updated: 2024/04/18 18:14:01 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/04/20 23:20:34 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <ft/print.h>
 #include <rt/renderer.h>
+#include <SDL2/SDL_scancode.h>
 
 int	rt_render_update(void *render)
 {
@@ -54,5 +55,17 @@ int	rt_keydown_event(int key, void *render)
 		mlx_loop_end(renderer->mlx->rt_mlx);
 		return (0);
 	}
+	if (key == SDL_SCANCODE_RIGHT)
+		rt_obj_move(&(renderer->scene->camera), (t_vec3d){0.1f, 0.0f, 0.0f});
+	if (key == SDL_SCANCODE_LEFT)
+		rt_obj_move(&(renderer->scene->camera), (t_vec3d){-0.1f, 0.0f, 0.0f});
+	if (key == SDL_SCANCODE_DOWN)
+		rt_obj_move(&(renderer->scene->camera), (t_vec3d){0.0f, -0.1f, 0.0f});
+	if (key == SDL_SCANCODE_UP)
+		rt_obj_move(&(renderer->scene->camera), (t_vec3d){0.0f, 0.1f, 0.0f});
+	if (key == SDL_SCANCODE_W)
+		rt_obj_move(&(renderer->scene->camera), (t_vec3d){0.0f, 0.0f, 0.1f});
+	if (key == SDL_SCANCODE_S)
+		rt_obj_move(&(renderer->scene->camera), (t_vec3d){0.0f, 0.0f, -0.1f});
 	return (0);
 }

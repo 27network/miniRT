@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 02:33:41 by kiroussa          #+#    #+#             */
-/*   Updated: 2024/04/18 19:46:07 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/04/20 23:12:20 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,15 +18,9 @@
 # include <stddef.h>
 # include <stdint.h>
 
-# include <rt/object/box.h>
-# include <rt/object/camera.h>
-# include <rt/object/cylinder.h>
-# include <rt/object/light.h>
-# include <rt/object/plane.h>
-# include <rt/object/sphere.h>
-
 typedef enum e_rt_object_type
 {
+	RT_OBJ_BOX,
 	RT_OBJ_SPHERE,
 	RT_OBJ_CYLINDER,
 	RT_OBJ_PLANE,
@@ -59,14 +53,27 @@ typedef struct s_rt_object
 
 typedef struct s_rt_scene
 {
-	t_rt_object		*objects;
-	size_t			objects_size;
+	int			width;
+	int			height;
+	t_rt_object	camera;
+	t_rt_object	*objects;
+	t_rt_object	*lights;
+	size_t		objects_size;
+	size_t		lights_size;
 }	t_rt_scene;
+
+t_rt_object	*rt_object_init(t_rt_object *obj, t_rt_object_type type);
 
 t_rt_error	rt_scene_init(t_rt_scene *scene);
 
 void		rt_scene_free(t_rt_scene *scene);
 
 t_rt_error	rt_empty_scene(t_rt_scene *scene);
+
+void		rt_obj_move(t_rt_object *obj, t_vec3d move);
+
+void		rt_obj_set_pos(t_rt_object *obj, double x, double y, double z);
+
+void		rt_obj_set_rot(t_rt_object *obj, double x, double y, double z);
 
 #endif // SCENE_H

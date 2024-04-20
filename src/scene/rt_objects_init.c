@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 19:21:15 by rgramati          #+#    #+#             */
-/*   Updated: 2024/04/18 19:30:10 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/04/20 23:19:02 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ t_rt_obj_camera	*rt_obj_camera_init(char *name)
 	if (!camera)
 		return (NULL);
 	camera->name = name;
+	camera->fov = 90;
 	return (camera);
 }
 

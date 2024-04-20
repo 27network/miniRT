@@ -1,26 +1,14 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   camera.h                                           :+:      :+:    :+:   */
+/*   rt_obj_light.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/18 19:06:32 by rgramati          #+#    #+#             */
-/*   Updated: 2024/04/20 19:06:41 by rgramati         ###   ########.fr       */
+/*   Created: 2024/04/19 14:49:44 by rgramati          #+#    #+#             */
+/*   Updated: 2024/04/19 15:50:44 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef CAMERA_H
-# define CAMERA_H
-
-# include <ft/math/vector.h>
-
-typedef struct s_rt_obj_camera
-{
-	char	*name;
-	double	fov;
-}	t_rt_obj_camera;
-
-t_rt_obj_camera	*rt_obj_camera_init(char *name);
-
-#endif // CAMERA_H
+#include <ft/math.h>
+#include <rt/renderer.h>
