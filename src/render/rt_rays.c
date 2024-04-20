@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/19 15:03:08 by rgramati          #+#    #+#             */
-/*   Updated: 2024/04/20 23:51:31 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/04/21 00:24:42 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,26 +39,27 @@ t_color	rt_get_ray(t_rt_scene *scene, t_rt_ray ray)
 {
 	size_t		i;
 	t_rt_hit	hit;
-	t_rt_hit	closest;
-	double		dist;
+	// t_rt_hit	closest;
+	// double		dist;
 
 	i = 0;
 	hit = (t_rt_hit) {(t_vec3d) {0.0f, 0.0f, 0.0f}, NULL};
-	closest = (t_rt_hit) {(t_vec3d) {0.0f, 0.0f, 0.0f}, NULL};
-	dist = INFINITY;
+	// closest = (t_rt_hit) {(t_vec3d) {0.0f, 0.0f, 0.0f}, NULL};
+	// dist = INFINITY;
 	while (i < scene->objects_size && !rt_obj_intersect(ray, &scene->objects[i], &hit))
-	{
-		if (!closest.hit_object || (hit.hit_object && rt_dist(hit.position, scene->camera.position) < dist))
-		{
-			dist = rt_dist(hit.position, scene->camera.position);
-			closest.hit_object = hit.hit_object;
-			closest.position = hit.position;
-		}
 		i++;
-	}
-	if (i == scene->objects_size || !closest.hit_object)
+	// {
+		// if (!closest.hit_object || (hit.hit_object && rt_dist(hit.position, scene->camera.position) < dist))
+		// {
+		// 	dist = rt_dist(hit.position, scene->camera.position);
+		// 	closest.hit_object = hit.hit_object;
+		// 	closest.position = hit.position;
+		// }
+	// 	i++;
+	// }
+	if (i == scene->objects_size)
 		return ((t_color){.argb = 0});
-	return (closest.hit_object->color);
+	return (scene->objects[i].color);
 }
 
 void	rt_init_ray(t_rt_scene *scene, t_rt_ray *ray, int x, int y)

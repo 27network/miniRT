@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 14:43:52 by rgramati          #+#    #+#             */
-/*   Updated: 2024/04/20 23:26:17 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/04/21 00:26:28 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,17 +29,17 @@ t_color	rt_get_color(t_rt_scene *scene, int x, int y)
 {
 	t_color			color;
 	t_rt_ray		ray;
-	static t_color	pixels[1920];
+	// static t_color	pixels[1920];
 
-	if (x % 4 == 0 && y % 4 == 0)
-	{
-		rt_init_ray(scene, &ray, x, y);
-		color = rt_get_ray(scene, ray);
-		pixels[y / 4] = color; 
-		return (color);
-	}
-	else
-		return (pixels[y / 4]);
+	// if (x % 4 == 0 && y % 4 == 0)
+	// {
+	rt_init_ray(scene, &ray, x, y);
+	color = rt_get_ray(scene, ray);
+	// pixels[y / 4] = color; 
+	return (color);
+	// }
+	// else
+	// 	return (pixels[y / 4]);
 }	
 
 void	rt_render_scene(t_rt_renderer *renderer)

@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 18:54:12 by rgramati          #+#    #+#             */
-/*   Updated: 2024/04/20 23:31:21 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/04/21 00:25:12 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,8 +67,8 @@ t_rt_error	rt_empty_scene(t_rt_scene *scene)
 
 	camera = rt_object_init(&scene->camera, RT_OBJ_CAMERA);
 	light = rt_object_init(scene->lights, RT_OBJ_LIGHT);
-	sphere = rt_object_init(&scene->objects[0], RT_OBJ_SPHERE);
-	sphere2 = rt_object_init(&scene->objects[1], RT_OBJ_SPHERE);
+	sphere = rt_object_init(&scene->objects[1], RT_OBJ_SPHERE);
+	sphere2 = rt_object_init(&scene->objects[0], RT_OBJ_SPHERE);
 	sphere3 = rt_object_init(&scene->objects[2], RT_OBJ_SPHERE);
 	rt_obj_set_pos(light, 1.0f, 1.0f, 0.0f);
 	rt_obj_set_pos(sphere, 0.0f, 0.0f, 2.0f);
