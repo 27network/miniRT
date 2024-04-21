@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 14:43:52 by rgramati          #+#    #+#             */
-/*   Updated: 2024/04/21 20:06:18 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/04/21 21:27:33 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ t_color	rt_get_color(t_rt_scene *scene, int x, int y)
 	// 	ft_printf("LES RAYOOOOONS\n");
 	if (!(x % scene->pratio) && !(y % scene->pratio))
 	{
-		rt_init_ray(scene, &ray, x, y);
+		rt_init_ray(scene, &ray, (t_vec2i){.x = x, .y = y}, scene->camera.position);
 		color = rt_get_ray(scene, ray);
 		pixels[y / scene->pratio] = color; 
 		return (color);

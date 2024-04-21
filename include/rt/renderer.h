@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 07:50:09 by kiroussa          #+#    #+#             */
-/*   Updated: 2024/04/21 19:26:04 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/04/21 21:33:07 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,6 @@ int			rt_keydown_event(int key, void *mlx);
 
 t_color		rt_get_ray(t_rt_scene *scene, t_rt_ray ray);
 
-void		rt_init_ray(t_rt_scene *scene, t_rt_ray *ray, int x, int y);
+void		rt_init_ray(t_rt_scene *scene, t_rt_ray *ray, t_vec2i pixs, t_vec3d start);
 
 #endif // RENDERER_H

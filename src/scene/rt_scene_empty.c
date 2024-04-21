@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 18:54:12 by rgramati          #+#    #+#             */
-/*   Updated: 2024/04/21 18:06:19 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/04/21 20:51:44 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,8 +94,7 @@ t_rt_error	rt_empty_scene(t_rt_scene *scene)
 
 	camera = rt_object_init(&scene->camera, RT_OBJ_CAMERA);
 	light = rt_object_init(scene->lights, RT_OBJ_LIGHT);
-	rt_obj_set_pos(light, 0.0f, 3.0f, 4.0f);
-	
+	rt_obj_set_pos(light, 0.0f, 3.0f, 0.0f);
 	i = 0;
 	while (i < 4)
 	{
@@ -108,5 +107,6 @@ t_rt_error	rt_empty_scene(t_rt_scene *scene)
 	}
 	camera->options = rt_obj_camera_init("Marvin");
 	light->options = rt_obj_light_init(1);
+	light->color.argb = 0xFFFF0000;
 	return (rt_scene_guard(scene));
 }

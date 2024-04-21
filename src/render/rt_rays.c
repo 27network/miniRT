@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/19 15:03:08 by rgramati          #+#    #+#             */
-/*   Updated: 2024/04/21 20:08:24 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/04/21 21:34:26 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 #include <ft/math/vector.h>
 #include <rt/renderer.h>
 #include <rt/object/sphere.h>
+#include <rt/object/light.h>
 #include <rt/object/camera.h>
 
 double	rt_dist(t_vec3d p1, t_vec3d p2)
@@ -102,11 +103,36 @@ void	rt_render_ray(t_rt_scene *scene, t_rt_ray ray, t_rt_hit hit)
 	rt_trace_line(scene, end, start, color);
 }
 
+t_color	rt_check_lights(t_rt_scene *scene, t_rt_hit hit, t_vec3d norm, t_color amb)
+{
+	t_color		dcolor;
+	t_rt_object	*light;
+	t_vec3d		light_dir;
+	double		dratio;
+
+	light = (t_rt_object *) scene->lights;
+	light_dir = ft_vec3d_sub(light->position, hit.position);
+	dratio = ft_vec3d_dot(norm, light_dir) / RT_PI;
+	if (dratio < 0.0f)
+		dratio = 0.0f;
+	dratio *= ((t_rt_obj_light *)light->options)->brightness;
+	dcolor = hit.hit_object->color;
+	dcolor.a = (uint8_t) (dratio * (dcolor.a * 0.75f + light->color.a * 0.25f));
+	dcolor.r = (uint8_t) (dratio * (dcolor.r * 0.75f + light->color.r * 0.25f));
+	dcolor.g = (uint8_t) (dratio * (dcolor.g * 0.75f + light->color.g * 0.25f));
+	dcolor.b = (uint8_t) (dratio * (dcolor.b * 0.75f + light->color.b * 0.25f));
+	return ((t_color){.a = (dcolor.a * 0.8f + amb.a * 0.2f),
+		.r = (dcolor.r * 0.80f + amb.r * 0.2f),
+		.g = (dcolor.g * 0.80f + amb.g * 0.2f),
+		.b = (dcolor.b * 0.80f + amb.b * 0.2f)});
+}
+
 t_color	rt_get_ray(t_rt_scene *scene, t_rt_ray ray)
 {
 	size_t		i;
 	t_rt_hit	hit;
 	t_rt_hit	closest;
+	t_color		acolor;
 	double		dist;
 
 	i = 0;
@@ -128,24 +154,33 @@ t_color	rt_get_ray(t_rt_scene *scene, t_rt_ray ray)
 	}
 	if (scene->rt_flags & RT_RAY_DEBUG)
 		rt_render_ray(scene, ray, hit);
+	acolor = (t_color){.argb = 0xFF424242};
 	if (!closest.hit_object)
-		return ((t_color){.argb = 0});
-	return (closest.hit_object->color);
+		return (ray.color);
+
+	t_vec3d		inter = (t_vec3d) {0.0f, 0.0f, 0.0f};
+	if (closest.hit_object->type == RT_OBJ_SPHERE)
+	{
+		inter = ft_vec3d_sub(closest.position, closest.hit_object->position);
+		if (ft_vec3d_dot(ray.direction, inter) > 0.0f)
+			inter = (t_vec3d) {-inter.x, -inter.y, -inter.z};
+	}
+	return (rt_check_lights(scene, hit, inter, acolor));
 }
 
-void	rt_init_ray(t_rt_scene *scene, t_rt_ray *ray, int x, int y)
+void	rt_init_ray(t_rt_scene *scene, t_rt_ray *ray, t_vec2i pixs, t_vec3d start)
 {
 	double	tmp;
 
 	ray->bounces = 0;
 	ray->color.argb = 0x00000000;
-	ray->origin = scene->camera.position;
-	ray->direction.x = x + 0.5f - scene->width * 0.5f;
-	ray->direction.y = y + 0.5f - scene->height * 0.5f;
+	ray->origin = start;
+	ray->direction.x = pixs.x + 0.5f - scene->width * 0.5f;
+	ray->direction.y = -(pixs.y + 0.5f - scene->height * 0.5f);
 	tmp = 2.0 * tan((((t_rt_obj_camera *)scene->camera.options)->fov * RT_PI * 0.5) / 180);
 	if (scene->width > scene->height)
-		ray->direction.z = scene->height / tmp;
-	else
 		ray->direction.z = scene->width / tmp;
+	else
+		ray->direction.z = scene->height / tmp;
 	ray->direction = ft_vec3d_norm(ray->direction);
 }
