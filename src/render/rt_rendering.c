@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 14:43:52 by rgramati          #+#    #+#             */
-/*   Updated: 2024/04/21 00:26:28 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/04/21 20:06:18 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,17 +29,19 @@ t_color	rt_get_color(t_rt_scene *scene, int x, int y)
 {
 	t_color			color;
 	t_rt_ray		ray;
-	// static t_color	pixels[1920];
+	static t_color	pixels[1920];
 
-	// if (x % 4 == 0 && y % 4 == 0)
-	// {
-	rt_init_ray(scene, &ray, x, y);
-	color = rt_get_ray(scene, ray);
-	// pixels[y / 4] = color; 
-	return (color);
-	// }
-	// else
-	// 	return (pixels[y / 4]);
+	// if (!x && !y)
+	// 	ft_printf("LES RAYOOOOONS\n");
+	if (!(x % scene->pratio) && !(y % scene->pratio))
+	{
+		rt_init_ray(scene, &ray, x, y);
+		color = rt_get_ray(scene, ray);
+		pixels[y / scene->pratio] = color; 
+		return (color);
+	}
+	else
+		return (pixels[y / scene->pratio]);
 }	
 
 void	rt_render_scene(t_rt_renderer *renderer)
@@ -62,7 +64,10 @@ void	rt_render_scene(t_rt_renderer *renderer)
 		}
 		x++;
 	}
-	mlx_put_image_to_window(mlx.rt_mlx, mlx.rt_win, mlx.rt_imgs[0], 0, 0);
+	if (!(renderer->scene->rt_flags & RT_RAY_DEBUG))
+		mlx_put_image_to_window(mlx.rt_mlx, mlx.rt_win, mlx.rt_imgs[0], 0, 0);
+	else
+		mlx_put_image_to_window(mlx.rt_mlx, mlx.rt_win, mlx.rt_imgs[1], 0, 0);
 	return ;
 }
 

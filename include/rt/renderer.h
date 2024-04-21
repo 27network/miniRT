@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 07:50:09 by kiroussa          #+#    #+#             */
-/*   Updated: 2024/04/20 19:14:00 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/04/21 19:26:04 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ typedef struct s_rt_hit
 {
 	t_vec3d		position;
 	t_rt_object	*hit_object;
+	bool		hit;
 }	t_rt_hit;
 
 typedef struct s_rt_ray
@@ -57,6 +58,8 @@ typedef struct s_rt_ray
 	t_vec3d	direction;
 	uint8_t	bounces;
 }	t_rt_ray;
+
+void		*rt_getmlx(int what, t_rt_mlx_data *data);
 
 void		rt_do_rendering(t_rt_renderer *renderer);
 

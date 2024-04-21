@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 07:51:17 by kiroussa          #+#    #+#             */
-/*   Updated: 2024/04/20 23:44:46 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/04/21 20:03:11 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,9 @@
 
 void	rt_setup_rendering(t_rt_scene *scene, t_rt_mlx_data *mlx)
 {
-	(void) mlx;
 	scene->width = 1366;
 	scene->height = 768;
+	rt_getmlx(0, mlx);
 }
 
 void	rt_start_rendering(t_rt_scene *scene, t_rt_mlx_data *mlx)
