@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 21:05:47 by rgramati          #+#    #+#             */
-/*   Updated: 2024/04/23 18:50:37 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/04/23 19:41:35 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,10 +86,11 @@ t_color_norm	rt_color_mult(t_color_norm c1, t_color_norm c2, bool gamma)
 
 void	rt_color_diffuse(t_rt_scene *scene, t_rt_hit hit, t_vec3d norm, t_color *c)
 {
-	t_color		dcolor;
-	t_rt_object	light;
-	t_vec3d		light_dir;
-	double		dratio;
+	t_rt_object		light;
+	t_vec3d			light_dir;
+	t_color			dcolor;
+	double			dratio;
+	t_color_norm	result;
 
 	light = (t_rt_object) scene->lights[0];
 	light_dir = ft_vec3d_norm(ft_vec3d_sub(light.position, hit.position));
@@ -97,11 +98,11 @@ void	rt_color_diffuse(t_rt_scene *scene, t_rt_hit hit, t_vec3d norm, t_color *c)
 	if (dratio < 0.0f)
 		dratio = 0.0f;
 	dratio *= ((t_rt_obj_light *)light.options)->brightness;
-	dcolor.a = 255;
-	dcolor.r = ((uint8_t) (dratio * light.color.r));
-	dcolor.g = ((uint8_t) (dratio * light.color.g));
-	dcolor.b = ((uint8_t) (dratio * light.color.b));
-	*c = dcolor;
+	dratio = ft_fmin(1.0f, dratio);
+	dcolor = light.color;
+	result = rt_color_to_norm(dcolor);
+	result = rt_color_mult(result, (t_color_norm){dratio, dratio, dratio, dratio}, 0);
+	*c = rt_color_from_norm(result);
 }
 
 void	rt_color_ambient(t_rt_scene *scene, t_rt_hit hit, t_color *c)
@@ -112,8 +113,16 @@ void	rt_color_ambient(t_rt_scene *scene, t_rt_hit hit, t_color *c)
 
 	t_color_norm	current;
 	t_color_norm	obj_color;
-	
+	t_color_norm	ambient;
+	double			brightness;
+
+	brightness = ((t_rt_obj_light *)scene->ambient.options)->brightness;
 	current = rt_color_to_norm(*c);
+	ambient = rt_color_to_norm(scene->ambient.color);
+	current.a = ft_fmin((ambient.a * brightness) + current.a, 1.0f);
+	current.r = ft_fmin((ambient.r * brightness) + current.r, 1.0f);
+	current.g = ft_fmin((ambient.g * brightness) + current.g, 1.0f);
+	current.b = ft_fmin((ambient.b * brightness) + current.b, 1.0f);
 	obj_color = rt_color_to_norm(hit.hit_object->color);
 	*c = rt_color_from_norm(rt_color_mult(current, obj_color, scene->rt_flags & RT_COL_GAMMA));
 }

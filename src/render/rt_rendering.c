@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 14:43:52 by rgramati          #+#    #+#             */
-/*   Updated: 2024/04/23 17:53:49 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/04/23 19:51:04 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,12 +40,12 @@ t_color	rt_get_color(t_rt_scene *scene, int x, int y)
 		rt_ray_init(scene, &ray, (t_vec2i){.x = x, .y = y});
 		hit = (t_rt_hit) {(t_vec3d) {0.0f, 0.0f, 0.0f}, NULL, false, INFINITY};
 		rt_ray_cast(scene, &ray, &hit);
-		if (scene->rt_flags & RT_RAY_DEBUG)
-			rt_render_ray(scene, ray, hit);
 		color = rt_color(0x00000000); // TO REMOVE -> BACKGROUND COLOR IF NO HIT
 		if (hit.hit)
 			color = rt_obj_color(scene, hit, hit.hit_object->norm(ray, hit));
 		pixels[y / scene->pratio] = color; 
+		if (scene->rt_flags & RT_RAY_DEBUG && hit.hit_object && hit.hit_object->type != RT_OBJ_PLANE)
+			rt_render_ray(scene, ray, hit, color);
 		return (color);
 	}
 	else

@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/19 15:03:08 by rgramati          #+#    #+#             */
-/*   Updated: 2024/04/23 17:28:20 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/04/23 20:07:47 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,23 @@
 #include <rt/object/sphere.h>
 #include <rt/object/light.h>
 #include <rt/object/camera.h>
+
+bool	rt_hit_update(
+	double t,
+	t_rt_ray ray,
+	t_rt_object *obj,
+	t_rt_hit *hit)
+{
+	if (t < hit->dist)
+	{
+		hit->hit_object = obj;
+		hit->position = ft_vec3d_add(ray.origin, ft_vec3d_mult(ray.direction, t));
+		hit->dist = t;
+		return (true);
+	}
+	else
+		return (false);
+}
 
 void	rt_ray_cast(t_rt_scene *scene, t_rt_ray *ray, t_rt_hit *hit)
 {

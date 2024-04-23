@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 19:21:15 by rgramati          #+#    #+#             */
-/*   Updated: 2024/04/23 14:58:38 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/04/23 19:08:47 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ t_rt_obj_plane	*rt_obj_plane_init(t_vec3d norm)
 	plane = ft_calloc(1, sizeof(t_rt_obj_plane));
 	if (!plane)
 		return (NULL);
-	plane->norm = norm;
+	plane->norm = ft_vec3d_norm(norm);
 	return (plane);
 }
 

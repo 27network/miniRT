@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 02:33:41 by kiroussa          #+#    #+#             */
-/*   Updated: 2024/04/23 18:50:28 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/04/23 19:47:34 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,6 +99,6 @@ void		rt_obj_set_rot(t_rt_object *obj, double x, double y, double z);
 
 /* DEBUGGER ***************************************************************** */
 
-void		rt_render_ray(t_rt_scene *scene, t_rt_ray ray, t_rt_hit hit);
+void		rt_render_ray(t_rt_scene *scene, t_rt_ray ray, t_rt_hit hit, t_color color);
 
 #endif // SCENE_H

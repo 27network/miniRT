@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 11:10:38 by rgramati          #+#    #+#             */
-/*   Updated: 2024/04/23 18:52:14 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/04/23 20:12:45 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ void	rt_clear_image(void *mlx, void *img, t_rt_scene *scene)
 	{
 		y = 0;
 		while (y < scene->height)
-			mlx_set_image_pixel(mlx, img, x, y++, 0);
+			mlx_set_image_pixel(mlx, img, x, y++, 0xFF303030);
 		x++;
 	}
 }
@@ -57,7 +57,6 @@ int	rt_keydown_event(int key, void *render)
 	t_rt_renderer	*renderer;
 
 	renderer = (t_rt_renderer *) render;
-	ft_printf("key = %d, %d\n", key, renderer->status);
 	if (renderer->status == RT_RS_NONE)
 		renderer->status = RT_RS_HOME;
 	if (renderer->status == RT_RS_HOME && key == 40)
