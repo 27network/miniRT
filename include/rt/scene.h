@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 02:33:41 by kiroussa          #+#    #+#             */
-/*   Updated: 2024/04/23 19:47:34 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/04/23 21:57:29 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,6 @@ typedef enum e_rt_object_type
 	RT_OBJ_LIGHT,
 	RT_OBJ_CAMERA
 }	t_rt_object_type;
-
-
 
 typedef bool	t_intersect_fn(t_rt_ray ray, t_rt_object *obj, t_rt_hit *hit);
 

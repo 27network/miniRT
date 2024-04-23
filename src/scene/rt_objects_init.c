@@ -6,29 +6,35 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 19:21:15 by rgramati          #+#    #+#             */
-/*   Updated: 2024/04/23 19:08:47 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/04/23 21:57:31 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <ft/mem.h>
-#include <rt/object/box.h>
 #include <rt/object/camera.h>
+#include <rt/object/cylinder.h>
 #include <rt/object/light.h>
 #include <rt/object/plane.h>
 #include <rt/object/sphere.h>
 
-t_rt_obj_box	*rt_obj_box_init(double sx, double sy, double sz)
+t_rt_obj_cylinder	*rt_obj_cylinder_init(
+	double diameter,
+	double height,
+	t_vec3d norm)
 {
-	t_rt_obj_box	*box;
+	t_rt_obj_cylinder	*cylinder;
 
-	box = ft_calloc(1, sizeof(t_rt_obj_box));
-	if (!box)
+	cylinder = ft_calloc(1, sizeof(t_rt_obj_cylinder));
+	if (!cylinder)
 		return (NULL);
-	box->size = (t_vec3d) {sx, sy, sz};
-	return (box);
+	cylinder->diameter = diameter;
+	cylinder->height = height;
+	cylinder->norm = norm;
+	return (cylinder);
 }
 
-t_rt_obj_camera	*rt_obj_camera_init(char *name)
+t_rt_obj_camera	*rt_obj_camera_init(
+	char *name)
 {
 	t_rt_obj_camera	*camera;
 
@@ -40,7 +46,8 @@ t_rt_obj_camera	*rt_obj_camera_init(char *name)
 	return (camera);
 }
 
-t_rt_obj_light	*rt_obj_light_init(double brightness)
+t_rt_obj_light	*rt_obj_light_init(
+	double brightness)
 {
 	t_rt_obj_light	*light;
 
@@ -51,7 +58,8 @@ t_rt_obj_light	*rt_obj_light_init(double brightness)
 	return (light);
 }
 
-t_rt_obj_plane	*rt_obj_plane_init(t_vec3d norm)
+t_rt_obj_plane	*rt_obj_plane_init(
+	t_vec3d norm)
 {
 	t_rt_obj_plane	*plane;
 
@@ -62,7 +70,8 @@ t_rt_obj_plane	*rt_obj_plane_init(t_vec3d norm)
 	return (plane);
 }
 
-t_rt_obj_sphere	*rt_obj_sphere_init(double diameter)
+t_rt_obj_sphere	*rt_obj_sphere_init(
+	double diameter)
 {
 	t_rt_obj_sphere	*sphere;
 
