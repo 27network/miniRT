@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 11:10:38 by rgramati          #+#    #+#             */
-/*   Updated: 2024/04/21 20:11:45 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/04/22 20:02:42 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,13 +57,13 @@ int	rt_keydown_event(int key, void *render)
 	t_rt_renderer	*renderer;
 
 	renderer = (t_rt_renderer *) render;
-	ft_printf("key = %d, %d\n", key, *renderer->status);
-	if (*renderer->status == RT_RS_NONE)
-		*renderer->status = RT_RS_HOME;
-	if (*renderer->status == RT_RS_HOME && key == 40)
+	ft_printf("key = %d, %d\n", key, renderer->status);
+	if (renderer->status == RT_RS_NONE)
+		renderer->status = RT_RS_HOME;
+	if (renderer->status == RT_RS_HOME && key == 40)
 	{
 		mlx_clear_window(renderer->mlx->rt_mlx, renderer->mlx->rt_win);
-		*renderer->status = RT_RS_SCENE;
+		renderer->status = RT_RS_SCENE;
 	}
 	if (key == 41)
 	{
@@ -78,27 +78,23 @@ int	rt_keydown_event(int key, void *render)
 		renderer->scene->pratio -= (renderer->scene->pratio != 1);
 
 	//move
-	if (key == SDL_SCANCODE_RIGHT)
-		rt_obj_move(&(renderer->scene->camera), (t_vec3d){0.1f, 0.0f, 0.0f});
-	if (key == SDL_SCANCODE_LEFT)
-		rt_obj_move(&(renderer->scene->camera), (t_vec3d){-0.1f, 0.0f, 0.0f});
-	if (key == SDL_SCANCODE_DOWN)
-		rt_obj_move(&(renderer->scene->camera), (t_vec3d){0.0f, -0.1f, 0.0f});
-	if (key == SDL_SCANCODE_UP)
-		rt_obj_move(&(renderer->scene->camera), (t_vec3d){0.0f, 0.1f, 0.0f});
+	if (key == SDL_SCANCODE_D)
+		rt_scene_translate(renderer->scene, (t_vec3d){-0.1f, 0.0f, 0.0f});
+	if (key == SDL_SCANCODE_A)
+		rt_scene_translate(renderer->scene, (t_vec3d){0.1f, 0.0f, 0.0f});
 	if (key == SDL_SCANCODE_W)
-		rt_obj_move(&(renderer->scene->camera), (t_vec3d){0.0f, 0.0f, 0.1f});
+		rt_scene_translate(renderer->scene, (t_vec3d){0.0f, -0.1f, 0.0f});
 	if (key == SDL_SCANCODE_S)
-		rt_obj_move(&(renderer->scene->camera), (t_vec3d){0.0f, 0.0f, -0.1f});
+		rt_scene_translate(renderer->scene, (t_vec3d){0.0f, 0.1f, 0.0f});
+	if (key == SDL_SCANCODE_X)
+		rt_scene_translate(renderer->scene, (t_vec3d){0.0f, 0.0f, -0.1f});
+	if (key == SDL_SCANCODE_C)
+		rt_scene_translate(renderer->scene, (t_vec3d){0.0f, 0.0f, 0.1f});
 
-	//rotate cam
-	if (key == SDL_SCANCODE_Q)
-		rt_obj_rotate(&(renderer->scene->camera), (t_vec3d){0.0f, 0.1f, 0.0f});
-	if (key == SDL_SCANCODE_E)
-		rt_obj_rotate(&(renderer->scene->camera), (t_vec3d){0.0f, -0.1f, 0.0f});
+	//rotate cam TODO
 
 	//debug rays
-	if (key == SDL_SCANCODE_D)
+	if (key == SDL_SCANCODE_R)
 	{
 		if (renderer->scene->rt_flags & RT_RAY_DEBUG)
 		{

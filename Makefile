@@ -6,7 +6,7 @@
 #    By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/08/06 21:19:50 by kiroussa          #+#    #+#              #
-#    Updated: 2024/04/19 20:19:46 by rgramati         ###   ########.fr        #
+#    Updated: 2024/04/22 21:07:22 by rgramati         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,18 +22,20 @@ SRC				=	error/rt_err.c					\
 					parse/scene/rt_parse_line.c		\
 					parse/scene/rt_parse_scene.c	\
 					parse/rt_parse_error.c 			\
-					render/rt_render.c				\
-					render/rt_hooks.c				\
-					render/rt_rendering.c			\
-					render/rt_rays.c				\
+					render/debug/rt_ray_debugger.c	\
 					render/objects/rt_obj_sphere.c	\
 					render/objects/rt_obj_box.c		\
 					render/objects/rt_obj_camera.c	\
 					render/objects/rt_obj_light.c	\
+					render/rt_colors.c				\
+					render/rt_hooks.c				\
+					render/rt_rays.c				\
+					render/rt_render.c				\
+					render/rt_rendering.c			\
 					scene/rt_objects_init.c			\
-					scene/rt_scene_empty.c			\
 					scene/rt_scene_free.c			\
 					scene/rt_scene_init.c			\
+					scene/rt_scene_transform.c		\
 					main.c
 
 SRC_DIR			=	src

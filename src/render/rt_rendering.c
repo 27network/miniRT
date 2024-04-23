@@ -6,11 +6,14 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 14:43:52 by rgramati          #+#    #+#             */
-/*   Updated: 2024/04/21 21:27:33 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/04/23 13:19:38 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <math.h>
+#include <ft/math.h>
 #include <rt/renderer.h>
+#include <rt/object/light.h>
 #include <ft/print.h>
 
 void	rt_render_home(t_rt_renderer *renderer)
@@ -27,16 +30,21 @@ void	rt_render_home(t_rt_renderer *renderer)
 
 t_color	rt_get_color(t_rt_scene *scene, int x, int y)
 {
+	static t_color	pixels[1920];
 	t_color			color;
 	t_rt_ray		ray;
-	static t_color	pixels[1920];
+	t_rt_hit		hit;
 
-	// if (!x && !y)
-	// 	ft_printf("LES RAYOOOOONS\n");
 	if (!(x % scene->pratio) && !(y % scene->pratio))
 	{
-		rt_init_ray(scene, &ray, (t_vec2i){.x = x, .y = y}, scene->camera.position);
-		color = rt_get_ray(scene, ray);
+		rt_ray_init(scene, &ray, (t_vec2i){.x = x, .y = y});
+		hit = (t_rt_hit) {(t_vec3d) {0.0f, 0.0f, 0.0f}, NULL, false, INFINITY};
+		rt_ray_cast(scene, &ray, &hit);
+		if (scene->rt_flags & RT_RAY_DEBUG)
+			rt_render_ray(scene, ray, hit);
+		color = (t_color){.argb = 0xFF101010};
+		if (hit.hit)
+			color = rt_obj_color(scene, hit, hit.hit_object->norm(ray, hit));
 		pixels[y / scene->pratio] = color; 
 		return (color);
 	}
@@ -48,21 +56,19 @@ void	rt_render_scene(t_rt_renderer *renderer)
 {
 	t_rt_mlx_data	mlx;
 	t_color			pixel;
-	int				x;
-	int				y;
+	t_vec2i			coords;
 
 	mlx = *renderer->mlx;
-	x = 0;
-	while (x < renderer->scene->width)
+	coords = (t_vec2i){.x = -1, .y = -1};
+	while (++coords.x < renderer->scene->width)
 	{
-		y = 0;
-		while (y < renderer->scene->height)
+		coords.y = -1;
+		while (++coords.y < renderer->scene->height)
 		{
-			pixel = rt_get_color(renderer->scene, x, y);
-			mlx_set_image_pixel(mlx.rt_mlx, mlx.rt_imgs[0], x, y, pixel.argb);
-			y++;
+			pixel = rt_get_color(renderer->scene, coords.x, coords.y);
+			mlx_set_image_pixel(mlx.rt_mlx, mlx.rt_imgs[0], coords.x, coords.y, pixel.argb);
+
 		}
-		x++;
 	}
 	if (!(renderer->scene->rt_flags & RT_RAY_DEBUG))
 		mlx_put_image_to_window(mlx.rt_mlx, mlx.rt_win, mlx.rt_imgs[0], 0, 0);

@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 02:33:41 by kiroussa          #+#    #+#             */
-/*   Updated: 2024/04/21 19:25:59 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/04/22 21:06:39 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,8 @@ typedef union u_color
 
 typedef bool	t_intersect_fn(t_rt_ray ray, t_rt_object *obj, t_rt_hit *hit);
 
+typedef t_vec3d	t_hit_norm_fn(t_rt_ray ray, t_rt_hit hit);
+
 typedef struct s_rt_object
 {
 	t_rt_object_type	type;
@@ -62,6 +64,7 @@ typedef struct s_rt_object
 	t_vec3d				rotation;
 	t_color				color;
 	t_intersect_fn		*intersect;
+	t_hit_norm_fn		*norm;
 	void				*options;
 }	t_rt_object;
 
@@ -70,6 +73,7 @@ typedef struct s_rt_scene
 	int			width;
 	int			height;
 	t_rt_object	camera;
+	t_rt_object	ambient;
 	t_rt_object	*objects;
 	t_rt_object	*lights;
 	size_t		objects_size;
@@ -82,16 +86,24 @@ t_rt_object	*rt_object_init(t_rt_object *obj, t_rt_object_type type);
 
 t_rt_error	rt_scene_init(t_rt_scene *scene);
 
+t_rt_error	rt_scene_guard(t_rt_scene *scene);
+
 void		rt_scene_free(t_rt_scene *scene);
 
-t_rt_error	rt_empty_scene(t_rt_scene *scene);
+t_rt_error	rt_scene_example(t_rt_scene *scene);
 
-void		rt_obj_move(t_rt_object *obj, t_vec3d move);
+t_color		rt_obj_color(t_rt_scene *scene, t_rt_hit hit, t_vec3d norm);
 
-void		rt_obj_rotate(t_rt_object *obj, t_vec3d angle);
+/* TRANSFORM **************************************************************** */
+
+void		rt_scene_translate(t_rt_scene *scene, t_vec3d move);
 
 void		rt_obj_set_pos(t_rt_object *obj, double x, double y, double z);
 
 void		rt_obj_set_rot(t_rt_object *obj, double x, double y, double z);
+
+/* DEBUGGER ***************************************************************** */
+
+void		rt_render_ray(t_rt_scene *scene, t_rt_ray ray, t_rt_hit hit);
 
 #endif // SCENE_H

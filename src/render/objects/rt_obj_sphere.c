@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/19 14:49:44 by rgramati          #+#    #+#             */
-/*   Updated: 2024/04/21 18:09:56 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/04/22 22:46:16 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,5 +45,17 @@ bool	rt_obj_sphere_intersect(t_rt_ray ray, t_rt_object *obj, t_rt_hit *hit)
 	if (t < 0)
 		return (false);
 	hit->position = ft_vec3d_add(ray.origin, ft_vec3d_mult(ray.direction, t));
+	if (t < hit->dist)
+		hit->dist = t;
 	return (true);
+}
+
+t_vec3d	rt_obj_sphere_norm(t_rt_ray ray, t_rt_hit hit)
+{
+	t_vec3d	norm;
+
+	norm = ft_vec3d_sub(hit.position, hit.hit_object->position);
+	if (ft_vec3d_dot(ray.direction, norm) > 0.0f)
+		norm = (t_vec3d) {-norm.x, -norm.y, -norm.z};
+	return (norm);
 }

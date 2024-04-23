@@ -6,14 +6,14 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 19:06:32 by rgramati          #+#    #+#             */
-/*   Updated: 2024/04/20 19:06:41 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/04/22 19:14:00 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CAMERA_H
 # define CAMERA_H
 
-# include <ft/math/vector.h>
+# include <ft/math/matrix.h>
 
 typedef struct s_rt_obj_camera
 {

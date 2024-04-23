@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 07:50:09 by kiroussa          #+#    #+#             */
-/*   Updated: 2024/04/21 21:33:07 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/04/22 20:01:38 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,8 @@ typedef struct s_rt_renderer
 {
 	t_rt_scene			*scene;
 	t_rt_mlx_data		*mlx;
-	t_rt_render_status	*status;
+	t_rt_render_status	status;
+	t_color				*img;
 }	t_rt_renderer;
 
 typedef struct s_rt_hit
@@ -49,6 +50,7 @@ typedef struct s_rt_hit
 	t_vec3d		position;
 	t_rt_object	*hit_object;
 	bool		hit;
+	double		dist;
 }	t_rt_hit;
 
 typedef struct s_rt_ray
@@ -69,13 +71,13 @@ void		rt_render_scene(t_rt_renderer *renderer);
 
 void		rt_render_editor(t_rt_renderer *renderer);
 
-void		rt_start_rendering(t_rt_scene *scene, t_rt_mlx_data *mlx_data);
+void		rt_start_rendering(t_rt_scene *s, t_rt_mlx_data *m, t_rt_renderer *r);
 
 void		rt_setup_rendering(t_rt_scene *scene, t_rt_mlx_data *mlx_data);
 
 t_rt_error	rt_mlx_init(t_rt_scene *scene, t_rt_mlx_data *mlx_data);
 
-t_rt_error	rt_render(t_rt_scene *scene);
+t_rt_error	rt_render(t_rt_scene *scene, t_vec2i size);
 
 int			rt_render_update(void *mlx);
 
@@ -84,8 +86,9 @@ int			rt_window_event(int key, void *mlx);
 int			rt_keydown_event(int key, void *mlx);
 
 
-t_color		rt_get_ray(t_rt_scene *scene, t_rt_ray ray);
+void		rt_ray_init(t_rt_scene *scene, t_rt_ray *ray, t_vec2i pixs);
 
-void		rt_init_ray(t_rt_scene *scene, t_rt_ray *ray, t_vec2i pixs, t_vec3d start);
+void		rt_ray_cast(t_rt_scene *scene, t_rt_ray *ray, t_rt_hit *hit);
+
 
 #endif // RENDERER_H
