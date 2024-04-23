@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 11:10:38 by rgramati          #+#    #+#             */
-/*   Updated: 2024/04/22 20:02:42 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/04/23 18:52:14 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,13 +96,10 @@ int	rt_keydown_event(int key, void *render)
 	//debug rays
 	if (key == SDL_SCANCODE_R)
 	{
-		if (renderer->scene->rt_flags & RT_RAY_DEBUG)
-		{
-			rt_clear_image(renderer->mlx->rt_mlx, renderer->mlx->rt_imgs[1], renderer->scene);
-			renderer->scene->rt_flags &= (~RT_RAY_DEBUG);
-		}
-		else
-			renderer->scene->rt_flags |= RT_RAY_DEBUG;
+		rt_clear_image(renderer->mlx->rt_mlx, renderer->mlx->rt_imgs[1], renderer->scene);
+		renderer->scene->rt_flags ^= RT_RAY_DEBUG;
 	}
+	if (key == SDL_SCANCODE_G)
+		renderer->scene->rt_flags ^= RT_COL_GAMMA;
 	return (0);
 }

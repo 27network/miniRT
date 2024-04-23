@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 07:48:48 by kiroussa          #+#    #+#             */
-/*   Updated: 2024/04/23 13:19:01 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/04/23 17:51:32 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,15 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <ft/mem.h>
+#include <ft/print.h>
 #include <rt/error.h>
 #include <rt/renderer.h>
 #include <rt/object/camera.h>
+#include <rt/object/plane.h>
 #include <rt/object/sphere.h>
 #include <rt/object/light.h>
 
-#define SPHERES_COUNT 40
+#define SPHERES_COUNT 4
 #define LIGHTS_COUNT 1
 
 t_rt_error	rt_scene_init(t_rt_scene *scene)
@@ -63,7 +65,7 @@ t_rt_object	*rt_object_init(t_rt_object *obj, t_rt_object_type type)
 	obj->type = type;
 	obj->position = (t_vec3d) {0.0f, 0.0f, 0.0f};
 	obj->rotation = (t_vec3d) {0.0f, 0.0f, 0.0f};
-	obj->color.argb = 0xFFFFFFFF;
+	obj->color = rt_color(0xFFFFFFFF);
 	obj->options = NULL;
 	if (type == RT_OBJ_SPHERE)
 	{
@@ -72,6 +74,11 @@ t_rt_object	*rt_object_init(t_rt_object *obj, t_rt_object_type type)
 	}
 	if (type == RT_OBJ_LIGHT)
 		obj->intersect = &rt_obj_light_intersect;
+	if (type == RT_OBJ_PLANE)
+	{
+		obj->intersect = &rt_obj_plane_intersect;
+		obj->norm = &rt_obj_plane_norm;
+	}
 	return (obj);
 }
 
@@ -91,7 +98,7 @@ t_color	rt_get_random_color(int toclose)
 	char		buffer[3];
 	t_color		color;
 
-	color.argb = 0xFF000000;
+	color = rt_color(0xFF000000);
 	if (toclose)
 	{
 		close(urandom);
@@ -100,9 +107,9 @@ t_color	rt_get_random_color(int toclose)
 	if (urandom == -1)
 		urandom = open("/dev/random", O_RDONLY);
 	read(urandom, buffer, 3);
-	color.argb += ((buffer[0] + 127) << 16);
-	color.argb += ((buffer[1] + 127) << 8);
-	color.argb += (buffer[2] + 127);
+	color.r = (buffer[0] + 127);
+	color.g = (buffer[1] + 127);
+	color.b = (buffer[2] + 127);
 	return (color);
 }
 
@@ -112,12 +119,14 @@ t_rt_error	rt_scene_example(t_rt_scene *scene)
 	t_rt_object	*ambient;
 	t_rt_object	*lights[LIGHTS_COUNT];
 	t_rt_object	*spheres[SPHERES_COUNT];
+	// t_rt_object	*background;
 	size_t		i;
 
-	camera = rt_object_init(&scene->camera, RT_OBJ_CAMERA);
+	
 	ambient = rt_object_init(&scene->ambient, RT_OBJ_LIGHT);
 	ambient->options = rt_obj_light_init(0.2f);
-	ambient->color.argb = 0x35353535;
+	ambient->color = rt_color(0x35353535);
+
 	i = 0;
 	while (i < scene->objects_size)
 	{
@@ -127,16 +136,26 @@ t_rt_error	rt_scene_example(t_rt_scene *scene)
 		spheres[i]->color = rt_get_random_color(i == scene->objects_size);
 		i++;
 	}
+
+	// background = rt_object_init(&scene->objects[i], RT_OBJ_PLANE);
+	// rt_obj_set_pos(background, 0.0f, -2.0f, 0.0f);
+	// background->options = rt_obj_plane_init((t_vec3d){0.0f, 1.0f, 0.0f});
+	// background->color = rt_get_random_color(1);
+
+	camera = rt_object_init(&scene->camera, RT_OBJ_CAMERA);
 	camera->options = rt_obj_camera_init("Marvin");
 	camera->rotation = (t_vec3d){0.0f, 0.0f, 0.0f};
+
+
 	i = 0;
 	while (i < scene->lights_size)
 	{
 		lights[i] = rt_object_init(&scene->lights[i], RT_OBJ_LIGHT);
 		lights[i]->options = rt_obj_light_init(1.0f);
-		lights[i]->color = (t_color){.argb = 0xFFFFFFFF};
+		lights[i]->color = rt_color(0xFFFFFFFF);
 		i++;
 	}
 	rt_obj_set_pos(lights[0], 0.0f, 2.0f, 0.0f);
+
 	return (rt_scene_guard(scene));
 }

@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 19:21:15 by rgramati          #+#    #+#             */
-/*   Updated: 2024/04/22 11:47:04 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/04/23 14:58:38 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,14 +51,14 @@ t_rt_obj_light	*rt_obj_light_init(double brightness)
 	return (light);
 }
 
-t_rt_obj_plane	*rt_obj_plane_init(double sx, double sy)
+t_rt_obj_plane	*rt_obj_plane_init(t_vec3d norm)
 {
 	t_rt_obj_plane	*plane;
 
 	plane = ft_calloc(1, sizeof(t_rt_obj_plane));
 	if (!plane)
 		return (NULL);
-	plane->size = (t_vec3d) {sx, sy, 0.0f};
+	plane->norm = norm;
 	return (plane);
 }
 

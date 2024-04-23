@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 14:08:19 by rgramati          #+#    #+#             */
-/*   Updated: 2024/04/22 22:22:43 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/04/23 17:47:07 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,8 +59,8 @@ void	rt_trace_line(t_rt_scene *scene, t_vec2i start, t_vec2i end, t_color color)
 	pos = (t_vec3d){start.x, start.y, 0.0f};
 	while (i < steps)
 	{
-		if (pos.x >= 0 && pos.x < scene->width && pos.y >= 0 && pos.y < scene->height && color.argb)
-			mlx_set_image_pixel(rt_getmlx(0b0001, NULL), rt_getmlx(0b1000, NULL), pos.x, pos.y, color.argb);
+		if (pos.x >= 0 && pos.x < scene->width && pos.y >= 0 && pos.y < scene->height && color.a)
+			mlx_set_image_pixel(rt_getmlx(0b0001, NULL), rt_getmlx(0b1000, NULL), pos.x, pos.y, rt_color_argb(color));
 		pos.x += inc.x;
 		pos.y += inc.y;
 		i += 1.0f;
@@ -74,7 +74,7 @@ void	rt_render_ray(t_rt_scene *scene, t_rt_ray ray, t_rt_hit hit)
 	t_color	color;
 
 	start = (t_vec2i){scene->width / 2, scene->height};
-	color.argb = 0x00000000;
+	color = rt_color(0x00000000);
 	if (hit.hit)
 	{
 		end = (t_vec2i){.x = mapx(scene->camera.position, hit.position.x, 0, scene->width),

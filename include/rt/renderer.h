@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 07:50:09 by kiroussa          #+#    #+#             */
-/*   Updated: 2024/04/22 20:01:38 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/04/23 15:17:10 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 
 # define RENDER_FONT "assets/fonts/menu.ttf"
 # define MAX_BOUNCES 1
-# define PRECISION 0.00001f
+# define EPSILON 0.00001f
 # define RT_PI 3.14159265358979323846
 
 typedef enum e_rt_render_status

@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/19 15:03:08 by rgramati          #+#    #+#             */
-/*   Updated: 2024/04/22 22:23:56 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/04/23 17:28:20 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void	rt_ray_init(t_rt_scene *scene, t_rt_ray *ray, t_vec2i pixs)
 	double	tmp;
 
 	ray->bounces = 0;
-	ray->color.argb = 0xFFFFFFFF;
+	ray->color = rt_color(0xFFFFFFFF);
 	ray->origin = scene->camera.position;
 	ray->direction.x = pixs.x + 0.5f - scene->width * 0.5f;
 	ray->direction.y = -(pixs.y + 0.5f - scene->height * 0.5f);

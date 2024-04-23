@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 18:54:12 by rgramati          #+#    #+#             */
-/*   Updated: 2024/04/22 13:59:23 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/04/23 16:24:21 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,9 @@ void	rt_scene_translate(t_rt_scene *scene, t_vec3d move)
 	i = 0;
 	while (i < scene->objects_size)
 	{
+		ft_printf("[%d]%p: old pos [%6, %6f, %6f]\n", i, scene->objects[i], scene->objects[i].position.x, scene->objects[i].position.y, scene->objects[i].position.z);
 		scene->objects[i].position = ft_vec3d_add(scene->objects[i].position, move);
+		ft_printf("[%d]%p: new pos [%6, %6f, %6f]\n", i, scene->objects[i], scene->objects[i].position.x, scene->objects[i].position.y, scene->objects[i].position.z);
 		i++;
 	}
 	i = 0;

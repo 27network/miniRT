@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 02:33:41 by kiroussa          #+#    #+#             */
-/*   Updated: 2024/04/22 21:06:39 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/04/23 18:50:28 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 # include <ft/math/vector.h>
 # include <rt/error.h>
 # include <stddef.h>
-# include <stdint.h>
+# include <rt/colors.h>
 
 typedef struct s_rt_ray t_rt_ray;
 
@@ -27,6 +27,7 @@ typedef struct s_rt_hit t_rt_hit;
 typedef enum e_rt_flag
 {
 	RT_RAY_DEBUG = 0x001,
+	RT_COL_GAMMA = 0x010,
 }	t_rt_flag;
 
 typedef enum e_rt_object_type
@@ -41,17 +42,7 @@ typedef enum e_rt_object_type
 	RT_OBJ_CAMERA
 }	t_rt_object_type;
 
-typedef union u_color
-{
-    struct {
-        uint8_t a;
-        uint8_t r;
-        uint8_t g;
-        uint8_t b;
-    };
-    uint32_t argb;
-    uint8_t array[4];
-}   t_color; 
+
 
 typedef bool	t_intersect_fn(t_rt_ray ray, t_rt_object *obj, t_rt_hit *hit);
 
@@ -93,6 +84,10 @@ void		rt_scene_free(t_rt_scene *scene);
 t_rt_error	rt_scene_example(t_rt_scene *scene);
 
 t_color		rt_obj_color(t_rt_scene *scene, t_rt_hit hit, t_vec3d norm);
+
+t_color		rt_color(uint32_t argb);
+
+uint32_t	rt_color_argb(t_color color);
 
 /* TRANSFORM **************************************************************** */
 
