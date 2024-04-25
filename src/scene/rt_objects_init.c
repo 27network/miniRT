@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 19:21:15 by rgramati          #+#    #+#             */
-/*   Updated: 2024/04/23 21:57:31 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/04/24 18:17:47 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ t_rt_obj_cylinder	*rt_obj_cylinder_init(
 	cylinder->diameter = diameter;
 	cylinder->height = height;
 	cylinder->norm = norm;
+	cylinder->last_hit_on_edge = false;
 	return (cylinder);
 }
 

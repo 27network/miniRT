@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 14:43:52 by rgramati          #+#    #+#             */
-/*   Updated: 2024/04/23 19:51:04 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/04/24 21:05:57 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,6 @@ void	rt_render_scene(t_rt_renderer *renderer)
 		{
 			pixel = rt_get_color(renderer->scene, coords.x, coords.y);
 			mlx_set_image_pixel(mlx.rt_mlx, mlx.rt_imgs[0], coords.x, coords.y, rt_color_argb(pixel));
-
 		}
 	}
 	if (!(renderer->scene->rt_flags & RT_RAY_DEBUG))

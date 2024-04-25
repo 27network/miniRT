@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 11:10:38 by rgramati          #+#    #+#             */
-/*   Updated: 2024/04/23 20:12:45 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/04/24 19:48:04 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int	rt_render_update(void *render)
 {
 	t_rt_renderer	*renderer;
 
-	renderer = (t_rt_renderer *) render;
+	renderer = (t_rt_renderer *)render;
 	mlx_clear_window(renderer->mlx->rt_mlx, renderer->mlx->rt_win);
 	rt_do_rendering(renderer);
 	return (0);
@@ -56,7 +56,8 @@ int	rt_keydown_event(int key, void *render)
 {
 	t_rt_renderer	*renderer;
 
-	renderer = (t_rt_renderer *) render;
+	renderer = (t_rt_renderer *)render;
+	rt_clear_image(renderer->mlx->rt_mlx, renderer->mlx->rt_imgs[1], renderer->scene);
 	if (renderer->status == RT_RS_NONE)
 		renderer->status = RT_RS_HOME;
 	if (renderer->status == RT_RS_HOME && key == 40)
@@ -72,7 +73,7 @@ int	rt_keydown_event(int key, void *render)
 
 	//pixels !
 	if (key == SDL_SCANCODE_PAGEUP)
-		renderer->scene->pratio += (renderer->scene->pratio < 16);
+		renderer->scene->pratio += (renderer->scene->pratio < 32);
 	if (key == SDL_SCANCODE_PAGEDOWN)
 		renderer->scene->pratio -= (renderer->scene->pratio != 1);
 
@@ -95,10 +96,31 @@ int	rt_keydown_event(int key, void *render)
 	//debug rays
 	if (key == SDL_SCANCODE_R)
 	{
-		rt_clear_image(renderer->mlx->rt_mlx, renderer->mlx->rt_imgs[1], renderer->scene);
 		renderer->scene->rt_flags ^= RT_RAY_DEBUG;
 	}
 	if (key == SDL_SCANCODE_G)
 		renderer->scene->rt_flags ^= RT_COL_GAMMA;
+	return (0);
+}
+
+t_color	rt_get_random_color(int toclose);
+
+int rt_mousedown_event(int key, void *render)
+{
+	t_rt_renderer	*renderer;
+	t_rt_ray		dray;
+	t_rt_hit		dhit;
+	int				params[2];
+
+	renderer = (t_rt_renderer *)render;
+	mlx_mouse_get_pos(renderer->mlx->rt_mlx, params, params + 1);
+	if (key == 1)
+	{
+		ft_printf("clic gauche [%5d %5d]\n", params[0], params[1]);
+		rt_ray_init(renderer->scene, &dray, (t_vec2i){.x = *params, .y = *(params + 1)});
+		ft_printf("DEBUG RAY:\n");
+		rt_ray_cast_debug(renderer->scene, &dray, &dhit);
+		dhit.hit_object->color = rt_get_random_color(0);
+	}
 	return (0);
 }

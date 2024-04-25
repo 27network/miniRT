@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 21:05:47 by rgramati          #+#    #+#             */
-/*   Updated: 2024/04/23 19:41:35 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/04/24 17:50:05 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,7 @@ void	rt_color_diffuse(t_rt_scene *scene, t_rt_hit hit, t_vec3d norm, t_color *c)
 	*c = rt_color_from_norm(result);
 }
 
-void	rt_color_ambient(t_rt_scene *scene, t_rt_hit hit, t_color *c)
+void	rt_color_ambient(t_rt_scene *scene, t_rt_hit hit, t_color *c, bool printshit)
 {
 	(void) scene;
 	(void) hit;
@@ -114,6 +114,7 @@ void	rt_color_ambient(t_rt_scene *scene, t_rt_hit hit, t_color *c)
 	t_color_norm	current;
 	t_color_norm	obj_color;
 	t_color_norm	ambient;
+	t_color			color;
 	double			brightness;
 
 	brightness = ((t_rt_obj_light *)scene->ambient.options)->brightness;
@@ -123,7 +124,10 @@ void	rt_color_ambient(t_rt_scene *scene, t_rt_hit hit, t_color *c)
 	current.r = ft_fmin((ambient.r * brightness) + current.r, 1.0f);
 	current.g = ft_fmin((ambient.g * brightness) + current.g, 1.0f);
 	current.b = ft_fmin((ambient.b * brightness) + current.b, 1.0f);
-	obj_color = rt_color_to_norm(hit.hit_object->color);
+	color = hit.hit_object->color;
+	if (printshit)
+		ft_printf("color from %p: %d %d %d\n", hit.hit_object, color.r, color.g, color.b);
+	obj_color = rt_color_to_norm(color);
 	*c = rt_color_from_norm(rt_color_mult(current, obj_color, scene->rt_flags & RT_COL_GAMMA));
 }
 
@@ -133,14 +137,28 @@ void	rt_color_specular(t_color *c)
 	(void) c;
 }
 
+t_color	rt_obj_color_debug(t_rt_scene *scene, t_rt_hit hit, t_vec3d norm)
+{
+	t_color	result;
+
+	(void) norm;
+	(void) scene;
+	// if (hit.hit_object->type != RT_OBJ_LIGHT)
+	rt_color_diffuse(scene, hit, norm, &result);
+	// rt_color_specular(&result);
+	rt_color_ambient(scene, hit, &result, true);
+	return (result);
+}
+
 t_color	rt_obj_color(t_rt_scene *scene, t_rt_hit hit, t_vec3d norm)
 {
 	t_color	result;
 
 	(void) norm;
 	(void) scene;
+	// if (hit.hit_object->type != RT_OBJ_LIGHT)
 	rt_color_diffuse(scene, hit, norm, &result);
 	// rt_color_specular(&result);
-	rt_color_ambient(scene, hit, &result);
+	rt_color_ambient(scene, hit, &result, false);
 	return (result);
 }

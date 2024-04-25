@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 14:08:19 by rgramati          #+#    #+#             */
-/*   Updated: 2024/04/23 19:49:00 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/04/24 21:05:35 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,14 @@ void	rt_trace_line(t_rt_scene *scene, t_vec2i start, t_vec2i end, t_color color)
 	while (i < steps)
 	{
 		if (pos.x >= 0 && pos.x < scene->width && pos.y >= 0 && pos.y < scene->height && color.a)
+		{
+			if (pos.x > 0 && pos.x < scene->width - 1 && pos.y > 0 && pos.y < scene->height - 1)
+			{
+				for (int j = 0; j < 9; j++)
+					mlx_set_image_pixel(rt_getmlx(0b0001, NULL), rt_getmlx(0b1000, NULL), start.x + ((j % 3) - 1), start.y+ ((j / 3) - 1), 0xFFFFFFFF);
+			}
 			mlx_set_image_pixel(rt_getmlx(0b0001, NULL), rt_getmlx(0b1000, NULL), pos.x, pos.y, rt_color_argb(color));
+		}
 		pos.x += inc.x;
 		pos.y += inc.y;
 		i += 1.0f;

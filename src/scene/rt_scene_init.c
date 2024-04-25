@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 07:48:48 by kiroussa          #+#    #+#             */
-/*   Updated: 2024/04/23 22:12:52 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/04/25 16:01:20 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@
 #include <rt/object/sphere.h>
 #include <rt/object/light.h>
 
-#define SPHERES_COUNT 4
+#define SPHERES_COUNT 6
 #define LIGHTS_COUNT 1
 
 t_rt_error	rt_scene_init(t_rt_scene *scene)
@@ -69,7 +69,10 @@ t_rt_object	*rt_object_init(t_rt_object *obj, t_rt_object_type type)
 	obj->color = rt_color(0xFFFFFFFF);
 	obj->options = NULL;
 	if (type == RT_OBJ_LIGHT)
+	{
 		obj->intersect = &rt_obj_light_intersect;
+		obj->norm = &rt_obj_sphere_norm;
+	}
 	if (type == RT_OBJ_SPHERE)
 	{
 		obj->intersect = &rt_obj_sphere_intersect;
@@ -121,55 +124,65 @@ t_color	rt_get_random_color(int toclose)
 
 t_rt_error	rt_scene_example(t_rt_scene *scene)
 {
-	t_rt_object	*camera;
 	t_rt_object	*ambient;
-	t_rt_object	*lights[LIGHTS_COUNT];
-	t_rt_object	*spheres[SPHERES_COUNT];
-	t_rt_object	*background;
-	size_t		i;
-
-	
 	ambient = rt_object_init(&scene->ambient, RT_OBJ_LIGHT);
 	ambient->options = rt_obj_light_init(0.2f);
 	ambient->color = rt_color(0xFFFFFFFF);
 
-	i = 0;
-	while (i < SPHERES_COUNT)
-	{
-		spheres[i] = rt_object_init(&scene->objects[i + 1], RT_OBJ_SPHERE);
-		rt_obj_set_pos(spheres[i], ((scene->objects_size / 2) * -2.0f + 1.0f) + 2.0f * i, 0.0f, 5.0f);
-		spheres[i]->options = rt_obj_sphere_init(1.0f);
-		spheres[i]->color = rt_get_random_color(0);
-		// spheres[i]->color = rt_color(0xFFFFFFFF);
-		i++;
-	}
+	t_rt_object	*floor;
+	floor = rt_object_init(&scene->objects[0], RT_OBJ_PLANE);
+	rt_obj_set_pos(floor, 0.0f, -2.0f, 0.0f);
+	floor->options = rt_obj_plane_init((t_vec3d){0.0f, 1.0f, 0.0f});
+	floor->color = rt_get_random_color(0);
 
-	background = rt_object_init(&scene->objects[0], RT_OBJ_PLANE);
-	rt_obj_set_pos(background, 0.0f, -2.0f, 0.0f);
-	background->options = rt_obj_plane_init((t_vec3d){0.0f, 1.0f, 0.0f});
-	background->color = rt_get_random_color(0);
-	// background->color = rt_color(0xFFFFFFFF);
+	t_rt_object	*ceiling;
+	ceiling = rt_object_init(&scene->objects[6], RT_OBJ_PLANE);
+	rt_obj_set_pos(ceiling, 0.0f, 4.0f, 0.0f);
+	ceiling->options = rt_obj_plane_init((t_vec3d){0.0f, -1.0f, 0.0f});
+	ceiling->color = rt_get_random_color(0);
 
-	spheres[0] = rt_object_init(&scene->objects[1], RT_OBJ_CYLINDER);
-	rt_obj_set_pos(spheres[0], 0.0f, 0.0f, 7.0f);
-	spheres[0]->options = rt_obj_cylinder_init(1.5f, 10.0f, (t_vec3d){0.0f, 1.0f, 0.0f});
-	spheres[0]->color = rt_get_random_color(0);
+	t_rt_object	*left_wall;
+	left_wall = rt_object_init(&scene->objects[1], RT_OBJ_PLANE);
+	rt_obj_set_pos(left_wall, -5.0f, 0.0f, 0.0f);
+	left_wall->options = rt_obj_plane_init((t_vec3d){1.0f, 0.0f, 0.0f});
+	left_wall->color = rt_get_random_color(0);
 
-	rt_get_random_color(1);
+	t_rt_object	*right_wall;
+	right_wall = rt_object_init(&scene->objects[2], RT_OBJ_PLANE);
+	rt_obj_set_pos(right_wall, 5.0f, 0.0f, 0.0f);
+	right_wall->options = rt_obj_plane_init((t_vec3d){-1.0f, 0.0f, 0.0f});
+	right_wall->color = rt_get_random_color(0);
 
+	t_rt_object	*back_wall;
+	back_wall = rt_object_init(&scene->objects[3], RT_OBJ_PLANE);
+	rt_obj_set_pos(back_wall, 0.0f, 0.0f, 10.0f);
+	back_wall->options = rt_obj_plane_init((t_vec3d){0.0f, 0.0f, -1.0f});
+	back_wall->color = rt_get_random_color(0);
+
+	t_rt_object	*cylinder;
+	cylinder = rt_object_init(&scene->objects[4], RT_OBJ_CYLINDER);
+	rt_obj_set_pos(cylinder, 0.0f, -2.0f, 5.0f);
+	cylinder->options = rt_obj_cylinder_init(1.0f, 4.0f, ft_vec3d_norm((t_vec3d){4.0f, 1.0f, 2.5f}));
+	cylinder->color = rt_get_random_color(0);
+
+	t_rt_object	*sphere;
+	sphere = rt_object_init(&scene->objects[5], RT_OBJ_SPHERE);
+	rt_obj_set_pos(sphere, -3.0f, 0.0f, 7.0f);
+	sphere->options = rt_obj_sphere_init(1.0f);
+	sphere->color = rt_get_random_color(0);
+	
+	// rt_get_random_color(1);
+
+	t_rt_object	*camera;
 	camera = rt_object_init(&scene->camera, RT_OBJ_CAMERA);
 	camera->options = rt_obj_camera_init("Marvin");
 	camera->rotation = (t_vec3d){0.0f, 0.0f, 0.0f};
 
-	i = 0;
-	while (i < scene->lights_size)
-	{
-		lights[i] = rt_object_init(&scene->lights[i], RT_OBJ_LIGHT);
-		lights[i]->options = rt_obj_light_init(1.0f);
-		lights[i]->color = rt_color(0xFFFFFFFF);
-		i++;
-	}
-	rt_obj_set_pos(lights[0], 0.0f, 5.0f, 0.0f);
+	t_rt_object	*light;
+	light = rt_object_init(scene->lights, RT_OBJ_LIGHT);
+	light->options = rt_obj_light_init(1.0f);
+	light->color = rt_color(0xFFFFFFFF);
+	rt_obj_set_pos(light, 0.0f, 0.0f, 2.5f);
 
 	return (rt_scene_guard(scene));
 }

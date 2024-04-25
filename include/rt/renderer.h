@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 07:50:09 by kiroussa          #+#    #+#             */
-/*   Updated: 2024/04/23 20:10:43 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/04/24 16:32:50 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,21 +75,33 @@ void		rt_start_rendering(t_rt_scene *s, t_rt_mlx_data *m, t_rt_renderer *r);
 
 void		rt_setup_rendering(t_rt_scene *scene, t_rt_mlx_data *mlx_data);
 
+
+
+
 t_rt_error	rt_mlx_init(t_rt_scene *scene, t_rt_mlx_data *mlx_data);
 
 t_rt_error	rt_render(t_rt_scene *scene, t_vec2i size);
 
 int			rt_render_update(void *mlx);
 
+
+
+
 int			rt_window_event(int key, void *mlx);
 
 int			rt_keydown_event(int key, void *mlx);
+
+int			rt_mousedown_event(int key, void *render);
+
+
 
 
 void		rt_ray_init(t_rt_scene *scene, t_rt_ray *ray, t_vec2i pixs);
 
 void		rt_ray_cast(t_rt_scene *scene, t_rt_ray *ray, t_rt_hit *hit);
 
-bool	rt_hit_update(double t, t_rt_ray ray, t_rt_object *obj, t_rt_hit *hit);
+void		rt_ray_cast_debug(t_rt_scene *scene, t_rt_ray *ray, t_rt_hit *hit);
+
+bool		rt_hit_update(double t, t_rt_ray ray, t_rt_object *obj, t_rt_hit *hit);
 
 #endif // RENDERER_H

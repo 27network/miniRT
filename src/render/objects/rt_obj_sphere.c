@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/19 14:49:44 by rgramati          #+#    #+#             */
-/*   Updated: 2024/04/23 21:48:13 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/04/24 16:25:31 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,6 @@
 #include <rt/object/sphere.h>
 
 bool	rt_obj_sphere_delta(
-	t_rt_ray ray,
-	t_rt_object *obj,
 	t_rt_hit *hit,
 	double *eq_params)
 {
@@ -26,14 +24,18 @@ bool	rt_obj_sphere_delta(
 
 	t = -eq_params[2] / (2 * eq_params[0]);
 	if (fabs(eq_params[3]) < EPSILON)
-		return (rt_hit_update(t, ray, obj, hit));
+	{
+		hit->dist = t;
+		return (true);
+	}
 	delta_root = sqrt(eq_params[3]);
 	t = ((-eq_params[1] + delta_root) / (2 * eq_params[0]));
 	if (t > ((-eq_params[1] - delta_root) / (2 * eq_params[0])))
 		t = ((-eq_params[1] - delta_root) / (2 * eq_params[0]));
 	if (t < 0)
 		return (false);
-	return (rt_hit_update(t, ray, obj, hit));
+	hit->dist = t;
+	return (true);
 }
 
 bool	rt_obj_sphere_intersect(
@@ -52,7 +54,7 @@ bool	rt_obj_sphere_intersect(
 	eq_params[3] = ft_fpow(eq_params[1], 2) - (4 * eq_params[0] * eq_params[2]);
 	if (eq_params[3] < 0 || fabs(eq_params[0]) < EPSILON)
 		return (false);
-	return (rt_obj_sphere_delta(ray, obj, hit, eq_params));
+	return (rt_obj_sphere_delta(hit, eq_params));
 }
 
 t_vec3d	rt_obj_sphere_norm(

@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/19 19:18:01 by rgramati          #+#    #+#             */
-/*   Updated: 2024/04/23 21:05:20 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/04/24 16:27:02 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,10 @@ bool	rt_obj_plane_intersect(
 	{
 		t = ft_vec3d_dot(ft_vec3d_sub(obj->position, ray.origin), norm) / d;
 		if (ft_fabs(t) > EPSILON && t >= 0)
-			return (rt_hit_update(t, ray, obj, hit));
+		{
+			hit->dist = t;
+			return (true);
+		}
 	}
 	return (false);
 }
@@ -39,5 +42,13 @@ t_vec3d	rt_obj_plane_norm(
 	t_rt_hit hit)
 {
 	(void) ray;
-	return (((t_rt_obj_plane *)hit.hit_object->options)->norm);
+	t_vec3d			norm;
+	t_rt_obj_plane	*plane;
+
+	plane = ((t_rt_obj_plane *)hit.hit_object->options);
+	if (ft_vec3d_dot(ray.direction, plane->norm) > 0.0)
+		norm = ft_vec3d(0.0f, 0.0f, 0.0f);
+	else
+		norm = plane->norm;
+	return (norm);
 }
