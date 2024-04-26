@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/19 15:03:08 by rgramati          #+#    #+#             */
-/*   Updated: 2024/04/24 18:22:06 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/04/25 18:19:33 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,17 +46,17 @@ void	rt_ray_cast(t_rt_scene *scene, t_rt_ray *ray, t_rt_hit *hit)
 void	rt_ray_cast_debug(t_rt_scene *scene, t_rt_ray *ray, t_rt_hit *hit)
 {
 	size_t		i;
-	t_color		color;
+	size_t		ptdr = 0;
 	t_rt_hit	closest;
 
 	i = 0;
-	size_t ptdr = 0;
 	hit->dist = INFINITY;
-	ft_printf("hit at %p\n", hit);
 	while (i < scene->objects_size)
 	{
 		if (scene->objects[i].options && scene->objects[i].intersect(*ray, &scene->objects[i], &closest))
 		{
+			ft_printf("Testing intersection on object %d:\n", i);
+			ft_printf("\n\tObject #%d::%p hit !\n", i, scene->objects[i]);
 			hit->hit = true;
 			if (closest.dist <= hit->dist)
 			{
@@ -64,20 +64,14 @@ void	rt_ray_cast_debug(t_rt_scene *scene, t_rt_ray *ray, t_rt_hit *hit)
 				ptdr = i;
 				hit->dist = closest.dist;
 				hit->position = ft_vec3d_add(ray->origin, ft_vec3d_mult(ray->direction, hit->dist));
+				ft_printf("\tUpdating closest hit: Object #%d::%p closest distance = %f, closest hit position {%6f, %6f, %6f}\n", i, hit->hit_object, hit->dist, hit->position.x, hit->position.y, hit->position.z);
 			}
-			color = rt_obj_color(scene, *hit, hit->hit_object->norm(*ray, *hit));
-			// ft_printf("rt_obj_color(%p, %p, (%p)->norm(%p, %p));\n", scene, hit, hit->hit_object, ray, hit);
-			// ft_printf("\t%p[%2d] - closest at : {%6f, %6f, %6f} distance = %10f :: color = %X\n\n", scene->objects + i, i, hit->position.x, hit->position.y, hit->position.z, hit->dist, rt_color_argb(color));
+			ft_printf("\n");
 		}
 		i++;
 	}
 	if (hit->hit)
-	{
-		ft_printf("Final hit at %f on object #%d = %p\n", hit->dist, ptdr, hit->hit_object);
-		color = rt_obj_color(scene, *hit, hit->hit_object->norm(*ray, *hit));
-		// ft_printf("rt_obj_color(%p, %p, (%p)->norm(%p, %p));\n", scene, hit, hit->hit_object, ray, hit);
-		// ft_printf("%p {OBJECT:%p} FINAL COLOR = %X :: %3d %3d %3d\n", hit, hit->hit_object, rt_color_argb(color), color.r, color.g, color.b);
-	}
+		ft_printf("FINAL hit : Object #%d::%p distance = %f\n", ptdr, hit->hit_object, hit->dist);
 }
 
 void	rt_ray_init(t_rt_scene *scene, t_rt_ray *ray, t_vec2i pixs)

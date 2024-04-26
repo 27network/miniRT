@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 21:05:47 by rgramati          #+#    #+#             */
-/*   Updated: 2024/04/24 17:50:05 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/04/25 18:25:45 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,12 +76,33 @@ t_color_norm	rt_color_mult(t_color_norm c1, t_color_norm c2, bool gamma)
 	result.b = c1.b * c2.b;
 	if (gamma)
 	{
-		result.a = sqrt(result.a);
 		result.r = sqrt(result.r);
 		result.g = sqrt(result.g);
 		result.b = sqrt(result.b);
 	}
 	return (result);
+}
+
+extern bool g_debug;
+
+bool	rt_color_occlusion(t_rt_scene *scene, t_rt_hit hit, t_vec3d light_dir)
+{
+	t_rt_ray	s_ray;
+	t_rt_hit	s_hit;
+	size_t		i;
+	
+	i = 0;
+	s_ray = (t_rt_ray){.color = rt_color(0xFF000000), .origin = hit.position, .direction = light_dir, .bounces = 0};
+	if (g_debug)
+	{
+		rt_ray_cast_debug(scene, &s_ray, &s_hit);
+		ft_printf("[%6f, %6f, %6f]\n", s_hit.position.x, s_hit.position.y, s_hit.position.z);
+	}
+	else
+		rt_ray_cast(scene, &s_ray, &s_hit);
+	if (hit.hit_object == s_hit.hit_object)
+		return (false);
+	return (ft_vec3d_len(light_dir) - ft_vec3d_len(ft_vec3d_sub(hit.position, s_hit.position)) > 0.0f);
 }
 
 void	rt_color_diffuse(t_rt_scene *scene, t_rt_hit hit, t_vec3d norm, t_color *c)
@@ -92,8 +113,12 @@ void	rt_color_diffuse(t_rt_scene *scene, t_rt_hit hit, t_vec3d norm, t_color *c)
 	double			dratio;
 	t_color_norm	result;
 
+	*c = rt_color(0xFF000000);
 	light = (t_rt_object) scene->lights[0];
-	light_dir = ft_vec3d_norm(ft_vec3d_sub(light.position, hit.position));
+	light_dir = ft_vec3d_sub(light.position, hit.position);
+	if (rt_color_occlusion(scene, hit, light_dir))
+		return ;
+	light_dir = ft_vec3d_norm(light_dir);
 	dratio = ft_vec3d_dot(norm, light_dir);
 	if (dratio < 0.0f)
 		dratio = 0.0f;
@@ -135,19 +160,6 @@ void	rt_color_ambient(t_rt_scene *scene, t_rt_hit hit, t_color *c, bool printshi
 void	rt_color_specular(t_color *c)
 {
 	(void) c;
-}
-
-t_color	rt_obj_color_debug(t_rt_scene *scene, t_rt_hit hit, t_vec3d norm)
-{
-	t_color	result;
-
-	(void) norm;
-	(void) scene;
-	// if (hit.hit_object->type != RT_OBJ_LIGHT)
-	rt_color_diffuse(scene, hit, norm, &result);
-	// rt_color_specular(&result);
-	rt_color_ambient(scene, hit, &result, true);
-	return (result);
 }
 
 t_color	rt_obj_color(t_rt_scene *scene, t_rt_hit hit, t_vec3d norm)

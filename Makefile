@@ -6,7 +6,7 @@
 #    By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/08/06 21:19:50 by kiroussa          #+#    #+#              #
-#    Updated: 2024/04/23 15:04:17 by rgramati         ###   ########.fr        #
+#    Updated: 2024/04/26 16:02:17 by rgramati         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,6 +25,7 @@ SRC				=	error/rt_err.c						\
 					render/debug/rt_ray_debugger.c		\
 					render/objects/rt_obj_box.c			\
 					render/objects/rt_obj_camera.c		\
+					render/objects/rt_obj_cone.c		\
 					render/objects/rt_obj_cylinder.c	\
 					render/objects/rt_obj_light.c		\
 					render/objects/rt_obj_plane.c		\

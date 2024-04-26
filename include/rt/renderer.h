@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 07:50:09 by kiroussa          #+#    #+#             */
-/*   Updated: 2024/04/24 16:32:50 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/04/25 16:38:28 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,5 +103,7 @@ void		rt_ray_cast(t_rt_scene *scene, t_rt_ray *ray, t_rt_hit *hit);
 void		rt_ray_cast_debug(t_rt_scene *scene, t_rt_ray *ray, t_rt_hit *hit);
 
 bool		rt_hit_update(double t, t_rt_ray ray, t_rt_object *obj, t_rt_hit *hit);
+
+bool		rt_color_occlusion(t_rt_scene *scene, t_rt_hit hit, t_vec3d light_dir);
 
 #endif // RENDERER_H

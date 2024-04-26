@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 18:37:09 by rgramati          #+#    #+#             */
-/*   Updated: 2024/04/23 18:52:37 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/04/26 16:39:18 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,18 +17,18 @@
 
 typedef struct s_color
 {
-    uint8_t a;
-    uint8_t r;
-    uint8_t g;
-    uint8_t b;
+	uint8_t a;
+	uint8_t r;
+	uint8_t g;
+	uint8_t b;
 }   t_color;
 
 typedef struct s_color_norm
 {
-    double	a;
-    double	r;
-    double	g;
-    double	b;
+	double	a;
+	double	r;
+	double	g;
+	double	b;
 }   t_color_norm; 
 
 t_color			rt_color(uint32_t argb);
