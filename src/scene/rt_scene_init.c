@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 07:48:48 by kiroussa          #+#    #+#             */
-/*   Updated: 2024/04/25 16:01:20 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/04/26 16:48:54 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 #include <rt/error.h>
 #include <rt/renderer.h>
 #include <rt/object/camera.h>
+#include <rt/object/cone.h>
 #include <rt/object/cylinder.h>
 #include <rt/object/plane.h>
 #include <rt/object/sphere.h>
@@ -86,6 +87,11 @@ t_rt_object	*rt_object_init(t_rt_object *obj, t_rt_object_type type)
 	if (type == RT_OBJ_CYLINDER)
 	{
 		obj->intersect = &rt_obj_cylinder_intersect;
+		obj->norm = &rt_obj_cylinder_norm;
+	}
+	if (type == RT_OBJ_CONE)
+	{
+		obj->intersect = &rt_obj_cone_intersect;
 		obj->norm = &rt_obj_cylinder_norm;
 	}
 	return (obj);
@@ -159,11 +165,11 @@ t_rt_error	rt_scene_example(t_rt_scene *scene)
 	back_wall->options = rt_obj_plane_init((t_vec3d){0.0f, 0.0f, -1.0f});
 	back_wall->color = rt_get_random_color(0);
 
-	t_rt_object	*cylinder;
-	cylinder = rt_object_init(&scene->objects[4], RT_OBJ_CYLINDER);
-	rt_obj_set_pos(cylinder, 0.0f, -2.0f, 5.0f);
-	cylinder->options = rt_obj_cylinder_init(1.0f, 4.0f, ft_vec3d_norm((t_vec3d){4.0f, 1.0f, 2.5f}));
-	cylinder->color = rt_get_random_color(0);
+	t_rt_object	*cone;
+	cone = rt_object_init(&scene->objects[4], RT_OBJ_CONE);
+	rt_obj_set_pos(cone, 0.0f, 0.0f, 5.0f);
+	cone->options = rt_obj_cone_init(1.0f, 4.0f, ft_vec3d_norm((t_vec3d){0.0f, 1.0f, 0.0f}), RT_PI / 6.0f);
+	cone->color = rt_get_random_color(0);
 
 	t_rt_object	*sphere;
 	sphere = rt_object_init(&scene->objects[5], RT_OBJ_SPHERE);

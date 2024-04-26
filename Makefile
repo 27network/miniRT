@@ -6,7 +6,7 @@
 #    By: kiroussa <oss@xtrm.me>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/08/06 21:19:50 by kiroussa          #+#    #+#              #
-#    Updated: 2024/04/26 16:53:55 by kiroussa         ###   ########.fr        #
+#    Updated: 2024/04/26 16:57:01 by kiroussa         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,6 +27,7 @@ SRC				=	error/rt_err.c						\
 					render/debug/rt_ray_debugger.c		\
 					render/objects/rt_obj_box.c			\
 					render/objects/rt_obj_camera.c		\
+					render/objects/rt_obj_cone.c		\
 					render/objects/rt_obj_cylinder.c	\
 					render/objects/rt_obj_light.c		\
 					render/objects/rt_obj_plane.c		\

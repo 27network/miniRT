@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 14:43:52 by rgramati          #+#    #+#             */
-/*   Updated: 2024/04/24 21:05:57 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/04/25 18:35:15 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ void	rt_render_scene(t_rt_renderer *renderer)
 {
 	t_rt_mlx_data	mlx;
 	t_color			pixel;
+	unsigned int	image[2073600];
 	t_vec2i			coords;
 
 	mlx = *renderer->mlx;
@@ -66,8 +67,15 @@ void	rt_render_scene(t_rt_renderer *renderer)
 		while (++coords.y < renderer->scene->height)
 		{
 			pixel = rt_get_color(renderer->scene, coords.x, coords.y);
-			mlx_set_image_pixel(mlx.rt_mlx, mlx.rt_imgs[0], coords.x, coords.y, rt_color_argb(pixel));
+			image[coords.x * renderer->scene->width + coords.y] = rt_color_argb(pixel);
 		}
+	}
+	coords = (t_vec2i){.x = -1, .y = -1};
+	while (++coords.x < renderer->scene->width)
+	{
+		coords.y = -1;
+		while (++coords.y < renderer->scene->height)
+			mlx_set_image_pixel(mlx.rt_mlx, mlx.rt_imgs[0], coords.x, coords.y, image[coords.x * renderer->scene->width + coords.y]);
 	}
 	if (!(renderer->scene->rt_flags & RT_RAY_DEBUG))
 		mlx_put_image_to_window(mlx.rt_mlx, mlx.rt_win, mlx.rt_imgs[0], 0, 0);

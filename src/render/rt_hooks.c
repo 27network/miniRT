@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 11:10:38 by rgramati          #+#    #+#             */
-/*   Updated: 2024/04/24 19:48:04 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/04/25 18:20:17 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,6 +103,8 @@ int	rt_keydown_event(int key, void *render)
 	return (0);
 }
 
+bool g_debug = false;
+
 t_color	rt_get_random_color(int toclose);
 
 int rt_mousedown_event(int key, void *render)
@@ -116,10 +118,21 @@ int rt_mousedown_event(int key, void *render)
 	mlx_mouse_get_pos(renderer->mlx->rt_mlx, params, params + 1);
 	if (key == 1)
 	{
-		ft_printf("clic gauche [%5d %5d]\n", params[0], params[1]);
 		rt_ray_init(renderer->scene, &dray, (t_vec2i){.x = *params, .y = *(params + 1)});
-		ft_printf("DEBUG RAY:\n");
+		for (int i = 0; i < 211; i++)
+			ft_printf("-");
+		ft_printf("\nDEBUG RAY:\n");
+		for (int i = 0; i < 211; i++)
+			ft_printf("-");
+		g_debug = true;
 		rt_ray_cast_debug(renderer->scene, &dray, &dhit);
+		for (int i = 0; i < 211; i++)
+			ft_printf("-");
+		ft_printf("\nSHADOW RAY:\n");
+		for (int i = 0; i < 211; i++)
+			ft_printf("-");
+		rt_color_occlusion(renderer->scene, dhit, ft_vec3d_sub(((t_rt_object) renderer->scene->lights[0]).position, dhit.position));
+		g_debug = false;
 		dhit.hit_object->color = rt_get_random_color(0);
 	}
 	return (0);
