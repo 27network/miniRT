@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/19 14:49:44 by rgramati          #+#    #+#             */
-/*   Updated: 2024/04/26 16:25:41 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/04/26 19:26:26 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ t_vec3d	rt_obj_sphere_norm(
 	t_vec3d	norm;
 
 	norm = ft_vec3d_sub(hit.position, hit.hit_object->position);
-	if (ft_vec3d_dot(ray.direction, norm) > 0.0f)
+	if (ft_fabs(ft_vec3d_dot(ray.direction, norm)) < EPSILON)
 		norm = (t_vec3d) {-norm.x, -norm.y, -norm.z};
 	return (norm);
 }

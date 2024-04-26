@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 07:51:17 by kiroussa          #+#    #+#             */
-/*   Updated: 2024/04/24 16:03:59 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/04/26 21:41:57 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,10 @@ void	rt_start_rendering(t_rt_scene *s, t_rt_mlx_data *m, t_rt_renderer *r)
 	mlx_on_event(m->rt_mlx, m->rt_win,
 		MLX_KEYDOWN, rt_keydown_event, r);
 	mlx_on_event(m->rt_mlx, m->rt_win,
+		MLX_KEYUP, rt_keyup_event, r);
+	mlx_on_event(m->rt_mlx, m->rt_win,
 		MLX_MOUSEDOWN, rt_mousedown_event, r);
+	mlx_set_fps_goal(m->rt_mlx, 120);
 	mlx_loop_hook(m->rt_mlx, rt_render_update, r);
 	rt_scene_example(s);
 	mlx_loop(m->rt_mlx);
@@ -69,6 +72,7 @@ t_rt_error	rt_mlx_init(t_rt_scene *s, t_rt_mlx_data *m)
 
 t_rt_error	rt_renderer_init(t_rt_scene *s, t_rt_mlx_data *m, t_rt_renderer *r)
 {
+	ft_memset(r->input_map, 0, sizeof(r->input_map));
 	r->scene = s;
 	r->mlx = m;
 	r->status = RT_RS_HOME;

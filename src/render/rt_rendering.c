@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 14:43:52 by rgramati          #+#    #+#             */
-/*   Updated: 2024/04/25 18:35:15 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/04/26 22:17:01 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,9 +40,9 @@ t_color	rt_get_color(t_rt_scene *scene, int x, int y)
 		rt_ray_init(scene, &ray, (t_vec2i){.x = x, .y = y});
 		hit = (t_rt_hit) {(t_vec3d) {0.0f, 0.0f, 0.0f}, NULL, false, INFINITY};
 		rt_ray_cast(scene, &ray, &hit);
-		color = rt_color(0x00000000); // TO REMOVE -> BACKGROUND COLOR IF NO HIT
+		color = rt_color(0xFF000000); // TO REMOVE -> BACKGROUND COLOR IF NO HIT
 		if (hit.hit)
-			color = rt_obj_color(scene, hit, hit.hit_object->norm(ray, hit));
+			color = rt_obj_color(scene, hit, ray, hit.hit_object->norm(ray, hit));
 		pixels[y / scene->pratio] = color; 
 		if (scene->rt_flags & RT_RAY_DEBUG && hit.hit_object && hit.hit_object->type != RT_OBJ_PLANE)
 			rt_render_ray(scene, ray, hit, color);
@@ -56,11 +56,11 @@ void	rt_render_scene(t_rt_renderer *renderer)
 {
 	t_rt_mlx_data	mlx;
 	t_color			pixel;
-	unsigned int	image[2073600];
 	t_vec2i			coords;
+	unsigned int	image[2073600];
 
 	mlx = *renderer->mlx;
-	coords = (t_vec2i){.x = -1, .y = -1};
+	coords = ft_vec2i(-1, -1);
 	while (++coords.x < renderer->scene->width)
 	{
 		coords.y = -1;
@@ -70,18 +70,16 @@ void	rt_render_scene(t_rt_renderer *renderer)
 			image[coords.x * renderer->scene->width + coords.y] = rt_color_argb(pixel);
 		}
 	}
-	coords = (t_vec2i){.x = -1, .y = -1};
+	coords = ft_vec2i(-1, -1);
 	while (++coords.x < renderer->scene->width)
 	{
 		coords.y = -1;
 		while (++coords.y < renderer->scene->height)
 			mlx_set_image_pixel(mlx.rt_mlx, mlx.rt_imgs[0], coords.x, coords.y, image[coords.x * renderer->scene->width + coords.y]);
 	}
-	if (!(renderer->scene->rt_flags & RT_RAY_DEBUG))
-		mlx_put_image_to_window(mlx.rt_mlx, mlx.rt_win, mlx.rt_imgs[0], 0, 0);
-	else
-		mlx_put_image_to_window(mlx.rt_mlx, mlx.rt_win, mlx.rt_imgs[1], 0, 0);
-	return ;
+	mlx_put_image_to_window(mlx.rt_mlx, mlx.rt_win, mlx.rt_imgs[0], 0, 0);
+	if ((renderer->scene->rt_flags & RT_RAY_DEBUG))
+		mlx_put_image_to_window(mlx.rt_mlx, mlx.rt_win, mlx.rt_imgs[1], renderer->scene->width - (renderer->scene->width / 4), 0);
 }
 
 void	rt_render_editor(__attribute_maybe_unused__ t_rt_renderer *renderer)

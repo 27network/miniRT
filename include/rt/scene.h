@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   scene.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kiroussa <oss@xtrm.me>                     +#+  +:+       +#+        */
+/*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 02:33:41 by kiroussa          #+#    #+#             */
-/*   Updated: 2024/04/26 16:50:53 by kiroussa         ###   ########.fr       */
+/*   Updated: 2024/04/26 19:35:23 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ void		rt_scene_free(t_rt_scene *scene);
 
 t_rt_error	rt_scene_example(t_rt_scene *scene);
 
-t_color		rt_obj_color(t_rt_scene *scene, t_rt_hit hit, t_vec3d norm);
+t_color		rt_obj_color(t_rt_scene *scene, t_rt_hit hit, t_rt_ray ray, t_vec3d norm);
 
 /* TRANSFORM **************************************************************** */
 
@@ -93,5 +93,7 @@ void		rt_obj_set_rot(t_rt_object *obj, double x, double y, double z);
 
 void		rt_render_ray(t_rt_scene *scene, t_rt_ray ray, t_rt_hit hit,
 				t_color color);
+
+void		rt_swap(double *a, double *b);
 
 #endif // SCENE_H

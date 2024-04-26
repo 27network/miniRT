@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 13:39:30 by rgramati          #+#    #+#             */
-/*   Updated: 2024/04/25 15:56:40 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/04/26 17:53:13 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,6 @@
 #include <ft/math.h>
 #include <ft/print.h>
 #include <rt/object/cylinder.h>
-
-void	rt_swap(double *a, double *b)
-{
-	double	tmp;
-
-	tmp = *a;
-	*a = *b;
-	*b = tmp;
-}
 
 bool	rt_obj_cylinder_delta(
 	t_rt_obj_cylinder *cyl,

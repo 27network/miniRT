@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/19 15:03:08 by rgramati          #+#    #+#             */
-/*   Updated: 2024/04/25 18:19:33 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/04/26 21:16:43 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,17 @@ void	rt_ray_cast(t_rt_scene *scene, t_rt_ray *ray, t_rt_hit *hit)
 	t_rt_hit	closest;
 
 	i = 0;
+	// if (scene->lights->intersect(*ray, scene->lights, &closest))
+	// {
+	// 	hit->hit = false;
+	// 	if (closest.dist < hit->dist)
+	// 	{
+	// 		hit->hit_object = scene->lights;
+	// 		hit->dist = closest.dist;
+	// 		hit->position = ft_vec3d_add(ray->origin, ft_vec3d_mult(ray->direction, closest.dist));
+	// 	}
+	// 	return ;
+	// }
 	hit->dist = INFINITY;
 	while (i < scene->objects_size)
 	{

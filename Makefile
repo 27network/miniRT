@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: kiroussa <oss@xtrm.me>                     +#+  +:+       +#+         #
+#    By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/08/06 21:19:50 by kiroussa          #+#    #+#              #
-#    Updated: 2024/04/26 16:57:01 by kiroussa         ###   ########.fr        #
+#    Updated: 2024/04/26 21:59:50 by rgramati         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -63,10 +63,13 @@ CFLAGS			= 	-Wall -Wextra -Werror
 ifeq ($(FUNMODE), 1)
 	CFLAGS		+=	-O3
 endif
-ifeq ($(DEBUG), 1)
-	CFLAGS		+=	-g3
-endif
 COPTS			= 	-I $(INCLUDE_DIR) -I $(MLX_DIR)/$(INCLUDE_DIR)s -I $(LIBFT_DIR)/$(INCLUDE_DIR)
+LDFLAGS			=	-lSDL2 -lm
+
+ifeq ($(DEBUG), 1)
+CFLAGS			+=	-gdwarf-4 -g3
+LDFLAGS			+=	-rdynamic
+endif
 
 MAKE_CMD		=	make
 
@@ -83,7 +86,7 @@ VALGRIND_PROGRAM_ARGS	=	./scenes/valid/minimalist.rt
 all:			$(NAME)
 
 $(NAME):		$(LIBFT) $(MLX) $(OBJ)
-	$(CC) $(CFLAGS) $(COPTS) -o $(NAME) $(OBJ) $(LIBFT) $(MLX) -lSDL2 -lm $(LINKER_ARGS)
+	$(CC) $(CFLAGS) $(COPTS) -o $(NAME) $(OBJ) $(LIBFT) $(MLX) $(LDFLAGS)
 
 bonus:			COPTS += -DMINIRT_BONUS
 bonus:			remake
@@ -92,7 +95,7 @@ rt:				COPTS += -DRT_MODE
 rt:				remake
 
 $(NAME_BONUS):	$(LIBFT) $(MLX) $(OBJ_BONUS)
-	$(CC) $(CFLAGS) $(COPTS) -o $(NAME_BONUS) $(OBJ_BONUS) $(LIBFT) $(MLX) -lSDL2 -lm $(LINKER_ARGS)
+	$(CC) $(CFLAGS) $(COPTS) -o $(NAME_BONUS) $(OBJ_BONUS) $(LIBFT) $(MLX) $(LDFLAGS)
 
 $(LIBFT):
 	$(MAKE_CMD) -j -C $(LIBFT_DIR) CFLAGS="$(CFLAGS)" all DEBUG="$(DEBUG)"

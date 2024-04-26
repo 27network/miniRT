@@ -6,21 +6,21 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 14:08:19 by rgramati          #+#    #+#             */
-/*   Updated: 2024/04/25 17:23:49 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/04/26 21:40:28 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <ft/math/vector.h>
+#include <ft/print.h>
 #include <rt/renderer.h>
 
 int	mapx(t_vec3d cam, double x, int start, int end)
 {
-	return (((x + 7.1f - cam.x) / 14.2f) * (end - start));
+	return (((x + 7.1f - cam.x) / 14.2f) * (end - start) / 4.0f);
 }
 
 int	mapy(t_vec3d cam, double y, int start, int end)
 {
-	return (((8.0f - (y - cam.z)) / 8.0f) * (end - start));
+	return (((8.0f - (y - cam.z)) / 8.0f) * (end - start) / 4.0f);
 }
 
 void	*rt_getmlx(int what, t_rt_mlx_data *data)
@@ -63,7 +63,7 @@ void	rt_trace_line(t_rt_scene *scene, t_vec2i start, t_vec2i end, t_color color)
 		{
 			if (pos.x > 0 && pos.x < scene->width - 1 && pos.y > 0 && pos.y < scene->height - 1)
 					mlx_set_image_pixel(rt_getmlx(0b0001, NULL), rt_getmlx(0b1000, NULL), start.x, start.y, 0xFFFFFFFF);
-			mlx_set_image_pixel(rt_getmlx(0b0001, NULL), rt_getmlx(0b1000, NULL), pos.x, pos.y, rt_color_argb(color));
+			mlx_set_image_pixel(rt_getmlx(0b0001, NULL), rt_getmlx(0b1000, NULL), pos.x, pos.y, color.argb);
 		}
 		pos.x += inc.x;
 		pos.y += inc.y;
@@ -76,7 +76,7 @@ void	rt_render_ray(t_rt_scene *scene, t_rt_ray ray, t_rt_hit hit, t_color color)
 	t_vec2i	start;
 	t_vec2i end;
 
-	start = (t_vec2i){scene->width / 2, scene->height};
+	start = (t_vec2i){scene->width / 8, scene->height / 4};
 	if (hit.hit)
 		end = (t_vec2i){.x = mapx(scene->camera.position, hit.position.x, 0, scene->width),
 						.y = mapy(scene->camera.position, hit.position.z, 0, scene->height)};
@@ -84,7 +84,7 @@ void	rt_render_ray(t_rt_scene *scene, t_rt_ray ray, t_rt_hit hit, t_color color)
 	{
 		end = (t_vec2i){.x = mapx(scene->camera.position, (8.0f / ray.direction.x) * ray.direction.y, 0, scene->width - 1),
 						.y = 0};
-		color = rt_color(0x00000000);
+		color = rt_color(0xFF000000);
 	}
 	rt_trace_line(scene, end, start, color);
 }
