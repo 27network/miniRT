@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   rt_colors.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kiroussa <oss@xtrm.me>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 21:05:47 by rgramati          #+#    #+#             */
-/*   Updated: 2024/04/24 17:50:05 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/04/26 16:51:29 by kiroussa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,34 +15,6 @@
 #include <rt/renderer.h>
 #include <rt/object/light.h>
 #include <ft/print.h>
-
-t_color	rt_color(uint32_t argb)
-{
-	t_color	result;
-
-	result.b = argb & 255;
-	argb >>= 8;
-	result.g = argb & 255;
-	argb >>= 8;
-	result.r = argb & 255;
-	argb >>= 8;
-	result.a = argb & 255;
-	return (result);
-}
-
-uint32_t	rt_color_argb(t_color color)
-{
-	uint32_t	result;
-
-	result = color.a;
-	result <<= 8;
-	result += color.r;
-	result <<= 8;
-	result += color.g;
-	result <<= 8;
-	result += color.b;
-	return (result);
-}
 
 t_color	rt_color_from_norm(t_color_norm color)
 {
@@ -101,16 +73,13 @@ void	rt_color_diffuse(t_rt_scene *scene, t_rt_hit hit, t_vec3d norm, t_color *c)
 	dratio = ft_fmin(1.0f, dratio);
 	dcolor = light.color;
 	result = rt_color_to_norm(dcolor);
-	result = rt_color_mult(result, (t_color_norm){dratio, dratio, dratio, dratio}, 0);
+	result = rt_color_mult(result, (t_color_norm){dratio, dratio, dratio,
+			dratio}, 0);
 	*c = rt_color_from_norm(result);
 }
 
-void	rt_color_ambient(t_rt_scene *scene, t_rt_hit hit, t_color *c, bool printshit)
+void	rt_color_ambient(t_rt_scene *scene, t_rt_hit hit, t_color *c)
 {
-	(void) scene;
-	(void) hit;
-	(void) c;
-
 	t_color_norm	current;
 	t_color_norm	obj_color;
 	t_color_norm	ambient;
@@ -125,40 +94,23 @@ void	rt_color_ambient(t_rt_scene *scene, t_rt_hit hit, t_color *c, bool printshi
 	current.g = ft_fmin((ambient.g * brightness) + current.g, 1.0f);
 	current.b = ft_fmin((ambient.b * brightness) + current.b, 1.0f);
 	color = hit.hit_object->color;
-	if (printshit)
-		ft_printf("color from %p: %d %d %d\n", hit.hit_object, color.r, color.g, color.b);
 	obj_color = rt_color_to_norm(color);
-	*c = rt_color_from_norm(rt_color_mult(current, obj_color, scene->rt_flags & RT_COL_GAMMA));
+	*c = rt_color_from_norm(rt_color_mult(current, obj_color,
+				scene->rt_flags & RT_COL_GAMMA));
 }
-
 
 void	rt_color_specular(t_color *c)
 {
 	(void) c;
 }
 
-t_color	rt_obj_color_debug(t_rt_scene *scene, t_rt_hit hit, t_vec3d norm)
-{
-	t_color	result;
-
-	(void) norm;
-	(void) scene;
-	// if (hit.hit_object->type != RT_OBJ_LIGHT)
-	rt_color_diffuse(scene, hit, norm, &result);
-	// rt_color_specular(&result);
-	rt_color_ambient(scene, hit, &result, true);
-	return (result);
-}
-
 t_color	rt_obj_color(t_rt_scene *scene, t_rt_hit hit, t_vec3d norm)
 {
 	t_color	result;
 
-	(void) norm;
-	(void) scene;
 	// if (hit.hit_object->type != RT_OBJ_LIGHT)
 	rt_color_diffuse(scene, hit, norm, &result);
 	// rt_color_specular(&result);
-	rt_color_ambient(scene, hit, &result, false);
+	rt_color_ambient(scene, hit, &result);
 	return (result);
 }

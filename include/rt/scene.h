@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   scene.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kiroussa <oss@xtrm.me>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 02:33:41 by kiroussa          #+#    #+#             */
-/*   Updated: 2024/04/23 21:57:29 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/04/26 16:50:53 by kiroussa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,18 +16,16 @@
 # include <ft/math/vector.h>
 # include <rt/error.h>
 # include <stddef.h>
-# include <rt/colors.h>
+# include <rt/color.h>
 
-typedef struct s_rt_ray t_rt_ray;
-
-typedef struct s_rt_object t_rt_object;
-
-typedef struct s_rt_hit t_rt_hit;
+typedef struct s_rt_ray		t_rt_ray;
+typedef struct s_rt_object	t_rt_object;
+typedef struct s_rt_hit		t_rt_hit;
 
 typedef enum e_rt_flag
 {
-	RT_RAY_DEBUG = 0x001,
-	RT_COL_GAMMA = 0x010,
+	RT_RAY_DEBUG = 0b001,
+	RT_COL_GAMMA = 0b010,
 }	t_rt_flag;
 
 typedef enum e_rt_object_type
@@ -42,9 +40,9 @@ typedef enum e_rt_object_type
 	RT_OBJ_CAMERA
 }	t_rt_object_type;
 
-typedef bool	t_intersect_fn(t_rt_ray ray, t_rt_object *obj, t_rt_hit *hit);
-
-typedef t_vec3d	t_hit_norm_fn(t_rt_ray ray, t_rt_hit hit);
+typedef bool				t_intersect_fn(t_rt_ray ray, t_rt_object *obj,
+								t_rt_hit *hit);
+typedef t_vec3d				t_hit_norm_fn(t_rt_ray ray, t_rt_hit hit);
 
 typedef struct s_rt_object
 {
@@ -83,10 +81,6 @@ t_rt_error	rt_scene_example(t_rt_scene *scene);
 
 t_color		rt_obj_color(t_rt_scene *scene, t_rt_hit hit, t_vec3d norm);
 
-t_color		rt_color(uint32_t argb);
-
-uint32_t	rt_color_argb(t_color color);
-
 /* TRANSFORM **************************************************************** */
 
 void		rt_scene_translate(t_rt_scene *scene, t_vec3d move);
@@ -97,6 +91,7 @@ void		rt_obj_set_rot(t_rt_object *obj, double x, double y, double z);
 
 /* DEBUGGER ***************************************************************** */
 
-void		rt_render_ray(t_rt_scene *scene, t_rt_ray ray, t_rt_hit hit, t_color color);
+void		rt_render_ray(t_rt_scene *scene, t_rt_ray ray, t_rt_hit hit,
+				t_color color);
 
 #endif // SCENE_H

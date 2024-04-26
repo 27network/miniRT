@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+         #
+#    By: kiroussa <oss@xtrm.me>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/08/06 21:19:50 by kiroussa          #+#    #+#              #
-#    Updated: 2024/04/23 15:04:17 by rgramati         ###   ########.fr        #
+#    Updated: 2024/04/26 16:53:55 by kiroussa         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,6 +22,8 @@ SRC				=	error/rt_err.c						\
 					parse/scene/rt_parse_line.c			\
 					parse/scene/rt_parse_scene.c		\
 					parse/rt_parse_error.c 				\
+					render/color/rt_color.c				\
+					render/color/rt_color_argb.c		\
 					render/debug/rt_ray_debugger.c		\
 					render/objects/rt_obj_box.c			\
 					render/objects/rt_obj_camera.c		\
