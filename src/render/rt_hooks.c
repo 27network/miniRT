@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 11:10:38 by rgramati          #+#    #+#             */
-/*   Updated: 2024/04/26 22:15:20 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/04/27 13:55:53 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,12 +35,28 @@ static void	rt_input_handle(t_rt_renderer *renderer)
 		rt_scene_translate(renderer->scene, (t_vec3d){0.0f, 0.0f, speed});
 }
 
+void	rt_clear_image(void *mlx, void *img, t_rt_scene *scene)
+{
+	int	x;
+	int	y;
+
+	x = 0;
+	while (x < scene->width / 4)
+	{
+		y = 0;
+		while (y < scene->height / 4)
+			mlx_set_image_pixel(mlx, img, x, y++, 0xBF000000);
+		x++;
+	}
+}
+
 int	rt_render_update(void *render)
 {
 	t_rt_renderer	*renderer;
 
 	renderer = (t_rt_renderer *)render;
 	rt_input_handle(renderer);
+	rt_clear_image(renderer->mlx->rt_mlx, renderer->mlx->rt_imgs[1], renderer->scene);
 	mlx_clear_window(renderer->mlx->rt_mlx, renderer->mlx->rt_win);
 	rt_do_rendering(renderer);
 	return (0);
@@ -59,20 +75,6 @@ int	rt_window_event(int key, void *mlx)
 	return (0);
 }
 
-void	rt_clear_image(void *mlx, void *img, t_rt_scene *scene)
-{
-	int	x;
-	int	y;
-
-	x = 0;
-	while (x < scene->width / 4)
-	{
-		y = 0;
-		while (y < scene->height / 4)
-			mlx_set_image_pixel(mlx, img, x, y++, 0xBF000000);
-		x++;
-	}
-}
 
 int rt_keyup_event(int key, void *param)
 {
@@ -89,7 +91,7 @@ int	rt_keydown_event(int key, void *render)
 	t_rt_renderer	*renderer;
 
 	renderer = (t_rt_renderer *)render;
-	rt_clear_image(renderer->mlx->rt_mlx, renderer->mlx->rt_imgs[1], renderer->scene);
+	// rt_clear_image(renderer->mlx->rt_mlx, renderer->mlx->rt_imgs[1], renderer->scene);
 	if (renderer->status == RT_RS_NONE)
 		renderer->status = RT_RS_HOME;
 	if (renderer->status == RT_RS_HOME && key == SDL_SCANCODE_RETURN)

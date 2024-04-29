@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 02:33:41 by kiroussa          #+#    #+#             */
-/*   Updated: 2024/04/26 19:35:23 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/04/27 19:41:51 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,9 @@ typedef enum e_rt_object_type
 	RT_OBJ_SPHERE,
 	RT_OBJ_CYLINDER,
 	RT_OBJ_PLANE,
-	RT_OBJ_TRIANGLE,
+	RT_OBJ_QUAD,
 	RT_OBJ_CONE,
+	RT_OBJ_TRIANGLE,
 	RT_OBJ_LIGHT,
 	RT_OBJ_CAMERA
 }	t_rt_object_type;

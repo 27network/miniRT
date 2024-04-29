@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 14:43:52 by rgramati          #+#    #+#             */
-/*   Updated: 2024/04/26 22:17:01 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/04/27 14:10:14 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ void	rt_render_scene(t_rt_renderer *renderer)
 	t_color			pixel;
 	t_vec2i			coords;
 	unsigned int	image[2073600];
-
+// 
 	mlx = *renderer->mlx;
 	coords = ft_vec2i(-1, -1);
 	while (++coords.x < renderer->scene->width)
@@ -79,7 +79,15 @@ void	rt_render_scene(t_rt_renderer *renderer)
 	}
 	mlx_put_image_to_window(mlx.rt_mlx, mlx.rt_win, mlx.rt_imgs[0], 0, 0);
 	if ((renderer->scene->rt_flags & RT_RAY_DEBUG))
-		mlx_put_image_to_window(mlx.rt_mlx, mlx.rt_win, mlx.rt_imgs[1], renderer->scene->width - (renderer->scene->width / 4), 0);
+	{
+		rt_trace_line(renderer->scene, (t_vec2i){0, 0}, (t_vec2i){renderer->scene->width / 4, 0}, rt_color(0xFFFFFFFF));
+		rt_trace_line(renderer->scene, (t_vec2i){renderer->scene->width / 4, 0}, (t_vec2i){renderer->scene->width / 4, renderer->scene->height / 4}, rt_color(0xFFFFFFFF));
+		rt_trace_line(renderer->scene, (t_vec2i){0, renderer->scene->height / 4}, (t_vec2i){renderer->scene->width / 4, renderer->scene->height / 4}, rt_color(0xFFFFFFFF));
+		rt_trace_line(renderer->scene, (t_vec2i){0, 0}, (t_vec2i){0, renderer->scene->height / 4}, rt_color(0xFFFFFFFF));
+		rt_trace_line(renderer->scene, (t_vec2i){0, renderer->scene->height / 4 - renderer->scene->width / 8}, (t_vec2i){renderer->scene->width / 8, renderer->scene->height / 4}, rt_color(0xFFFFFFFF));
+		rt_trace_line(renderer->scene, (t_vec2i){renderer->scene->width / 8, renderer->scene->height / 4}, (t_vec2i){renderer->scene->width / 4, renderer->scene->height / 4 - renderer->scene->width / 8}, rt_color(0xFFFFFFFF));
+		mlx_put_image_to_window(mlx.rt_mlx, mlx.rt_win, mlx.rt_imgs[1], renderer->scene->width - (renderer->scene->width / 4) - 1, 0);
+	}
 }
 
 void	rt_render_editor(__attribute_maybe_unused__ t_rt_renderer *renderer)

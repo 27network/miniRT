@@ -6,13 +6,14 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 19:21:15 by rgramati          #+#    #+#             */
-/*   Updated: 2024/04/26 18:00:37 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/04/27 19:47:09 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <ft/mem.h>
 #include <rt/object/camera.h>
 #include <rt/object/cone.h>
+#include <rt/object/quad.h>
 #include <rt/object/cylinder.h>
 #include <rt/object/light.h>
 #include <rt/object/plane.h>
@@ -101,4 +102,18 @@ t_rt_obj_cone	*rt_obj_cone_init(
 	cone->theta = theta;
 	cone->last_hit_on_edge = false;
 	return (cone);
+}
+
+t_rt_obj_quad	*rt_obj_quad_init(
+	t_vec3d norm,
+	t_vec3d size
+) {
+	t_rt_obj_quad	*quad;
+
+	quad = ft_calloc(1, sizeof(t_rt_obj_quad));
+	if (!quad)
+		return (NULL);
+	quad->norm = ft_vec3d_norm(norm);
+	quad->size = size;
+	return (quad);
 }

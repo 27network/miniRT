@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/19 14:49:44 by rgramati          #+#    #+#             */
-/*   Updated: 2024/04/26 19:26:26 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/04/28 16:24:57 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,9 +29,10 @@ bool	rt_obj_sphere_delta(
 		return (true);
 	}
 	delta_root = sqrt(eq_params[3]);
-	t = ((-eq_params[1] + delta_root) / (2 * eq_params[0]));
-	if (t > ((-eq_params[1] - delta_root) / (2 * eq_params[0])))
-		t = ((-eq_params[1] - delta_root) / (2 * eq_params[0]));
+
+	t = ((-eq_params[1] - delta_root) / (2 * eq_params[0]));
+	if (t < 0)
+		t = ((-eq_params[1] + delta_root) / (2 * eq_params[0]));
 	if (t < 0)
 		return (false);
 	hit->dist = t;
