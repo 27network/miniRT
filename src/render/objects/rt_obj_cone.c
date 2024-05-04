@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/26 16:01:40 by rgramati          #+#    #+#             */
-/*   Updated: 2024/04/29 15:50:52 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/05/01 20:22:02 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,10 +61,12 @@ bool    rt_obj_cone_intersect(
 	if (t_s[0] < 0.0f)
 		return (false);
 	hitpos = ft_vec3d_sub(ft_vec3d_add(ray.origin, ft_vec3d_mult(ray.direction, t_s[0])), obj->position);
-	if (ft_vec3d_len(hitpos) > cone->height)
+	if (ft_vec3d_len(hitpos) > (cone->height / cos(cone->theta)))
 		rt_swap(t_s, t_s + 1);
 	hitpos = ft_vec3d_sub(ft_vec3d_add(ray.origin, ft_vec3d_mult(ray.direction, t_s[0])), obj->position);
-	if (ft_vec3d_len(hitpos) > cone->height)
+	if (ft_vec3d_len(hitpos) > (cone->height / cos(cone->theta)))
+		return (false);
+	if (t_s[0] < 0.0f)
 		return (false);
 	hit->dist = t_s[0];
 	cone->last_hit_on_edge = true;
@@ -80,20 +82,21 @@ t_vec3d	rt_obj_cone_norm(
 	t_vec3d			norm;
 	double			t;
 
+	(void) ray;
 	cone = (t_rt_obj_cone *)hit.hit_object->options;
-	if (cone->last_hit_on_edge)
-	{
-		t = ft_vec3d_dot(cone->norm, ft_vec3d_sub(hit.position, hit.hit_object->position));
-		t = -t / ft_vec3d_dot(cone->norm, cone->norm);
-		contact = ft_vec3d_add(hit.hit_object->position, ft_vec3d_mult(cone->norm, -t));
-		norm = ft_vec3d_sub(hit.position, contact);
-	}
-	else
-	{
-		if (ft_vec3d_dot(ray.direction, cone->norm) < 0.0)
-			norm = ft_vec3d_mult(cone->norm, -1.0f);
-		else
-			norm = cone->norm;
-	}
+	// if (cone->last_hit_on_edge)
+	// {
+	t = ft_vec3d_dot(cone->norm, ft_vec3d_sub(hit.position, hit.hit_object->position));
+	t = -t / ft_vec3d_dot(cone->norm, cone->norm);
+	contact = ft_vec3d_add(hit.hit_object->position, ft_vec3d_mult(cone->norm, -t));
+	norm = ft_vec3d_sub(hit.position, contact);
+	// }
+	// else
+	// {
+	// 	if (ft_vec3d_dot(ray.direction, cone->norm) < 0.0)
+	// 		norm = ft_vec3d_mult(cone->norm, -1.0f);
+	// 	else
+	// 		norm = cone->norm;
+	// }
 	return (norm);
 }

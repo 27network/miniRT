@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 14:08:19 by rgramati          #+#    #+#             */
-/*   Updated: 2024/04/27 14:07:01 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/05/01 20:24:57 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,12 @@
 
 int	mapx(t_vec3d cam, double x, int start, int end)
 {
-	return (((x + 7.1f - cam.x) / 14.2f) * (end - start) / 4.0f);
+	return (((x + 100.0f - cam.x) / 200.0f) * (end - start) / 4.0f);
 }
 
 int	mapy(t_vec3d cam, double y, int start, int end)
 {
-	return (((8.0f - (y - cam.z)) / 8.0f) * (end - start) / 4.0f);
+	return (((160.0f - (y - cam.z)) / 160.0f) * (end - start) / 4.0f);
 }
 
 void	*rt_getmlx(int what, t_rt_mlx_data *data)

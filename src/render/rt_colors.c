@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 21:05:47 by rgramati          #+#    #+#             */
-/*   Updated: 2024/04/27 16:40:41 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/04/30 14:41:11 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,8 +86,8 @@ static void	rt_color_diffuse(
 	*c = rt_color_to_norm(rt_color(0xFF000000));
 	light = (t_rt_object) scene->lights[0];
 	light_dir = ft_vec3d_sub(light.position, hit.position);
-	if (rt_color_occlusion(scene, hit, light_dir, norm))
-		return ;
+	// if (rt_color_occlusion(scene, hit, light_dir, norm))
+	// 	return ;
 	light_dir = ft_vec3d_norm(light_dir);
 	dratio = ft_vec3d_dot(norm, light_dir);
 	if (dratio < 0.0f)

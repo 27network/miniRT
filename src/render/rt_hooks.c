@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 11:10:38 by rgramati          #+#    #+#             */
-/*   Updated: 2024/04/27 13:55:53 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/04/30 15:00:43 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,17 @@ int	rt_render_update(void *render)
 	rt_input_handle(renderer);
 	rt_clear_image(renderer->mlx->rt_mlx, renderer->mlx->rt_imgs[1], renderer->scene);
 	mlx_clear_window(renderer->mlx->rt_mlx, renderer->mlx->rt_win);
+	if (renderer->input_map[SDL_SCANCODE_W]
+		|| renderer->input_map[SDL_SCANCODE_A]
+		|| renderer->input_map[SDL_SCANCODE_S]
+		|| renderer->input_map[SDL_SCANCODE_D]
+		|| renderer->input_map[SDL_SCANCODE_LCTRL]
+		|| renderer->input_map[SDL_SCANCODE_LSHIFT])
+	{
+		renderer->scene->pratio = 16;
+	}
+	if (renderer->input_map[SDL_SCANCODE_F])
+		renderer->scene->pratio = 4;
 	rt_do_rendering(renderer);
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 13:39:30 by rgramati          #+#    #+#             */
-/*   Updated: 2024/04/26 17:53:13 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/05/01 19:36:38 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,21 +15,23 @@
 #include <ft/print.h>
 #include <rt/object/cylinder.h>
 
-bool	rt_obj_cylinder_delta(
+void	rt_obj_cylinder_delta(
 	t_rt_obj_cylinder *cyl,
 	t_rt_hit *hit,
 	double *t_s
 ) {
 	if (t_s[2] > t_s[1] || t_s[3] < t_s[0])
-		return (false);
+	{
+		t_s[4] = -1;
+		return ;
+	}
 	t_s[4] = ft_fmax(t_s[0], t_s[2]);
 	if (t_s[4] < 0)
 		t_s[4] = ft_fmin(t_s[1], t_s[3]);
 	if (t_s[4] <= 0)
-		return (false);
-	cyl->last_hit_on_edge = (t_s[2] < t_s[0]);
+		return ;
+	cyl->last_hit_on_edge = (t_s[2] > 0.0f && t_s[2] < t_s[0]);
 	hit->dist = t_s[4];
-	return (true);
 }
 
 void	rt_obj_cylinder_cut(
@@ -84,7 +86,8 @@ bool	rt_obj_cylinder_intersect(
 	t_s[3] = (tmps[0] - cyl->height / 2.0f) / tmps[1];
 	if (t_s[2] > t_s[3])
 		rt_swap(t_s + 2, t_s + 3);
-	return (rt_obj_cylinder_delta(cyl, hit, t_s));
+	rt_obj_cylinder_delta(cyl, hit, t_s);
+	return (t_s[4] > 0);
 }
 
 t_vec3d	rt_obj_cylinder_norm(

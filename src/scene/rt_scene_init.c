@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 07:48:48 by kiroussa          #+#    #+#             */
-/*   Updated: 2024/04/28 18:59:50 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/04/30 16:11:41 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@
 #include <rt/object/sphere.h>
 #include <rt/object/light.h>
 
-#define OBJ_COUNT 6
+#define OBJ_COUNT 3
 #define LIGHTS_COUNT 1
 
 void	rt_swap(double *a, double *b)
@@ -147,38 +147,40 @@ t_rt_error	rt_scene_example(t_rt_scene *scene)
 {
 	t_rt_object	*ambient;
 	ambient = rt_object_init(&scene->ambient, RT_OBJ_LIGHT);
-	ambient->options = rt_obj_light_init(0.1f);
+	ambient->options = rt_obj_light_init(0.2f);
 	ambient->color = rt_color(0xFFFFFFFF);
 
 	t_rt_object	*floor;
 	floor = rt_object_init(&scene->objects[0], RT_OBJ_PLANE);
-	rt_obj_set_pos(floor, 0.0f, -10.0f, 0.0f);
+	rt_obj_set_pos(floor, 0.0f, 0.0f, 0.0f);
 	floor->options = rt_obj_plane_init((t_vec3d){0.0f, 1.0f, 0.0f});
-	floor->color = rt_get_random_color(0);
+	floor->color = rt_color(0xFF000000);
+	floor->color.r = 255;
+	floor->color.b = 225;
 
-	t_rt_object	*ceiling;
-	ceiling = rt_object_init(&scene->objects[1], RT_OBJ_PLANE);
-	rt_obj_set_pos(ceiling, 0.0f, 10.0f, 0.0f);
-	ceiling->options = rt_obj_plane_init((t_vec3d){0.0f, -1.0f, 0.0f});
-	ceiling->color = rt_get_random_color(0);
+	// t_rt_object	*ceiling;
+	// ceiling = rt_object_init(&scene->objects[1], RT_OBJ_PLANE);
+	// rt_obj_set_pos(ceiling, 0.0f, 10.0f, 0.0f);
+	// ceiling->options = rt_obj_plane_init((t_vec3d){0.0f, -1.0f, 0.0f});
+	// ceiling->color = rt_get_random_color(0);
 
-	t_rt_object	*left_wall;
-	left_wall = rt_object_init(&scene->objects[2], RT_OBJ_PLANE);
-	rt_obj_set_pos(left_wall, -10.0f, 0.0f, 0.0f);
-	left_wall->options = rt_obj_plane_init((t_vec3d){1.0f, 0.0f, 0.0f});
-	left_wall->color = rt_get_random_color(0);
+	// t_rt_object	*left_wall;
+	// left_wall = rt_object_init(&scene->objects[2], RT_OBJ_PLANE);
+	// rt_obj_set_pos(left_wall, -10.0f, 0.0f, 0.0f);
+	// left_wall->options = rt_obj_plane_init((t_vec3d){1.0f, 0.0f, 0.0f});
+	// left_wall->color = rt_get_random_color(0);
 
-	t_rt_object	*right_wall;
-	right_wall = rt_object_init(&scene->objects[3], RT_OBJ_PLANE);
-	rt_obj_set_pos(right_wall, 10.0f, 0.0f, 0.0f);
-	right_wall->options = rt_obj_plane_init((t_vec3d){-1.0f, 0.0f, 0.0f});
-	right_wall->color = rt_get_random_color(0);
+	// t_rt_object	*right_wall;
+	// right_wall = rt_object_init(&scene->objects[3], RT_OBJ_PLANE);
+	// rt_obj_set_pos(right_wall, 10.0f, 0.0f, 0.0f);
+	// right_wall->options = rt_obj_plane_init((t_vec3d){-1.0f, 0.0f, 0.0f});
+	// right_wall->color = rt_get_random_color(0);
 
-	t_rt_object	*back_wall;
-	back_wall = rt_object_init(&scene->objects[4], RT_OBJ_PLANE);
-	rt_obj_set_pos(back_wall, 0.0f, 0.0f, 10.0f);
-	back_wall->options = rt_obj_plane_init((t_vec3d){0.0f, 0.0f, -1.0f});
-	back_wall->color = rt_get_random_color(0);
+	// t_rt_object	*back_wall;
+	// back_wall = rt_object_init(&scene->objects[4], RT_OBJ_PLANE);
+	// rt_obj_set_pos(back_wall, 0.0f, 0.0f, 10.0f);
+	// back_wall->options = rt_obj_plane_init((t_vec3d){0.0f, 0.0f, -1.0f});
+	// back_wall->color = rt_get_random_color(0);
 
 	// t_rt_object	*quad;
 	// quad = rt_object_init(&scene->objects[5], RT_OBJ_QUAD);
@@ -186,23 +188,30 @@ t_rt_error	rt_scene_example(t_rt_scene *scene)
 	// quad->options = rt_obj_quad_init((t_vec3d){0.0f, 0.0f, -1.0f}, (t_vec3d){2.0f, 2.0f, 0.0f});
 	// quad->color = rt_get_random_color(0);
 
-	t_rt_object	*cone;
-	cone = rt_object_init(&scene->objects[5], RT_OBJ_CONE);
-	rt_obj_set_pos(cone, 0.0f, -2.0f, 5.0f);
-	cone->options = rt_obj_cone_init(1.0f, 2.0f, ft_vec3d_norm((t_vec3d){0.0f, 1.0f, 0.0f}), RT_PI / 8.0f);
-	cone->color = rt_get_random_color(0);
+	// t_rt_object	*cone;
+	// cone = rt_object_init(&scene->objects[5], RT_OBJ_CONE);
+	// rt_obj_set_pos(cone, 0.0f, -2.0f, 5.0f);
+	// cone->options = rt_obj_cone_init(1.0f, 2.0f, ft_vec3d_norm((t_vec3d){0.0f, 1.0f, 0.0f}), RT_PI / 6.0f);
+	// cone->color = rt_get_random_color(0);
 
-	// t_rt_object	*cylinder;
-	// cylinder = rt_object_init(&scene->objects[4], RT_OBJ_CYLINDER);
-	// rt_obj_set_pos(cylinder, 0.0f, -2.0f, 7.0f);
-	// cylinder->options = rt_obj_cylinder_init(1.0f, 4.0f, ft_vec3d_norm((t_vec3d){0.0f, 1.0f, 0.0f}));
-	// cylinder->color = rt_get_random_color(0);
+	// t_rt_object	*cone2;
+	// cone2 = rt_object_init(&scene->objects[6], RT_OBJ_CONE);
+	// rt_obj_set_pos(cone2, 0.0f, 2.0f, 5.0f);
+	// cone2->options = rt_obj_cone_init(1.0f, 2.0f, ft_vec3d_norm((t_vec3d){0.0f, -1.0f, 0.0f}), RT_PI / 6.0f);
+	// cone2->color = rt_get_random_color(0);
 
-	// t_rt_object	*sphere;
-	// sphere = rt_object_init(&scene->objects[6], RT_OBJ_SPHERE);
-	// rt_obj_set_pos(sphere, -3.0f, 0.0f, 8.0f);
-	// sphere->options = rt_obj_sphere_init(1.4f);
-	// sphere->color = rt_get_random_color(0);
+	t_rt_object	*sphere;
+	sphere = rt_object_init(&scene->objects[1], RT_OBJ_SPHERE);
+	rt_obj_set_pos(sphere, 0.0f, 0.0f, 20.0f);
+	sphere->options = rt_obj_sphere_init(20.0f);
+	sphere->color = rt_color(0xFFFF0000);
+	
+	t_rt_object	*cylinder;
+	cylinder = rt_object_init(&scene->objects[2], RT_OBJ_CYLINDER);
+	rt_obj_set_pos(cylinder, 50.0f, 0.0f, 20.6f);
+	cylinder->options = rt_obj_cylinder_init(14.2f, 21.42f, ft_vec3d_norm((t_vec3d){0.0f, 0.0f, 1.0f}));
+	cylinder->color = rt_color(0xFF0000FF);
+	cylinder->color.r = 10;
 	
 	// t_rt_object	*sphere2;
 	// sphere2 = rt_object_init(&scene->objects[7], RT_OBJ_SPHERE);
@@ -214,15 +223,15 @@ t_rt_error	rt_scene_example(t_rt_scene *scene)
 
 	t_rt_object	*camera;
 	camera = rt_object_init(&scene->camera, RT_OBJ_CAMERA);
-	camera->options = rt_obj_camera_init("Marvin");
-	camera->rotation = (t_vec3d){0.0f, 0.0f, 0.0f};
-	rt_obj_set_pos(camera, 0.0f, 0.0f, -10.0f);
+	camera->options = rt_obj_camera_init("Marvin", 70);
+	camera->rotation = (t_vec3d){0.0f, 0.0f, 1.0f};
+	rt_obj_set_pos(camera, -50.0f, 10.0f, 20.0f);
 
 	t_rt_object	*light;
 	light = rt_object_init(scene->lights, RT_OBJ_LIGHT);
-	light->options = rt_obj_light_init(0.8f);
+	light->options = rt_obj_light_init(0.7f);
 	light->color = rt_color(0xFFFFFFFF);
-	rt_obj_set_pos(light, 0.0f, 2.0f, 3.0f);
+	rt_obj_set_pos(light, -40.0f, 0.0f, 30.0f);
 
 	return (rt_scene_guard(scene));
 }

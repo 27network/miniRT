@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 14:43:52 by rgramati          #+#    #+#             */
-/*   Updated: 2024/04/27 14:10:14 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/04/30 14:39:49 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ void	rt_render_scene(t_rt_renderer *renderer)
 	unsigned int	image[2073600];
 // 
 	mlx = *renderer->mlx;
-	coords = ft_vec2i(-1, -1);
+	coords = (t_vec2i) {-1, -1};
 	while (++coords.x < renderer->scene->width)
 	{
 		coords.y = -1;

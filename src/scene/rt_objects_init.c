@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 19:21:15 by rgramati          #+#    #+#             */
-/*   Updated: 2024/04/27 19:47:09 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/04/30 14:31:34 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,8 @@ t_rt_obj_cylinder	*rt_obj_cylinder_init(
 }
 
 t_rt_obj_camera	*rt_obj_camera_init(
-	char *name
+	char *name,
+	int fov
 ) {
 	t_rt_obj_camera	*camera;
 
@@ -45,7 +46,7 @@ t_rt_obj_camera	*rt_obj_camera_init(
 	if (!camera)
 		return (NULL);
 	camera->name = name;
-	camera->fov = 90;
+	camera->fov = fov;
 	return (camera);
 }
 
