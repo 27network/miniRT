@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 11:10:38 by rgramati          #+#    #+#             */
-/*   Updated: 2024/04/30 15:00:43 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/05/05 19:37:33 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,9 +55,9 @@ int	rt_render_update(void *render)
 	t_rt_renderer	*renderer;
 
 	renderer = (t_rt_renderer *)render;
+	// renderer->scene->pratio = 1;
 	rt_input_handle(renderer);
 	rt_clear_image(renderer->mlx->rt_mlx, renderer->mlx->rt_imgs[1], renderer->scene);
-	mlx_clear_window(renderer->mlx->rt_mlx, renderer->mlx->rt_win);
 	if (renderer->input_map[SDL_SCANCODE_W]
 		|| renderer->input_map[SDL_SCANCODE_A]
 		|| renderer->input_map[SDL_SCANCODE_S]
@@ -65,10 +65,15 @@ int	rt_render_update(void *render)
 		|| renderer->input_map[SDL_SCANCODE_LCTRL]
 		|| renderer->input_map[SDL_SCANCODE_LSHIFT])
 	{
-		renderer->scene->pratio = 16;
+		memset(renderer->image, 0, (renderer->scene->height * renderer->scene->width) * sizeof(t_color_norm));
+		renderer->rendered = 0;
+		// renderer->scene->pratio = 5;
 	}
 	if (renderer->input_map[SDL_SCANCODE_F])
-		renderer->scene->pratio = 4;
+	{
+		rt_clear_image(renderer->mlx->rt_mlx, renderer->mlx->rt_imgs[0], renderer->scene);
+		renderer->scene->pratio = 1;
+	}
 	rt_do_rendering(renderer);
 	return (0);
 }
@@ -107,7 +112,6 @@ int	rt_keydown_event(int key, void *render)
 		renderer->status = RT_RS_HOME;
 	if (renderer->status == RT_RS_HOME && key == SDL_SCANCODE_RETURN)
 	{
-		mlx_clear_window(renderer->mlx->rt_mlx, renderer->mlx->rt_win);
 		renderer->status = RT_RS_SCENE;
 	}
 	if (key == SDL_SCANCODE_ESCAPE)
@@ -127,6 +131,8 @@ int	rt_keydown_event(int key, void *render)
 	//debug rays
 	if (key == SDL_SCANCODE_R)
 		renderer->scene->rt_flags ^= RT_RAY_DEBUG;
+	if (key == SDL_SCANCODE_J)
+		renderer->scene->rt_flags ^= RT_NO_RENDER;
 	if (key == SDL_SCANCODE_G)
 		renderer->scene->rt_flags ^= RT_COL_GAMMA;
 	return (0);
@@ -143,6 +149,7 @@ int rt_mousedown_event(int key, void *render)
 	t_rt_hit		dhit;
 	int				params[2];
 
+	g_debug = true;
 	renderer = (t_rt_renderer *)render;
 	mlx_mouse_get_pos(renderer->mlx->rt_mlx, params, params + 1);
 	if (key == 1)
@@ -153,7 +160,6 @@ int rt_mousedown_event(int key, void *render)
 		ft_printf("\nDEBUG RAY:\n");
 		for (int i = 0; i < 211; i++)
 			ft_printf("-");
-		g_debug = true;
 		rt_ray_cast_debug(renderer->scene, &dray, &dhit);
 		for (int i = 0; i < 211; i++)
 			ft_printf("-");
@@ -161,8 +167,7 @@ int rt_mousedown_event(int key, void *render)
 		for (int i = 0; i < 211; i++)
 			ft_printf("-");
 		// rt_color_occlusion(renderer->scene, dhit, ft_vec3d_sub(((t_rt_object) renderer->scene->lights[0]).position, dhit.position));
-		g_debug = false;
-		dhit.hit_object->color = rt_get_random_color(0);
+		dhit.hit_object->material.obj_color = rt_color_to_norm(rt_get_random_color(0));
 	}
 	if (key == 3)
 	{
@@ -174,5 +179,6 @@ int rt_mousedown_event(int key, void *render)
 			dhit.hit_object->options = NULL;
 		}
 	}
+	g_debug = false;
 	return (0);
 }

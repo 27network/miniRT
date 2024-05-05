@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 02:29:41 by kiroussa          #+#    #+#             */
-/*   Updated: 2024/04/22 20:10:34 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/05/05 19:45:59 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,14 +20,14 @@
 # undef WIDTH
 #endif
 #ifndef WIDTH
-# define WIDTH 1366
+# define WIDTH 1920
 #endif
 
 #ifdef HEIGHT
 # undef HEIGHT
 #endif
 #ifndef HEIGHT
-# define HEIGHT 768
+# define HEIGHT 1080
 #endif
 
 int	main(int argc, char *argv[])

@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 02:33:41 by kiroussa          #+#    #+#             */
-/*   Updated: 2024/04/27 19:41:51 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/05/05 17:00:03 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ typedef enum e_rt_flag
 {
 	RT_RAY_DEBUG = 0b001,
 	RT_COL_GAMMA = 0b010,
+	RT_NO_RENDER = 0b100,
 }	t_rt_flag;
 
 typedef enum e_rt_object_type
@@ -45,12 +46,19 @@ typedef bool				t_intersect_fn(t_rt_ray ray, t_rt_object *obj,
 								t_rt_hit *hit);
 typedef t_vec3d				t_hit_norm_fn(t_rt_ray ray, t_rt_hit hit);
 
+typedef struct s_rt_material
+{
+	t_color_norm	obj_color;
+	t_color_norm	emi_color;
+	double			emi_strength;
+}	t_rt_material;
+
 typedef struct s_rt_object
 {
 	t_rt_object_type	type;
 	t_vec3d				position;
 	t_vec3d				rotation;
-	t_color				color;
+	t_rt_material		material;
 	t_intersect_fn		*intersect;
 	t_hit_norm_fn		*norm;
 	void				*options;
@@ -96,5 +104,8 @@ void		rt_render_ray(t_rt_scene *scene, t_rt_ray ray, t_rt_hit hit,
 				t_color color);
 
 void		rt_swap(double *a, double *b);
+
+
+void	rt_color_ambient(t_rt_scene *scene, t_color_norm *c);
 
 #endif // SCENE_H

@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 07:50:09 by kiroussa          #+#    #+#             */
-/*   Updated: 2024/04/27 13:59:36 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/05/05 21:10:09 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,8 @@
 # include <rt/scene.h>
 
 # define RENDER_FONT "assets/fonts/menu.ttf"
-# define MAX_BOUNCES 1
-# define EPSILON 0.00001f
+# define MAX_BOUNCES 3
+# define EPSILON 0.000001
 # define RT_PI 3.14159265358979323846
 
 typedef enum e_rt_render_status
@@ -42,8 +42,10 @@ typedef struct s_rt_renderer
 	t_rt_scene			*scene;
 	t_rt_mlx_data		*mlx;
 	t_rt_render_status	status;
-	t_color				*img;
 	char				input_map[65535];
+	t_color_norm		*image;
+	t_color_norm		*calc;
+	size_t				rendered;
 }	t_rt_renderer;
 
 typedef struct s_rt_hit
@@ -56,10 +58,11 @@ typedef struct s_rt_hit
 
 typedef struct s_rt_ray
 {
-	t_color	color;
-	t_vec3d	origin;
-	t_vec3d	direction;
-	uint8_t	bounces;
+	t_color		color;
+	t_vec3d		origin;
+	t_vec3d		direction;
+	uint8_t		bounces;
+	// t_rt_hit	*hits; //TODO: Optimiser avec une define constants MAX_REBONDS truc du genre
 }	t_rt_ray;
 
 void		*rt_getmlx(int what, t_rt_mlx_data *data);

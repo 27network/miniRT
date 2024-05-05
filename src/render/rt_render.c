@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 07:51:17 by kiroussa          #+#    #+#             */
-/*   Updated: 2024/04/27 13:50:35 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/05/05 18:47:32 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,6 @@ void	rt_start_rendering(t_rt_scene *s, t_rt_mlx_data *m, t_rt_renderer *r)
 		MLX_KEYUP, rt_keyup_event, r);
 	mlx_on_event(m->rt_mlx, m->rt_win,
 		MLX_MOUSEDOWN, rt_mousedown_event, r);
-	mlx_set_fps_goal(m->rt_mlx, 120);
 	mlx_loop_hook(m->rt_mlx, rt_render_update, r);
 	rt_scene_example(s);
 	mlx_loop(m->rt_mlx);
@@ -39,6 +38,7 @@ void	rt_start_rendering(t_rt_scene *s, t_rt_mlx_data *m, t_rt_renderer *r)
 
 void	rt_do_rendering(t_rt_renderer *renderer)
 {
+	mlx_clear_window(renderer->mlx->rt_mlx, renderer->mlx->rt_win);
 	if (renderer->status == RT_RS_HOME)
 		rt_render_home(renderer);
 	else if (renderer->status == RT_RS_SCENE)
@@ -61,6 +61,11 @@ t_rt_error	rt_mlx_init(t_rt_scene *s, t_rt_mlx_data *m)
 	}
 	m->rt_imgs[0] = mlx_new_image(m->rt_mlx, s->width, s->height);
 	m->rt_imgs[1] = mlx_new_image(m->rt_mlx, s->width, s->height);
+	for (int i = 0; i < s->width; i++) {
+		for (int j = 0; j < s->height; j++) {
+			mlx_set_image_pixel(m->rt_mlx, m->rt_imgs[0], i, j, -1);
+		}
+	}
 	if (!m->rt_imgs[0] || !m->rt_imgs[1])
 	{
 		mlx_destroy_window(m->rt_mlx, m->rt_win);
@@ -76,9 +81,14 @@ t_rt_error	rt_renderer_init(t_rt_scene *s, t_rt_mlx_data *m, t_rt_renderer *r)
 	r->scene = s;
 	r->mlx = m;
 	r->status = RT_RS_HOME;
-	r->img = ft_calloc(s->width * s->height, sizeof(t_color));
-	if (!r->img)
+	r->rendered = 0;
+	r->image = ft_calloc(s->width * s->height , sizeof(t_color_norm));
+	if (!r->image)
 		return (rt_errd(RT_ERROR_ALLOC, strerror(errno)));
+	r->calc = ft_calloc(s->width * s->height , sizeof(t_color_norm));
+	if (!r->calc)
+		return (rt_errd(RT_ERROR_ALLOC, strerror(errno)));
+	ft_printf("%d %d\n", s->height, s->width);
 	return (rt_ok());
 }
 

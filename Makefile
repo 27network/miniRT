@@ -6,7 +6,7 @@
 #    By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/08/06 21:19:50 by kiroussa          #+#    #+#              #
-#    Updated: 2024/04/27 19:47:43 by rgramati         ###   ########.fr        #
+#    Updated: 2024/05/05 19:41:37 by rgramati         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -60,7 +60,7 @@ LIBFT_DIR		=	third-party/libft
 LIBFT			=	$(LIBFT_DIR)/libft.so
 
 CC				=	clang
-CFLAGS			= 	-Wall -Wextra -Werror
+CFLAGS			= 	-Wall -Wextra -Werror -O3
 ifeq ($(FUNMODE), 1)
 	CFLAGS		+=	-O3
 endif

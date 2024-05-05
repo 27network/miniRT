@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/19 15:03:08 by rgramati          #+#    #+#             */
-/*   Updated: 2024/05/01 20:21:11 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/05/05 18:17:32 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,10 +78,9 @@ void	rt_ray_init(t_rt_scene *scene, t_rt_ray *ray, t_vec2i pixs)
 {
 	double	tmp;
 
-	ray->bounces = 0;
 	ray->color = rt_color(0xFFFFFFFF);
 	ray->origin = scene->camera.position;
-
+	// rat->hits = ft_calloc()
 	tmp = 2.0 * tan(((t_rt_obj_camera *)scene->camera.options)->fov * 0.5 * RT_PI / 180);
 	ray->direction.x = pixs.x + 0.5f - scene->width * 0.5f;
 	ray->direction.y = -(pixs.y + 0.5f - scene->height * 0.5f);
