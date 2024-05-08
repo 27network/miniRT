@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 21:05:47 by rgramati          #+#    #+#             */
-/*   Updated: 2024/05/05 20:34:49 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/05/08 00:26:52 by kiroussa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,9 +75,7 @@ bool	rt_color_occlusion(t_rt_scene *scene, t_rt_hit hit, t_vec3d light_dir, t_ve
 {
 	t_rt_ray	s_ray;
 	t_rt_hit	s_hit;
-	size_t		i;
 
-	i = 0;
 	s_ray = (t_rt_ray){.color = rt_color(0xFF000000), .origin = hit.position,
 		.direction = light_dir, .bounces = 0};
 	s_ray.origin = ft_vec3d_add(s_ray.origin, ft_vec3d_mult(norm, 0.1f));
@@ -141,7 +139,7 @@ t_vec3d	rt_color_specular(t_rt_ray ray, t_vec3d norm, t_vec3d light_dir)
 
 t_color	rt_obj_color(t_rt_scene *scene, t_rt_hit hit, t_rt_ray ray, t_vec3d norm)
 {
-	t_vec3d			light_dir;
+	// t_vec3d			light_dir;
 	t_color			result;
 	t_color_norm	diff;
 	t_color_norm	ambi;
@@ -151,7 +149,7 @@ t_color	rt_obj_color(t_rt_scene *scene, t_rt_hit hit, t_rt_ray ray, t_vec3d norm
 	if (hit.hit_object->type != RT_OBJ_LIGHT)
 		rt_color_diffuse(scene, hit, norm, &diff);
 	rt_color_ambient(scene, &ambi);
-	light_dir = ft_vec3d_sub(scene->lights->position, hit.position);
+	// light_dir = ft_vec3d_sub(scene->lights->position, hit.position);
 	// spec = rt_color_specular(ray, norm, light_dir);
 	// double specratio = ((t_rt_obj_light *)(scene->lights->options))->brightness * ft_vec3d_dot(ft_vec3d_mult(ray.direction, -1.0f), spec);
 	// t_color_norm speccolor = rt_color_mult(rt_color_to_norm(scene->lights->color), (t_color_norm){1.0, specratio, specratio, specratio}, 0);

@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 07:48:48 by kiroussa          #+#    #+#             */
-/*   Updated: 2024/05/05 21:10:18 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/05/08 00:27:37 by kiroussa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,7 +136,8 @@ t_color	rt_get_random_color(int toclose)
 	}
 	if (urandom == -1)
 		urandom = open("/dev/random", O_RDONLY);
-	read(urandom, buffer, 3);
+	if (read(urandom, buffer, 3) < 0)
+		return (color);
 	color.r = (buffer[0] + 127);
 	color.g = (buffer[1] + 127);
 	color.b = (buffer[2] + 127);
