@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 02:29:41 by kiroussa          #+#    #+#             */
-/*   Updated: 2024/05/05 19:45:59 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/05/08 19:35:35 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,20 +15,6 @@
 #include <rt/parse/parser.h>
 #include <rt/renderer.h>
 #include <rt/scene.h>
-
-#ifdef WIDTH
-# undef WIDTH
-#endif
-#ifndef WIDTH
-# define WIDTH 1920
-#endif
-
-#ifdef HEIGHT
-# undef HEIGHT
-#endif
-#ifndef HEIGHT
-# define HEIGHT 1080
-#endif
 
 int	main(int argc, char *argv[])
 {

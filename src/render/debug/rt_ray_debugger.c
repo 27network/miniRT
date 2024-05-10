@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 14:08:19 by rgramati          #+#    #+#             */
-/*   Updated: 2024/05/01 20:24:57 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/05/10 14:37:51 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,20 +71,16 @@ void	rt_trace_line(t_rt_scene *scene, t_vec2i start, t_vec2i end, t_color color)
 	}
 }
 
-void	rt_render_ray(t_rt_scene *scene, t_rt_ray ray, t_rt_hit hit, t_color color)
+void	rt_ray_render(t_rt_scene *scene, t_rt_ray ray, t_rt_hit hit, t_color color)
 {
 	t_vec2i	start;
 	t_vec2i end;
 
 	start = (t_vec2i){scene->width / 8, scene->height / 4};
-	if (hit.hit)
+	if (ray.bounces == 0 && scene->rt_flags & RT_RAY_DEBUG && hit.hit && hit.hit_object)
+	{
 		end = (t_vec2i){.x = mapx(scene->camera.position, hit.position.x, 0, scene->width),
 						.y = mapy(scene->camera.position, hit.position.z, 0, scene->height)};
-	else
-	{
-		end = (t_vec2i){.x = mapx(scene->camera.position, (8.0f / ray.direction.x) * ray.direction.y, 0, scene->width - 1),
-						.y = 0};
-		color = rt_color(0xFF000000);
+		rt_trace_line(scene, end, start, color);
 	}
-	rt_trace_line(scene, end, start, color);
 }

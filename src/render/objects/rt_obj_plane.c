@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/19 19:18:01 by rgramati          #+#    #+#             */
-/*   Updated: 2024/04/27 19:46:28 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/05/05 22:32:37 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,9 @@ t_vec3d	rt_obj_plane_norm(
 	if (ft_vec3d_dot(ray.direction, plane->norm) > 0.0)
 		norm = ft_vec3d(0.0f, 0.0f, 0.0f);
 	else
+	{
+		// ft_printf("PLANE NORM WOW\n");
 		norm = plane->norm;
+	}
 	return (norm);
 }

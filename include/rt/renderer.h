@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 07:50:09 by kiroussa          #+#    #+#             */
-/*   Updated: 2024/05/05 21:10:09 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/05/10 15:44:09 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,11 @@
 # include <rt/scene.h>
 
 # define RENDER_FONT "assets/fonts/menu.ttf"
-# define MAX_BOUNCES 3
-# define EPSILON 0.000001
-# define RT_PI 3.14159265358979323846
+# define MAX_BOUNCES 15
+# define MAX_SEQ_PASSES 2
+# define RAY_PER_PIXEL 100
+# define EPSILON 0.00001
+# define RT_PI 3.1415926535
 
 typedef enum e_rt_render_status
 {
@@ -58,10 +60,10 @@ typedef struct s_rt_hit
 
 typedef struct s_rt_ray
 {
-	t_color		color;
-	t_vec3d		origin;
-	t_vec3d		direction;
-	uint8_t		bounces;
+	t_color_norm	color;
+	t_vec3d			origin;
+	t_vec3d			direction;
+	uint8_t			bounces;
 	// t_rt_hit	*hits; //TODO: Optimiser avec une define constants MAX_REBONDS truc du genre
 }	t_rt_ray;
 
@@ -110,8 +112,14 @@ void		rt_ray_cast_debug(t_rt_scene *scene, t_rt_ray *ray, t_rt_hit *hit);
 
 void		rt_trace_line(t_rt_scene *scene, t_vec2i start, t_vec2i end, t_color color);
 
-bool		rt_hit_update(double t, t_rt_ray ray, t_rt_object *obj, t_rt_hit *hit);
+t_color_norm	rt_get_color_debug(t_rt_renderer *renderer, t_vec2i coords);
 
 bool		rt_color_occlusion(t_rt_scene *scene, t_rt_hit hit, t_vec3d light_dir, t_vec3d norm);
+
+t_vec3d		ft_vec3d_random(long long *state);
+
+double		ft_smoothstep(double start, double end, double x);
+
+t_vec3d		ft_vec3d_lerp(t_vec3d a, t_vec3d b, double t);
 
 #endif // RENDERER_H

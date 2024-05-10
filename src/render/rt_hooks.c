@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 11:10:38 by rgramati          #+#    #+#             */
-/*   Updated: 2024/05/05 19:37:33 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/05/10 15:20:52 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,25 +14,65 @@
 #include <rt/renderer.h>
 #include <SDL2/SDL_scancode.h>
 
+// static void	rt_obj_rotate_y(t_vec3d *direction, double angle)
+// {
+// 	const double	c = cos(angle);
+// 	const double	s = sin(angle);
+	
+// 	direction->x = direction->x * c + direction->z * s;
+// 	direction->z = direction->x * -s + direction->z * c;
+// }
+
+// static void	rt_obj_rotate_x(t_vec3d *direction, double angle)
+// {
+// 	const double	c = cos(angle);
+// 	const double	s = sin(angle);
+	
+// 	direction->x = direction->x * c + direction->y * s;
+// 	direction->y = direction->x * -s + direction->y * c;
+// }
+
+// static void	rt_obj_rotate_z(t_vec3d *direction, double angle)
+// {
+// 	const double	c = cos(angle);
+// 	const double	s = sin(angle);
+	
+// 	direction->y = direction->y * c + direction->z * s;
+// 	direction->z = direction->y * -s + direction->z * c;
+// }
+
+static void	rt_obj_translate(t_rt_object *obj, t_vec3d move)
+{
+	obj->position.x += move.x;
+	obj->position.y += move.y;
+	obj->position.z += move.z;
+	ft_printf("CAM POS = [%4f %4f %4f]\n", obj->position.x, obj->position.y, obj->position.z);
+}
+
 static void	rt_input_handle(t_rt_renderer *renderer)
 {
 	float	speed;
 
-	speed = 0.2f;
+	speed = 0.1f;
 	if (renderer->input_map[SDL_SCANCODE_LCTRL])
-		speed = 0.7f;
+		speed = 0.4f;
 	if (renderer->input_map[SDL_SCANCODE_D])
-		rt_scene_translate(renderer->scene, (t_vec3d){-speed, 0.0f, 0.0f});
+		rt_obj_translate(&(renderer->scene->camera), (t_vec3d){speed, 0.0f, 0.0f});
 	if (renderer->input_map[SDL_SCANCODE_A])
-		rt_scene_translate(renderer->scene, (t_vec3d){speed, 0.0f, 0.0f});
+		rt_obj_translate(&(renderer->scene->camera), (t_vec3d){-speed, 0.0f, 0.0f});
 	if (renderer->input_map[SDL_SCANCODE_SPACE])
-		rt_scene_translate(renderer->scene, (t_vec3d){0.0f, -speed, 0.0f});
+		rt_obj_translate(&(renderer->scene->camera), (t_vec3d){0.0f, speed, 0.0f});
 	if (renderer->input_map[SDL_SCANCODE_LSHIFT])
-		rt_scene_translate(renderer->scene, (t_vec3d){0.0f, speed, 0.0f});
+		rt_obj_translate(&(renderer->scene->camera), (t_vec3d){0.0f, -speed, 0.0f});
 	if (renderer->input_map[SDL_SCANCODE_W])
-		rt_scene_translate(renderer->scene, (t_vec3d){0.0f, 0.0f, -speed});
+		rt_obj_translate(&(renderer->scene->camera), (t_vec3d){0.0f, 0.0f, speed});
 	if (renderer->input_map[SDL_SCANCODE_S])
-		rt_scene_translate(renderer->scene, (t_vec3d){0.0f, 0.0f, speed});
+		rt_obj_translate(&(renderer->scene->camera), (t_vec3d){0.0f, 0.0f, -speed});
+	if (renderer->input_map[SDL_SCANCODE_E])
+		renderer->scene->camera.rotation.x += 0.1;
+	if (renderer->input_map[SDL_SCANCODE_Q])
+		renderer->scene->camera.rotation.x -= 0.1;
+	// renderer->scene->camera.rotation.x = fmod(renderer->scene->camera.rotation.x, RT_PI * 2.);
 }
 
 void	rt_clear_image(void *mlx, void *img, t_rt_scene *scene)
@@ -131,6 +171,8 @@ int	rt_keydown_event(int key, void *render)
 	//debug rays
 	if (key == SDL_SCANCODE_R)
 		renderer->scene->rt_flags ^= RT_RAY_DEBUG;
+	if (key == SDL_SCANCODE_K)
+		renderer->scene->rt_flags ^= RT_SEQ_RENDER;
 	if (key == SDL_SCANCODE_J)
 		renderer->scene->rt_flags ^= RT_NO_RENDER;
 	if (key == SDL_SCANCODE_G)
@@ -138,47 +180,13 @@ int	rt_keydown_event(int key, void *render)
 	return (0);
 }
 
-bool g_debug = false;
-
-t_color	rt_get_random_color(int toclose);
-
 int rt_mousedown_event(int key, void *render)
 {
 	t_rt_renderer	*renderer;
-	t_rt_ray		dray;
-	t_rt_hit		dhit;
 	int				params[2];
 
-	g_debug = true;
+	(void) key;
 	renderer = (t_rt_renderer *)render;
-	mlx_mouse_get_pos(renderer->mlx->rt_mlx, params, params + 1);
-	if (key == 1)
-	{
-		rt_ray_init(renderer->scene, &dray, (t_vec2i){.x = *params, .y = *(params + 1)});
-		for (int i = 0; i < 211; i++)
-			ft_printf("-");
-		ft_printf("\nDEBUG RAY:\n");
-		for (int i = 0; i < 211; i++)
-			ft_printf("-");
-		rt_ray_cast_debug(renderer->scene, &dray, &dhit);
-		for (int i = 0; i < 211; i++)
-			ft_printf("-");
-		ft_printf("\nSHADOW RAY:\n");
-		for (int i = 0; i < 211; i++)
-			ft_printf("-");
-		// rt_color_occlusion(renderer->scene, dhit, ft_vec3d_sub(((t_rt_object) renderer->scene->lights[0]).position, dhit.position));
-		dhit.hit_object->material.obj_color = rt_color_to_norm(rt_get_random_color(0));
-	}
-	if (key == 3)
-	{
-		rt_ray_init(renderer->scene, &dray, (t_vec2i){.x = *params, .y = *(params + 1)});
-		rt_ray_cast_debug(renderer->scene, &dray, &dhit);
-		if (dhit.hit_object)
-		{
-			free(dhit.hit_object->options);
-			dhit.hit_object->options = NULL;
-		}
-	}
-	g_debug = false;
+	mlx_mouse_get_pos(renderer->mlx->rt_mlx, params, params + 1);	
 	return (0);
 }

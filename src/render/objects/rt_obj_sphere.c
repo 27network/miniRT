@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/19 14:49:44 by rgramati          #+#    #+#             */
-/*   Updated: 2024/05/05 19:26:02 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/05/06 16:22:03 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,20 +19,19 @@ bool	rt_obj_sphere_delta(
 	t_rt_hit *hit,
 	double *eq_params
 ) {
-	double			delta_root;
+	const double	delta_root = sqrt(eq_params[3]);
+	const double	double_a = 2 * eq_params[0];
 	double			t;
 
 	if (ft_fabs(eq_params[3]) < EPSILON)
 	{
-		t = -eq_params[2] / (2 * eq_params[0]);
+		t = -eq_params[2] / double_a;
 		hit->dist = t;
 		return (true);
 	}
-	delta_root = sqrt(eq_params[3]);
-
-	t = ((-eq_params[1] - delta_root) / (2 * eq_params[0]));
+	t = ((-eq_params[1] - delta_root) / double_a);
 	if (t < 0)
-		t = ((-eq_params[1] + delta_root) / (2 * eq_params[0]));
+		t = ((-eq_params[1] + delta_root) / double_a);
 	if (t < 0)
 		return (false);
 	hit->dist = t;

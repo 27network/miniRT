@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/19 15:03:08 by rgramati          #+#    #+#             */
-/*   Updated: 2024/05/05 18:17:32 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/05/10 15:24:29 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,50 +43,21 @@ void	rt_ray_cast(t_rt_scene *scene, t_rt_ray *ray, t_rt_hit *hit)
 	}
 }
 
-void	rt_ray_cast_debug(t_rt_scene *scene, t_rt_ray *ray, t_rt_hit *hit)
-{
-	size_t		i;
-	size_t		ptdr = 0;
-	t_rt_hit	closest;
-
-	i = 0;
-	hit->dist = INFINITY;
-	while (i < scene->objects_size)
-	{
-		if (scene->objects[i].options && scene->objects[i].intersect(*ray, &scene->objects[i], &closest))
-		{
-			ft_printf("Testing intersection on object %d:\n", i);
-			ft_printf("\n\tObject #%d::%p hit !\n", i, scene->objects[i]);
-			hit->hit = true;
-			if (closest.dist <= hit->dist)
-			{
-				hit->hit_object = &scene->objects[i];
-				ptdr = i;
-				hit->dist = closest.dist;
-				hit->position = ft_vec3d_add(ray->origin, ft_vec3d_mult(ray->direction, hit->dist));
-				ft_printf("\tUpdating closest hit: Object #%d::%p closest distance = %f, closest hit position {%6f, %6f, %6f}\n", i, hit->hit_object, hit->dist, hit->position.x, hit->position.y, hit->position.z);
-			}
-			ft_printf("\n");
-		}
-		i++;
-	}
-	if (hit->hit)
-		ft_printf("FINAL hit : Object #%d::%p distance = %f\n", ptdr, hit->hit_object, hit->dist);
-}
-
 void	rt_ray_init(t_rt_scene *scene, t_rt_ray *ray, t_vec2i pixs)
 {
-	double	tmp;
+	t_vec3d	uv;
+	double  phi;
+	double  theta;
 
-	ray->color = rt_color(0xFFFFFFFF);
+	uv = (t_vec3d){(2. * pixs.x - WIDTH) / HEIGHT, (2. * pixs.y - HEIGHT) / HEIGHT, 0.};
+	uv = ft_vec3d_mult(uv, .5);
+	uv.z = 1.;
 	ray->origin = scene->camera.position;
-	// rat->hits = ft_calloc()
-	tmp = 2.0 * tan(((t_rt_obj_camera *)scene->camera.options)->fov * 0.5 * RT_PI / 180);
-	ray->direction.x = pixs.x + 0.5f - scene->width * 0.5f;
-	ray->direction.y = -(pixs.y + 0.5f - scene->height * 0.5f);
-	if (scene->width > scene->height)
-		ray->direction.z = scene->width / tmp;
-	else
-		ray->direction.z = scene->height / tmp;
-	ray->direction = ft_vec3d_norm(ray->direction);
+	ray->direction = ft_vec3d_norm(ft_vec3d_add(uv, scene->camera.rotation));
+	phi = atan2(scene->camera.rotation.y, scene->camera.rotation.x);
+	theta = acos(scene->camera.rotation.z);
+	scene->camera.rotation.x = cos(theta) * scene->camera.rotation.x + sin(theta) * scene->camera.rotation.z;
+	scene->camera.rotation.z = cos(theta) * scene->camera.rotation.z - sin(theta) * scene->camera.rotation.x;
+	scene->camera.rotation.x = cos(theta) * scene->camera.rotation.x - sin(theta) * scene->camera.rotation.y;
+	scene->camera.rotation.y = sin(theta) * scene->camera.rotation.x + cos(theta) * scene->camera.rotation.y;
 }

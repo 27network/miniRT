@@ -6,12 +6,26 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 02:33:41 by kiroussa          #+#    #+#             */
-/*   Updated: 2024/05/05 17:00:03 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/05/10 14:52:38 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef SCENE_H
 # define SCENE_H
+
+# ifdef WIDTH
+#  undef WIDTH
+# endif
+# ifndef WIDTH
+#  define WIDTH 1366
+# endif
+
+# ifdef HEIGHT
+#  undef HEIGHT
+# endif
+# ifndef HEIGHT
+#  define HEIGHT 768
+# endif
 
 # include <ft/math/vector.h>
 # include <rt/error.h>
@@ -24,9 +38,10 @@ typedef struct s_rt_hit		t_rt_hit;
 
 typedef enum e_rt_flag
 {
-	RT_RAY_DEBUG = 0b001,
-	RT_COL_GAMMA = 0b010,
-	RT_NO_RENDER = 0b100,
+	RT_RAY_DEBUG = 0b0001,
+	RT_COL_GAMMA = 0b0010,
+	RT_NO_RENDER = 0b0100,
+	RT_SEQ_RENDER = 0b1000,
 }	t_rt_flag;
 
 typedef enum e_rt_object_type
@@ -100,7 +115,7 @@ void		rt_obj_set_rot(t_rt_object *obj, double x, double y, double z);
 
 /* DEBUGGER ***************************************************************** */
 
-void		rt_render_ray(t_rt_scene *scene, t_rt_ray ray, t_rt_hit hit,
+void		rt_ray_render(t_rt_scene *scene, t_rt_ray ray, t_rt_hit hit,
 				t_color color);
 
 void		rt_swap(double *a, double *b);

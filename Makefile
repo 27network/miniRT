@@ -6,7 +6,7 @@
 #    By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/08/06 21:19:50 by kiroussa          #+#    #+#              #
-#    Updated: 2024/05/05 19:41:37 by rgramati         ###   ########.fr        #
+#    Updated: 2024/05/10 14:52:22 by rgramati         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -37,6 +37,7 @@ SRC				=	error/rt_err.c						\
 					render/rt_hooks.c					\
 					render/rt_rays.c					\
 					render/rt_render.c					\
+					render/rt_render_utils.c			\
 					render/rt_rendering.c				\
 					scene/rt_objects_init.c				\
 					scene/rt_scene_free.c				\
@@ -60,7 +61,7 @@ LIBFT_DIR		=	third-party/libft
 LIBFT			=	$(LIBFT_DIR)/libft.so
 
 CC				=	clang
-CFLAGS			= 	-Wall -Wextra -Werror -O3
+CFLAGS			= 	-Wall -Wextra -Werror
 ifeq ($(FUNMODE), 1)
 	CFLAGS		+=	-O3
 endif

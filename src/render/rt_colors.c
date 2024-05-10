@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 21:05:47 by rgramati          #+#    #+#             */
-/*   Updated: 2024/05/05 20:34:49 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/05/10 14:27:19 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ t_color_norm	rt_color_add(t_color_norm c1, t_color_norm c2)
 	return (result);
 }
 
-t_color_norm	rt_color_mult(t_color_norm c1, t_color_norm c2, __attribute__((unused)) bool gamma)
+t_color_norm	rt_color_mult(t_color_norm c1, t_color_norm c2)
 {
 	t_color_norm	result;
 
@@ -78,7 +78,7 @@ bool	rt_color_occlusion(t_rt_scene *scene, t_rt_hit hit, t_vec3d light_dir, t_ve
 	size_t		i;
 
 	i = 0;
-	s_ray = (t_rt_ray){.color = rt_color(0xFF000000), .origin = hit.position,
+	s_ray = (t_rt_ray){.color = (t_color_norm){.a = 1.0, .r = 0., .g = 0., .b = 0.}, .origin = hit.position,
 		.direction = light_dir, .bounces = 0};
 	s_ray.origin = ft_vec3d_add(s_ray.origin, ft_vec3d_mult(norm, 0.1f));
 	rt_ray_cast(scene, &s_ray, &s_hit);
@@ -110,8 +110,7 @@ static void	rt_color_diffuse(
 	dratio *= ((t_rt_obj_light *)light.options)->brightness;
 	dratio = ft_fmin(1.0f, dratio);
 	*c = light.material.obj_color;
-	*c = rt_color_mult(*c, (t_color_norm){1.0, dratio, dratio,
-			dratio}, 0);
+	*c = rt_color_mult(*c, (t_color_norm){1.0, dratio, dratio, dratio});
 }
 
 void	rt_color_ambient(t_rt_scene *scene, t_color_norm *c)
@@ -161,7 +160,7 @@ t_color	rt_obj_color(t_rt_scene *scene, t_rt_hit hit, t_rt_ray ray, t_vec3d norm
 	diff.g = ft_fmin(diff.g + ambi.g, 1.0f);
 	diff.b = ft_fmin(diff.b + ambi.b, 1.0f);
 
-	result = rt_color_from_norm(rt_color_mult(diff, hit.hit_object->material.obj_color, scene->rt_flags & RT_COL_GAMMA));
+	result = rt_color_from_norm(rt_color_mult(diff, hit.hit_object->material.obj_color));
 
 	return (result);
 }
