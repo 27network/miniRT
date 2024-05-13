@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 19:21:15 by rgramati          #+#    #+#             */
-/*   Updated: 2024/04/30 14:31:34 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/05/13 17:47:41 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ t_rt_obj_cylinder	*rt_obj_cylinder_init(
 	double diameter,
 	double height,
 	t_vec3d norm
-) {
+)	{
 	t_rt_obj_cylinder	*cylinder;
 
 	cylinder = ft_calloc(1, sizeof(t_rt_obj_cylinder));
@@ -39,20 +39,34 @@ t_rt_obj_cylinder	*rt_obj_cylinder_init(
 t_rt_obj_camera	*rt_obj_camera_init(
 	char *name,
 	int fov
-) {
+)	{
 	t_rt_obj_camera	*camera;
+	size_t			i;
+	size_t			j;
 
 	camera = ft_calloc(1, sizeof(t_rt_obj_camera));
 	if (!camera)
 		return (NULL);
 	camera->name = name;
 	camera->fov = fov;
+	camera->near_clip = 1.;
+	i = 0;
+	while (i < 4)
+	{
+		j = 0;
+		while (j < 4)
+		{
+			camera->localToWorld[i][j] = ((i == 2) && (j == 2));
+			j++;
+		}
+		i++;
+	}
 	return (camera);
 }
 
 t_rt_obj_light	*rt_obj_light_init(
 	double brightness
-) {
+)	{
 	t_rt_obj_light	*light;
 
 	light = ft_calloc(1, sizeof(t_rt_obj_light));
@@ -64,7 +78,7 @@ t_rt_obj_light	*rt_obj_light_init(
 
 t_rt_obj_plane	*rt_obj_plane_init(
 	t_vec3d norm
-) {
+)	{
 	t_rt_obj_plane	*plane;
 
 	plane = ft_calloc(1, sizeof(t_rt_obj_plane));
@@ -76,7 +90,7 @@ t_rt_obj_plane	*rt_obj_plane_init(
 
 t_rt_obj_sphere	*rt_obj_sphere_init(
 	double diameter
-) {
+)	{
 	t_rt_obj_sphere	*sphere;
 
 	sphere = ft_calloc(1, sizeof(t_rt_obj_sphere));
@@ -91,7 +105,7 @@ t_rt_obj_cone	*rt_obj_cone_init(
 	double height,
 	t_vec3d norm,
 	double theta
-) {
+)	{
 	t_rt_obj_cone	*cone;
 
 	cone = ft_calloc(1, sizeof(t_rt_obj_cone));
@@ -107,14 +121,16 @@ t_rt_obj_cone	*rt_obj_cone_init(
 
 t_rt_obj_quad	*rt_obj_quad_init(
 	t_vec3d norm,
-	t_vec3d size
-) {
+	t_vec3d wvect,
+	t_vec3d hvect
+)	{
 	t_rt_obj_quad	*quad;
 
 	quad = ft_calloc(1, sizeof(t_rt_obj_quad));
 	if (!quad)
 		return (NULL);
 	quad->norm = ft_vec3d_norm(norm);
-	quad->size = size;
+	quad->wvect = wvect;
+	quad->hvect = hvect;
 	return (quad);
 }

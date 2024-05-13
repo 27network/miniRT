@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 07:50:09 by kiroussa          #+#    #+#             */
-/*   Updated: 2024/05/10 15:44:09 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/05/13 18:16:52 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,12 @@
 # include <rt/error.h>
 # include <rt/scene.h>
 
+# include "libattopng.h"
+
 # define RENDER_FONT "assets/fonts/menu.ttf"
-# define MAX_BOUNCES 15
-# define MAX_SEQ_PASSES 2
-# define RAY_PER_PIXEL 100
+# define MAX_BOUNCES 8
+# define MAX_SEQ_PASSES 8
+# define RAY_PER_PIXEL 8
 # define EPSILON 0.00001
 # define RT_PI 3.1415926535
 
@@ -121,5 +123,7 @@ t_vec3d		ft_vec3d_random(long long *state);
 double		ft_smoothstep(double start, double end, double x);
 
 t_vec3d		ft_vec3d_lerp(t_vec3d a, t_vec3d b, double t);
+
+void	rt_render_shoot_pixel(t_rt_renderer *renderer, t_vec2i coords);
 
 #endif // RENDERER_H

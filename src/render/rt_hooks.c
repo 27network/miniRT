@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 11:10:38 by rgramati          #+#    #+#             */
-/*   Updated: 2024/05/10 15:20:52 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/05/12 19:05:07 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -180,13 +180,21 @@ int	rt_keydown_event(int key, void *render)
 	return (0);
 }
 
+int g_debug = false;
+
 int rt_mousedown_event(int key, void *render)
 {
 	t_rt_renderer	*renderer;
-	int				params[2];
+	t_vec2i			coords;
 
 	(void) key;
 	renderer = (t_rt_renderer *)render;
-	mlx_mouse_get_pos(renderer->mlx->rt_mlx, params, params + 1);	
+	mlx_mouse_get_pos(renderer->mlx->rt_mlx, &coords.x, &coords.y);
+	if (key == 1)
+	{
+		g_debug = true;
+		rt_render_shoot_pixel(renderer, coords);
+		g_debug = false;
+	}
 	return (0);
 }

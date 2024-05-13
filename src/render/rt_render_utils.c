@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/10 14:50:03 by rgramati          #+#    #+#             */
-/*   Updated: 2024/05/10 15:15:33 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/05/11 19:47:30 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ double	ft_smoothstep(double start, double end, double x)
     return (x * x * (3 - 2 * x));
 }
 
-static float	ft_random_value(long long *state)
+float	ft_random_value(long long *state)
 {
 	uint32_t	result;
 

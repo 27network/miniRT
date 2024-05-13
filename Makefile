@@ -6,7 +6,7 @@
 #    By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/08/06 21:19:50 by kiroussa          #+#    #+#              #
-#    Updated: 2024/05/10 16:22:49 by rgramati         ###   ########.fr        #
+#    Updated: 2024/05/11 03:17:38 by rgramati         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -43,6 +43,7 @@ SRC				=	error/rt_err.c						\
 					scene/rt_scene_free.c				\
 					scene/rt_scene_init.c				\
 					scene/rt_scene_transform.c			\
+					../libattopng/libattopng.c			\
 					main.c
 
 SRC_DIR			=	src
@@ -65,7 +66,7 @@ CFLAGS			= 	-Wall -Wextra -Werror
 ifeq ($(FUNMODE), 1)
 	CFLAGS		+=	-O3
 endif
-COPTS			= 	-I $(INCLUDE_DIR) -I $(MLX_DIR)/$(INCLUDE_DIR)s -I $(LIBFT_DIR)/$(INCLUDE_DIR)
+COPTS			= 	-I $(INCLUDE_DIR) -I $(MLX_DIR)/$(INCLUDE_DIR)s -I $(LIBFT_DIR)/$(INCLUDE_DIR) -I libattopng
 LDFLAGS			=	-lSDL2 -lm
 
 ifeq ($(DEBUG), 1)

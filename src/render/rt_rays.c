@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/19 15:03:08 by rgramati          #+#    #+#             */
-/*   Updated: 2024/05/10 15:24:29 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/05/12 16:05:34 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,19 +45,18 @@ void	rt_ray_cast(t_rt_scene *scene, t_rt_ray *ray, t_rt_hit *hit)
 
 void	rt_ray_init(t_rt_scene *scene, t_rt_ray *ray, t_vec2i pixs)
 {
-	t_vec3d	uv;
-	double  phi;
-	double  theta;
+	const t_rt_obj_camera	*cam = (t_rt_obj_camera *)scene->camera.options;
+	const t_vec3d			uv = (t_vec3d){tan(cam->fov * 0.5 * RT_PI / 180) * ((2. * pixs.x - WIDTH) / HEIGHT), tan(cam->fov * 0.5 * RT_PI / 180) * ((2. * pixs.y - HEIGHT) / HEIGHT), 1.};
+	// const double			view_h = cam->near_clip * tan(cam->fov * 0.5 * RT_PI / 180) * 2.;
+	// const t_vec3d			view_params = ft_vec3d(view_h, view_h * (WIDTH / HEIGHT), cam->near_clip);
+	// const t_vec3d			view_point = ft_vec3d((uv.x - 0.5) * view_params.x, (uv.y - 0.5) * view_params.y, view_params.z);
 
-	uv = (t_vec3d){(2. * pixs.x - WIDTH) / HEIGHT, (2. * pixs.y - HEIGHT) / HEIGHT, 0.};
-	uv = ft_vec3d_mult(uv, .5);
-	uv.z = 1.;
 	ray->origin = scene->camera.position;
 	ray->direction = ft_vec3d_norm(ft_vec3d_add(uv, scene->camera.rotation));
-	phi = atan2(scene->camera.rotation.y, scene->camera.rotation.x);
-	theta = acos(scene->camera.rotation.z);
-	scene->camera.rotation.x = cos(theta) * scene->camera.rotation.x + sin(theta) * scene->camera.rotation.z;
-	scene->camera.rotation.z = cos(theta) * scene->camera.rotation.z - sin(theta) * scene->camera.rotation.x;
-	scene->camera.rotation.x = cos(theta) * scene->camera.rotation.x - sin(theta) * scene->camera.rotation.y;
-	scene->camera.rotation.y = sin(theta) * scene->camera.rotation.x + cos(theta) * scene->camera.rotation.y;
+	// phi = atan2(scene->camera.rotation.y, scene->camera.rotation.x);
+	// theta = acos(scene->camera.rotation.z);
+	// scene->camera.rotation.x = cos(theta) * scene->camera.rotation.x + sin(theta) * scene->camera.rotation.z;
+	// scene->camera.rotation.z = cos(phi) * scene->camera.rotation.z - sin(phi) * scene->camera.rotation.x;
+	// scene->camera.rotation.x = cos(theta) * scene->camera.rotation.x - sin(theta) * scene->camera.rotation.y;
+	// scene->camera.rotation.y = sin(theta) * scene->camera.rotation.x + cos(theta) * scene->camera.rotation.y;
 }

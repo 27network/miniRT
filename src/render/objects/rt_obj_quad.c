@@ -6,19 +6,32 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/27 19:45:57 by rgramati          #+#    #+#             */
-/*   Updated: 2024/04/27 21:15:53 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/05/13 17:52:24 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <math.h>
 #include <ft/math.h>
 #include <ft/print.h>
 #include <rt/object/quad.h>
 
+static inline bool	rt_quad_inside(
+	t_rt_object *obj,
+	t_vec3d hitpoint
+)	{
+	const t_rt_obj_quad	*quad = (t_rt_obj_quad *)(obj)->options;
+	const t_vec3d		v = ft_vec3d_sub(hitpoint, obj->position);
+	const t_vec3d		size = ft_vec3d(ft_vec3d_len(quad->wvect), ft_vec3d_len(quad->hvect), 0.);
+	const t_vec3d		proj = ft_vec3d(ft_vec3d_dot(v, quad->wvect) / size.x, ft_vec3d_dot(v, quad->hvect) / size.y, 0.);
+	
+	return ((proj.x < size.x && proj.x > 0.) && (proj.y < size.y && proj.y > 0.));
+}
+
 bool	rt_obj_quad_intersect(
 	t_rt_ray ray,
 	t_rt_object *obj,
-	t_rt_hit *hit)
-{
+	t_rt_hit *hit
+)	{
 	double	d;
 	double	t;
 	t_vec3d	norm;
@@ -33,9 +46,7 @@ bool	rt_obj_quad_intersect(
 		{
 			hit->dist = t;
             hitpoint = ft_vec3d_add(ray.origin, ft_vec3d_mult(ray.direction, t));
-            if (ft_vec3d_len(ft_vec3d_sub(obj->position, hitpoint)) > 2.0f)
-                return (false);
-			return (true);
+			return (rt_quad_inside(obj, hitpoint));
 		}
 	}
 	return (false);
@@ -43,8 +54,8 @@ bool	rt_obj_quad_intersect(
 
 t_vec3d	rt_obj_quad_norm(
 	t_rt_ray ray,
-	t_rt_hit hit)
-{
+	t_rt_hit hit
+)	{
 	(void) ray;
 	t_vec3d			norm;
 	t_rt_obj_quad	*quad;

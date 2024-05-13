@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 14:43:52 by rgramati          #+#    #+#             */
-/*   Updated: 2024/05/10 15:42:42 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/05/13 18:11:20 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,8 @@ static t_color_norm	rt_get_environment(t_rt_renderer *renderer, t_rt_ray *ray)
 	double 	ground_to_sky;
 	t_vec3d	sky;
 	double	sun;
-	double SUN_FOCUS = 0.5;
-	double SUN_INTENSITY = 1.;
+	double SUN_FOCUS = 0.2;
+	double SUN_INTENSITY = 0.05;
 	t_vec3d	composite;
 
 	ground_to_sky = ft_smoothstep(-.01, 0, ray->direction.y);
@@ -50,27 +50,42 @@ static t_color_norm	rt_get_environment(t_rt_renderer *renderer, t_rt_ray *ray)
 	return ((t_color_norm){.a = 1., .r = composite.x, .g = composite.y, .b = composite.z});
 }
 
-static void	rt_ray_colorize(t_rt_ray *ray, t_rt_hit *hit, t_color_norm *light)
+extern bool g_debug;
+
+static void	rt_ray_colorize(t_rt_ray *ray, t_rt_hit *hit, t_color_norm *light, bool spec_bounce)
 {
 	const t_rt_material		hit_mat = hit->hit_object->material;
 	const t_color_norm		emittedlight = rt_color_fact(hit_mat.emi_color, hit_mat.emi_strength);
 	const t_color_norm		raylight = rt_color_mult(ray->color, emittedlight);
 
 	*light = rt_color_add(*light, raylight);
-	ray->color = rt_color_mult(ray->color, hit_mat.obj_color);
+	if (spec_bounce)
+		ray->color = rt_color_mult(ray->color, hit_mat.spe_color);
+	else
+		ray->color = rt_color_mult(ray->color, hit_mat.obj_color);
+	if (g_debug)
+	{
+		ft_printf("bounce [%d]:\n", ray->bounces);
+		ft_printf("\tobj->color    = (%6f, %6f, %6f)\n", hit_mat.obj_color.r, hit_mat.obj_color.g, hit_mat.obj_color.b);
+		ft_printf("\temitted light = (%6f, %6f, %6f)\n", emittedlight.r, emittedlight.g, emittedlight.b);
+		ft_printf("\tray light     = (%6f, %6f, %6f)\n", raylight.r, raylight.g, raylight.b);
+		ft_printf("\tlight         = (%6f, %6f, %6f)\n", light->r, light->g, light->b);
+		ft_printf("\tcolor = 0x%X\n", rt_color_from_norm(ray->color).argb);
+	}
 }
 
-static void	rt_ray_update(t_rt_renderer *renderer, t_rt_ray *ray, t_rt_hit *hit)
+static void	rt_ray_update(t_rt_renderer *renderer, t_rt_ray *ray, t_rt_hit *hit, bool spec_bounce)
 {
 	static long long	rngState = 0;
 	const size_t		frame = renderer->rendered;
-	const t_vec3d		rand_dir = ft_vec3d_random(&rngState);
-	const t_vec3d		new_dir = ft_vec3d_add(rand_dir, hit->hit_object->norm(*ray, *hit));
+	const t_vec3d		norm = hit->hit_object->norm(*ray, *hit);
+	const t_vec3d		diff_dir = ft_vec3d_norm(ft_vec3d_add(ft_vec3d_random(&rngState), norm));
+	const t_vec3d		spec_dir = ft_vec3d_sub(ray->direction, ft_vec3d_mult(ft_vec3d_mult(norm, ft_vec3d_dot(ray->direction, norm)), 2.));
 
 	if (rngState == 0)
 		rngState = ft_atoll(__TIME__);
 	rngState = rngState + frame * 1471343;
-	ray->direction = ft_vec3d_norm(new_dir);
+	ray->direction = ft_vec3d_lerp(diff_dir, spec_dir, hit->hit_object->material.smoothness * spec_bounce);
 	ray->origin = ft_vec3d_add(hit->position, ft_vec3d_mult(ray->direction, 0.0001f));
 }
 
@@ -78,17 +93,22 @@ static t_color_norm	rt_ray_loop(t_rt_renderer *renderer, t_rt_ray ray)
 {
 	t_rt_hit			hit;
 	t_color_norm		light;
+	static long long	rngState = 0;
+	bool				spec_bounce;
 
+	if (rngState == 0)
+		rngState = ft_atoll(__TIME__);
 	light = (t_color_norm){.a = 1., .r = 0., .g = 0., .b = 0.};
 	while (ray.bounces++ < MAX_BOUNCES)
 	{
 		hit = (t_rt_hit) {(t_vec3d) {0.0f, 0.0f, 0.0f}, NULL, false, INFINITY};
 		rt_ray_cast(renderer->scene, &ray, &hit);
-		if (hit.hit && hit.hit_object && hit.dist < 1000.)
+		if (hit.hit && hit.hit_object && hit.dist < 100.)
 		{
+			spec_bounce = hit.hit_object->material.spe_prob >= (double) ft_random_value(&rngState);
 			rt_ray_render(renderer->scene, ray, hit, rt_color_from_norm(hit.hit_object->material.obj_color));
-			rt_ray_update(renderer, &ray, &hit);
-			rt_ray_colorize(&ray, &hit, &light);
+			rt_ray_colorize(&ray, &hit, &light, spec_bounce);
+			rt_ray_update(renderer, &ray, &hit, spec_bounce);
 		}
 		else
 			light = rt_color_add(light, rt_color_mult(ray.color, rt_get_environment(renderer, &ray)));
@@ -161,26 +181,31 @@ static void	rt_accumulate(t_rt_renderer *renderer)
 	renderer->rendered++;
 }
 
-static void	rt_render_shoot_pixel(t_rt_renderer *renderer, t_vec2i coords)
+void	rt_render_shoot_pixel(t_rt_renderer *renderer, t_vec2i coords)
 {
 	size_t			i;
 	t_color_norm	accu;
 	t_color_norm	pixel;
 
 	i = 0;
-	accu = (t_color_norm){.a = 1.0f, .r = 0.0f, .g = 0.0f, .b = 0.0f};	
-	while (i++ < RAY_PER_PIXEL)
+	accu = (t_color_norm){.a = 1.0f, .r = 0.0f, .g = 0.0f, .b = 0.0f};
+	if (!g_debug)
 	{
-		pixel = rt_get_color(renderer, coords);
-		accu = (t_color_norm){
-			.a = 1.0f, 
-			.r = accu.r + pixel.r,
-			.g = accu.g + pixel.g,
-			.b = accu.b + pixel.b};	
+		while (i++ < RAY_PER_PIXEL)
+		{
+			pixel = rt_get_color(renderer, coords);
+			accu = (t_color_norm){
+				.a = 1.0f, 
+				.r = accu.r + pixel.r,
+				.g = accu.g + pixel.g,
+				.b = accu.b + pixel.b};	
+		}
+		accu = (t_color_norm){.a = 1.0f, .r = accu.r / (float) RAY_PER_PIXEL,
+				.g = accu.g / (float) RAY_PER_PIXEL,
+				.b = accu.b / (float) RAY_PER_PIXEL};
 	}
-	accu = (t_color_norm){.a = 1.0f, .r = accu.r / (float) RAY_PER_PIXEL,
-			.g = accu.g / (float) RAY_PER_PIXEL,
-			.b = accu.b / (float) RAY_PER_PIXEL};
+	else
+		accu = rt_get_color(renderer, coords);
 	(renderer->calc)[(coords.x * renderer->scene->height) + coords.y] = accu;
 }
 
@@ -267,7 +292,7 @@ void	rt_render_scene(t_rt_renderer *renderer)
 		else
 		{
 			(void) rt_render_put_line;
-			int nthreads = 24;
+			int nthreads = 16;
 			int init_threads = 0;
 			int lines_per_thread = 1;
 			cache_rendered = renderer->rendered;
@@ -292,9 +317,22 @@ void	rt_render_scene(t_rt_renderer *renderer)
 			for (int i = 0; i < init_threads; i++)
 				pthread_join(threads[i], NULL);
 			renderer->rendered = cache_rendered;
+			
+			
+			
 			if (coords.y >= renderer->scene->height)
 			{
 				coords.y = 0;
+				// libattopng_t* png = libattopng_new(WIDTH, HEIGHT, PNG_RGBA);
+				// int x, y;
+				// for (y = 0; y < HEIGHT; y++)
+				// {
+				// 	for (x = 0; x < WIDTH; x++)
+				// 		libattopng_set_pixel(png, x, y, mlx_get_image_pixel(renderer->mlx->rt_mlx, renderer->mlx->rt_imgs[0], x, y));
+				// }
+				// libattopng_save(png, "LE RENDERINGGGGG");
+				// libattopng_destroy(png);
+				// exit(-583475834);
 				renderer->rendered++;
 			}
 

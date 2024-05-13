@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 07:49:03 by kiroussa          #+#    #+#             */
-/*   Updated: 2024/04/18 19:46:37 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/05/11 02:47:01 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,9 @@ void	rt_scene_free(t_rt_scene *scene)
 		return ;
 	tmp = scene->objects;
 	while (tmp - scene->objects < (long) scene->objects_size)
+		free((tmp++)->options);
+	tmp = scene->lights;
+	while (tmp - scene->objects < (long) scene->lights_size)
 		free((tmp++)->options);
 	free(scene->objects);
 }

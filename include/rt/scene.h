@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 02:33:41 by kiroussa          #+#    #+#             */
-/*   Updated: 2024/05/10 14:52:38 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/05/11 19:47:40 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,9 @@ typedef struct s_rt_material
 	t_color_norm	obj_color;
 	t_color_norm	emi_color;
 	double			emi_strength;
+	t_color_norm	spe_color;
+	double			spe_prob;
+	double			smoothness;
 }	t_rt_material;
 
 typedef struct s_rt_object
@@ -120,6 +123,7 @@ void		rt_ray_render(t_rt_scene *scene, t_rt_ray ray, t_rt_hit hit,
 
 void		rt_swap(double *a, double *b);
 
+float	ft_random_value(long long *state);
 
 void	rt_color_ambient(t_rt_scene *scene, t_color_norm *c);
 
