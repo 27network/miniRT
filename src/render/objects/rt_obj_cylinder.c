@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 13:39:30 by rgramati          #+#    #+#             */
-/*   Updated: 2024/05/10 15:41:57 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/05/13 23:17:30 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,9 +45,9 @@ void	rt_obj_cylinder_cut(
 	double				delta_root;
 
 	cyl = (t_rt_obj_cylinder *)obj->options;
-	tmp_vects[0] = ft_vec3d_cross(ray.direction, cyl->norm);
+	tmp_vects[0] = ft_vec3d_cross(ray.dir, cyl->norm);
 	eq_params[0] = ft_vec3d_dot(tmp_vects[0], tmp_vects[0]);
-	tmp_vects[1] = ft_vec3d_sub(ray.origin, obj->position);
+	tmp_vects[1] = ft_vec3d_sub(ray.origin, obj->pos);
 	tmp_vects[2] = ft_vec3d_cross(tmp_vects[1], cyl->norm);
 	eq_params[1] = 2 * ft_vec3d_dot(tmp_vects[0], tmp_vects[2]);
 	eq_params[2] = ft_vec3d_dot(tmp_vects[2], tmp_vects[2])
@@ -80,9 +80,9 @@ bool	rt_obj_cylinder_intersect(
 	if (t_s[5])
 		return (false);
 	tmp_vects[0] = ft_vec3d_mult(cyl->norm, cyl->height / 2.);
-	tmp_vects[1] = ft_vec3d_add(obj->position, tmp_vects[0]);
+	tmp_vects[1] = ft_vec3d_add(obj->pos, tmp_vects[0]);
 	tmps[0] = ft_vec3d_dot(ft_vec3d_sub(tmp_vects[1], ray.origin), cyl->norm);
-	tmps[1] = ft_vec3d_dot(ray.direction, cyl->norm);
+	tmps[1] = ft_vec3d_dot(ray.dir, cyl->norm);
 	t_s[2] = (tmps[0] + cyl->height / 2.) / tmps[1];
 	t_s[3] = (tmps[0] - cyl->height / 2.) / tmps[1];
 	if (t_s[2] > t_s[3])
@@ -100,17 +100,17 @@ t_vec3d	rt_obj_cylinder_norm(
 	t_vec3d				norm;
 	double				t;
 
-	cyl = (t_rt_obj_cylinder *)hit.hit_object->options;
+	cyl = (t_rt_obj_cylinder *)hit.obj->options;
 	if (cyl->last_hit_on_edge)
 	{
-		t = ft_vec3d_dot(cyl->norm, ft_vec3d_sub(hit.position, hit.hit_object->position));
+		t = ft_vec3d_dot(cyl->norm, ft_vec3d_sub(hit.pos, hit.obj->pos));
 		t = -t / ft_vec3d_dot(cyl->norm, cyl->norm);
-		contact = ft_vec3d_add(hit.hit_object->position, ft_vec3d_mult(cyl->norm, -t));
-		norm = ft_vec3d_sub(hit.position, contact);
+		contact = ft_vec3d_add(hit.obj->pos, ft_vec3d_mult(cyl->norm, -t));
+		norm = ft_vec3d_sub(hit.pos, contact);
 	}
 	else
 	{
-		if (ft_vec3d_dot(ray.direction, cyl->norm) > 0.0)
+		if (ft_vec3d_dot(ray.dir, cyl->norm) > 0.0)
 			norm = ft_vec3d_mult(cyl->norm, -1.0f);
 		else
 			norm = cyl->norm;

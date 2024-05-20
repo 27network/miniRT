@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 14:43:52 by rgramati          #+#    #+#             */
-/*   Updated: 2024/05/13 18:11:20 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/05/19 10:18:19 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,95 +30,7 @@ void	rt_render_home(t_rt_renderer *renderer)
 		scene->width / 2 - 330, 200, 0xff80b0ff, "MINI RT");
 }
 
-static t_color_norm	rt_get_environment(t_rt_renderer *renderer, t_rt_ray *ray)
-{
-	const t_vec3d	upsky_color = ft_vec3d(1.0f, 1.0f, 1.0f);
-	const t_vec3d	downsky_color = ft_vec3d(0x87 / 255., 0xCE / 255., 0xEB / 255.);
-	const t_vec3d	ground_color = ft_vec3d(0x8C / 255., 0x83 / 255., 0x91 / 255.);
-
-	double 	ground_to_sky;
-	t_vec3d	sky;
-	double	sun;
-	double SUN_FOCUS = 0.2;
-	double SUN_INTENSITY = 0.05;
-	t_vec3d	composite;
-
-	ground_to_sky = ft_smoothstep(-.01, 0, ray->direction.y);
-	sky = ft_vec3d_lerp(upsky_color, downsky_color, pow(ft_smoothstep(0, 0.4, ray->direction.y), 0.35));
-	sun = ft_fpow(ft_fmax(0, ft_vec3d_dot(ray->direction, renderer->scene->ambient.position)), SUN_FOCUS) * SUN_INTENSITY;
-	composite = ft_vec3d_add(ft_vec3d_lerp(ground_color, sky, ground_to_sky), ft_vec3d_mult(ft_vec3d(sun, sun, sun), (ground_to_sky >= 1)));
-	return ((t_color_norm){.a = 1., .r = composite.x, .g = composite.y, .b = composite.z});
-}
-
-extern bool g_debug;
-
-static void	rt_ray_colorize(t_rt_ray *ray, t_rt_hit *hit, t_color_norm *light, bool spec_bounce)
-{
-	const t_rt_material		hit_mat = hit->hit_object->material;
-	const t_color_norm		emittedlight = rt_color_fact(hit_mat.emi_color, hit_mat.emi_strength);
-	const t_color_norm		raylight = rt_color_mult(ray->color, emittedlight);
-
-	*light = rt_color_add(*light, raylight);
-	if (spec_bounce)
-		ray->color = rt_color_mult(ray->color, hit_mat.spe_color);
-	else
-		ray->color = rt_color_mult(ray->color, hit_mat.obj_color);
-	if (g_debug)
-	{
-		ft_printf("bounce [%d]:\n", ray->bounces);
-		ft_printf("\tobj->color    = (%6f, %6f, %6f)\n", hit_mat.obj_color.r, hit_mat.obj_color.g, hit_mat.obj_color.b);
-		ft_printf("\temitted light = (%6f, %6f, %6f)\n", emittedlight.r, emittedlight.g, emittedlight.b);
-		ft_printf("\tray light     = (%6f, %6f, %6f)\n", raylight.r, raylight.g, raylight.b);
-		ft_printf("\tlight         = (%6f, %6f, %6f)\n", light->r, light->g, light->b);
-		ft_printf("\tcolor = 0x%X\n", rt_color_from_norm(ray->color).argb);
-	}
-}
-
-static void	rt_ray_update(t_rt_renderer *renderer, t_rt_ray *ray, t_rt_hit *hit, bool spec_bounce)
-{
-	static long long	rngState = 0;
-	const size_t		frame = renderer->rendered;
-	const t_vec3d		norm = hit->hit_object->norm(*ray, *hit);
-	const t_vec3d		diff_dir = ft_vec3d_norm(ft_vec3d_add(ft_vec3d_random(&rngState), norm));
-	const t_vec3d		spec_dir = ft_vec3d_sub(ray->direction, ft_vec3d_mult(ft_vec3d_mult(norm, ft_vec3d_dot(ray->direction, norm)), 2.));
-
-	if (rngState == 0)
-		rngState = ft_atoll(__TIME__);
-	rngState = rngState + frame * 1471343;
-	ray->direction = ft_vec3d_lerp(diff_dir, spec_dir, hit->hit_object->material.smoothness * spec_bounce);
-	ray->origin = ft_vec3d_add(hit->position, ft_vec3d_mult(ray->direction, 0.0001f));
-}
-
-static t_color_norm	rt_ray_loop(t_rt_renderer *renderer, t_rt_ray ray)
-{
-	t_rt_hit			hit;
-	t_color_norm		light;
-	static long long	rngState = 0;
-	bool				spec_bounce;
-
-	if (rngState == 0)
-		rngState = ft_atoll(__TIME__);
-	light = (t_color_norm){.a = 1., .r = 0., .g = 0., .b = 0.};
-	while (ray.bounces++ < MAX_BOUNCES)
-	{
-		hit = (t_rt_hit) {(t_vec3d) {0.0f, 0.0f, 0.0f}, NULL, false, INFINITY};
-		rt_ray_cast(renderer->scene, &ray, &hit);
-		if (hit.hit && hit.hit_object && hit.dist < 100.)
-		{
-			spec_bounce = hit.hit_object->material.spe_prob >= (double) ft_random_value(&rngState);
-			rt_ray_render(renderer->scene, ray, hit, rt_color_from_norm(hit.hit_object->material.obj_color));
-			rt_ray_colorize(&ray, &hit, &light, spec_bounce);
-			rt_ray_update(renderer, &ray, &hit, spec_bounce);
-		}
-		else
-			light = rt_color_add(light, rt_color_mult(ray.color, rt_get_environment(renderer, &ray)));
-		if (!hit.hit || !hit.hit_object || hit.hit_object->material.emi_strength >= 1.)
-			break ;
-	}
-	return (light);
-}
-
-t_color_norm	rt_get_color(t_rt_renderer *renderer, t_vec2i coords)
+static t_color_norm	rt_get_color(t_rt_renderer *renderer, t_vec2i coords)
 {
 	static t_color_norm	pixels[1920];
 	t_color_norm		light;
@@ -143,6 +55,7 @@ void	rt_render_put_pixel(t_rt_renderer *renderer, t_vec2i coords)
 	const t_rt_mlx_data	*mlx = renderer->mlx;
 	const size_t		index = coords.x * renderer->scene->height + coords.y;
 	const t_color_norm	color_norm = (renderer->image)[index];
+	// const t_color_norm	color_norm_div = rt_color_fact(color_norm, 1.0 / ((double)renderer->rendered));
 	const uint32_t		color_int = rt_color_argb(rt_color_from_norm(color_norm));
 	
 	mlx_set_image_pixel(mlx->rt_mlx, mlx->rt_imgs[0], coords.x, coords.y, color_int);
@@ -189,23 +102,18 @@ void	rt_render_shoot_pixel(t_rt_renderer *renderer, t_vec2i coords)
 
 	i = 0;
 	accu = (t_color_norm){.a = 1.0f, .r = 0.0f, .g = 0.0f, .b = 0.0f};
-	if (!g_debug)
+	while (i++ < RAY_PER_PIXEL)
 	{
-		while (i++ < RAY_PER_PIXEL)
-		{
-			pixel = rt_get_color(renderer, coords);
-			accu = (t_color_norm){
-				.a = 1.0f, 
-				.r = accu.r + pixel.r,
-				.g = accu.g + pixel.g,
-				.b = accu.b + pixel.b};	
-		}
-		accu = (t_color_norm){.a = 1.0f, .r = accu.r / (float) RAY_PER_PIXEL,
-				.g = accu.g / (float) RAY_PER_PIXEL,
-				.b = accu.b / (float) RAY_PER_PIXEL};
+		pixel = rt_get_color(renderer, coords);
+		accu = (t_color_norm){
+			.a = 1.0f, 
+			.r = accu.r + pixel.r,
+			.g = accu.g + pixel.g,
+			.b = accu.b + pixel.b};	
 	}
-	else
-		accu = rt_get_color(renderer, coords);
+	accu = (t_color_norm){.a = 1.0f, .r = accu.r / (float) RAY_PER_PIXEL,
+			.g = accu.g / (float) RAY_PER_PIXEL,
+			.b = accu.b / (float) RAY_PER_PIXEL};
 	(renderer->calc)[(coords.x * renderer->scene->height) + coords.y] = accu;
 }
 
@@ -270,9 +178,39 @@ static void *rt_tamere(void *param)
 		coords.y++;
 		data->nlines--;
 	}
-	mlx_put_image_to_window(renderer->mlx->rt_mlx, renderer->mlx->rt_win, renderer->mlx->rt_imgs[0], 0, 0);
 	free(param);
 	return NULL;
+}
+
+void	rt_trace_line(t_rt_renderer *renderer, t_vec2i start, t_vec2i end, t_color color)
+{
+	t_vec2i	deltas;
+	t_vec3d	inc;
+	t_vec3d	pos;
+	double	steps;
+	double	i;
+
+	deltas = (t_vec2i){end.x - start.x, end.y - start.y};
+	if (deltas.x > deltas.y)
+		steps = deltas.x;
+	else
+		steps = deltas.y;
+	inc.x = (double) deltas.x / steps;
+	inc.y = (double) deltas.y / steps;
+	i = 0.0f;
+	pos = (t_vec3d){start.x, start.y, 0.0f};
+	while (i < steps)
+	{
+		if (pos.x >= 0 && pos.x < WIDTH && pos.y >= 0 && pos.y < HEIGHT && color.a)
+		{
+			if (pos.x > 0 && pos.x < WIDTH - 1 && pos.y > 0 && pos.y < HEIGHT - 1)
+					mlx_set_image_pixel(renderer->mlx->rt_mlx, renderer->mlx->rt_imgs[1], start.x, start.y, 0xFFFFFFFF);
+			mlx_set_image_pixel(renderer->mlx->rt_mlx, renderer->mlx->rt_imgs[1], pos.x, pos.y, color.argb);
+		}
+		pos.x += inc.x;
+		pos.y += inc.y;
+		i += 1.0f;
+	}
 }
 
 void	rt_render_scene(t_rt_renderer *renderer)
@@ -316,65 +254,26 @@ void	rt_render_scene(t_rt_renderer *renderer)
 			}
 			for (int i = 0; i < init_threads; i++)
 				pthread_join(threads[i], NULL);
+			mlx_put_image_to_window(renderer->mlx->rt_mlx, renderer->mlx->rt_win, renderer->mlx->rt_imgs[0], 0, 0);
 			renderer->rendered = cache_rendered;
-			
-			
-			
 			if (coords.y >= renderer->scene->height)
 			{
 				coords.y = 0;
-				// libattopng_t* png = libattopng_new(WIDTH, HEIGHT, PNG_RGBA);
-				// int x, y;
-				// for (y = 0; y < HEIGHT; y++)
-				// {
-				// 	for (x = 0; x < WIDTH; x++)
-				// 		libattopng_set_pixel(png, x, y, mlx_get_image_pixel(renderer->mlx->rt_mlx, renderer->mlx->rt_imgs[0], x, y));
-				// }
-				// libattopng_save(png, "LE RENDERINGGGGG");
-				// libattopng_destroy(png);
-				// exit(-583475834);
 				renderer->rendered++;
 			}
-
-			// for (int i = 0; i < renderer->scene->width * 50; i++) {
-			// 	cache_rendered = renderer->rendered;
-			// 	renderer->rendered = cache_rendered * MAX_SEQ_PASSES;
-			// 	n_pass = 0;
-			// 	while (n_pass++ < MAX_SEQ_PASSES)
-			// 	{
-			// 		rt_render_shoot_pixel(renderer, coords);
-			// 		rt_accumulate_pixel(renderer, coords);
-			// 		renderer->rendered++;
-			// 	}
-			// 	renderer->rendered = cache_rendered;
-			// 	coords.x++;
-			// 	if (coords.x >= renderer->scene->width)
-			// 	{
-			// 		rt_render_put_line(renderer, coords.y);
-			// 		coords.x = 0;
-			// 		coords.y++;
-			// 		if (coords.y >= renderer->scene->height)
-			// 		{
-			// 			renderer->rendered++;
-			// 			coords.y = 0;
-			// 			break;
-			// 		}
-			// 	}
-			// }
 		}
 	}
-	// ft_printf("rendering ! %d\n", renderer->rendered);
 
 	mlx_put_image_to_window(mlx.rt_mlx, mlx.rt_win, mlx.rt_imgs[0], 0, 0);
 
 	if ((renderer->scene->rt_flags & RT_RAY_DEBUG))
 	{
-		rt_trace_line(renderer->scene, (t_vec2i){0, 0}, (t_vec2i){renderer->scene->width / 4, 0}, rt_color(0xFFFFFFFF));
-		rt_trace_line(renderer->scene, (t_vec2i){renderer->scene->width / 4, 0}, (t_vec2i){renderer->scene->width / 4, renderer->scene->height / 4}, rt_color(0xFFFFFFFF));
-		rt_trace_line(renderer->scene, (t_vec2i){0, renderer->scene->height / 4}, (t_vec2i){renderer->scene->width / 4, renderer->scene->height / 4}, rt_color(0xFFFFFFFF));
-		rt_trace_line(renderer->scene, (t_vec2i){0, 0}, (t_vec2i){0, renderer->scene->height / 4}, rt_color(0xFFFFFFFF));
-		rt_trace_line(renderer->scene, (t_vec2i){0, renderer->scene->height / 4 - renderer->scene->width / 8}, (t_vec2i){renderer->scene->width / 8, renderer->scene->height / 4}, rt_color(0xFFFFFFFF));
-		rt_trace_line(renderer->scene, (t_vec2i){renderer->scene->width / 8, renderer->scene->height / 4}, (t_vec2i){renderer->scene->width / 4, renderer->scene->height / 4 - renderer->scene->width / 8}, rt_color(0xFFFFFFFF));
+		rt_trace_line(renderer, (t_vec2i){0, 0}, (t_vec2i){renderer->scene->width / 4, 0}, rt_color(0xFFFFFFFF));
+		rt_trace_line(renderer, (t_vec2i){renderer->scene->width / 4, 0}, (t_vec2i){renderer->scene->width / 4, renderer->scene->height / 4}, rt_color(0xFFFFFFFF));
+		rt_trace_line(renderer, (t_vec2i){0, renderer->scene->height / 4}, (t_vec2i){renderer->scene->width / 4, renderer->scene->height / 4}, rt_color(0xFFFFFFFF));
+		rt_trace_line(renderer, (t_vec2i){0, 0}, (t_vec2i){0, renderer->scene->height / 4}, rt_color(0xFFFFFFFF));
+		rt_trace_line(renderer, (t_vec2i){0, renderer->scene->height / 4 - renderer->scene->width / 8}, (t_vec2i){renderer->scene->width / 8, renderer->scene->height / 4}, rt_color(0xFFFFFFFF));
+		rt_trace_line(renderer, (t_vec2i){renderer->scene->width / 8, renderer->scene->height / 4}, (t_vec2i){renderer->scene->width / 4, renderer->scene->height / 4 - renderer->scene->width / 8}, rt_color(0xFFFFFFFF));
 		mlx_put_image_to_window(mlx.rt_mlx, mlx.rt_win, mlx.rt_imgs[1], renderer->scene->width - (renderer->scene->width / 4) - 1, 0);
 	}
 }

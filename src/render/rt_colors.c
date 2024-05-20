@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 21:05:47 by rgramati          #+#    #+#             */
-/*   Updated: 2024/05/10 16:21:17 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/05/13 23:24:01 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,10 +20,10 @@ t_color	rt_color_from_norm(t_color_norm color)
 {
 	t_color	result;
 
-	result.a = color.a * 255;
-	result.r = color.r * 255;
-	result.g = color.g * 255;
-	result.b = color.b * 255;
+	result.a = (uint8_t) ft_fmin(color.a * 255, 255);
+	result.r = (uint8_t) ft_fmin(color.r * 255, 255);
+	result.g = (uint8_t) ft_fmin(color.g * 255, 255);
+	result.b = (uint8_t) ft_fmin(color.b * 255, 255);
 	return (result);
 }
 
@@ -46,6 +46,9 @@ t_color_norm	rt_color_add(t_color_norm c1, t_color_norm c2)
 	result.r = ft_fmin(c1.r + c2.r, 1.);
 	result.g = ft_fmin(c1.g + c2.g, 1.);
 	result.b = ft_fmin(c1.b + c2.b, 1.);
+	// result.r = c1.r + c2.r;
+	// result.g = c1.g + c2.g;
+	// result.b = c1.b + c2.b;
 	return (result);
 }
 
@@ -68,6 +71,9 @@ t_color_norm	rt_color_fact(t_color_norm c1, double f)
 	result.r = ft_fmin(c1.r * f, 1.);
 	result.g = ft_fmin(c1.g * f, 1.);
 	result.b = ft_fmin(c1.b * f, 1.);
+	// result.r = c1.r * f;
+	// result.g = c1.g * f;
+	// result.b = c1.b * f;
 	return (result);
 }
 
@@ -76,14 +82,14 @@ t_color_norm	rt_color_fact(t_color_norm c1, double f)
 // 	t_rt_ray	s_ray;
 // 	t_rt_hit	s_hit;
 
-// 	s_ray = (t_rt_ray){.color = rt_color_from_norm(rt_color(0xFF000000)), .origin = hit.position,
-// 		.direction = light_dir, .bounces = 0};
+// 	s_ray = (t_rt_ray){.color = rt_color_from_norm(rt_color(0xFF000000)), .origin = hit.pos,
+// 		.dir = light_dir, .bounces = 0};
 // 	s_ray.origin = ft_vec3d_add(s_ray.origin, ft_vec3d_mult(norm, 0.1f));
 // 	rt_ray_cast(scene, &s_ray, &s_hit);
-// 	if (hit.hit_object == s_hit.hit_object)
+// 	if (hit.obj == s_hit.obj)
 // 		return (false);
-// 	return (ft_vec3d_len(light_dir) - ft_vec3d_len(ft_vec3d_sub(hit.position,
-// 				s_hit.position)) > 0.0f);
+// 	return (ft_vec3d_len(light_dir) - ft_vec3d_len(ft_vec3d_sub(hit.pos,
+// 				s_hit.pos)) > 0.0f);
 // }
 
 static void	rt_color_diffuse(
@@ -98,7 +104,7 @@ static void	rt_color_diffuse(
 
 	*c = rt_color_to_norm(rt_color(0xFF000000));
 	light = (t_rt_object) scene->lights[0];
-	light_dir = ft_vec3d_sub(light.position, hit.position);
+	light_dir = ft_vec3d_sub(light.pos, hit.pos);
 	// if (rt_color_occlusion(scene, hit, light_dir, norm))
 	// 	return ;
 	light_dir = ft_vec3d_norm(light_dir);
@@ -107,7 +113,7 @@ static void	rt_color_diffuse(
 		dratio = 0.0f;
 	dratio *= ((t_rt_obj_light *)light.options)->brightness;
 	dratio = ft_fmin(1.0f, dratio);
-	*c = light.material.obj_color;
+	*c = light.mat.obj_color;
 	*c = rt_color_mult(*c, (t_color_norm){1.0, dratio, dratio, dratio});
 }
 
@@ -116,8 +122,8 @@ void	rt_color_ambient(t_rt_scene *scene, t_color_norm *c)
 	t_color_norm	ambient;
 	double			brightness;
 
-	brightness = scene->ambient.material.emi_strength;
-	ambient = scene->ambient.material.emi_color;
+	brightness = scene->ambient.mat.emi_strength;
+	ambient = scene->ambient.mat.emi_color;
 	// ft_printf("mon bon pixel la (%.2f %.2f %.2f) -> ", c->r, c->g, c->b);
 
 	c->r = ft_fmin((ambient.r * brightness) + c->r, 1.0f);
@@ -131,7 +137,7 @@ t_vec3d	rt_color_specular(t_rt_ray ray, t_vec3d norm, t_vec3d light_dir)
 {
 	t_vec3d	reflect;
 
-	reflect = ft_vec3d_norm(ft_vec3d_sub(ray.direction, ft_vec3d_mult(norm, 2.0 * ft_vec3d_dot(light_dir, norm))));
+	reflect = ft_vec3d_norm(ft_vec3d_sub(ray.dir, ft_vec3d_mult(norm, 2.0 * ft_vec3d_dot(light_dir, norm))));
 	// ft_printf("");
 	return (reflect);
 }
@@ -145,12 +151,12 @@ t_color	rt_obj_color(t_rt_scene *scene, t_rt_hit hit, t_rt_ray ray, t_vec3d norm
 	// t_vec3d			spec;
 
 	(void) ray;	
-	if (hit.hit_object->type != RT_OBJ_LIGHT)
+	if (hit.obj->type != RT_OBJ_LIGHT)
 		rt_color_diffuse(scene, hit, norm, &diff);
 	rt_color_ambient(scene, &ambi);
-	// light_dir = ft_vec3d_sub(scene->lights->position, hit.position);
+	// light_dir = ft_vec3d_sub(scene->lights->pos, hit.pos);
 	// spec = rt_color_specular(ray, norm, light_dir);
-	// double specratio = ((t_rt_obj_light *)(scene->lights->options))->brightness * ft_vec3d_dot(ft_vec3d_mult(ray.direction, -1.0f), spec);
+	// double specratio = ((t_rt_obj_light *)(scene->lights->options))->brightness * ft_vec3d_dot(ft_vec3d_mult(ray.dir, -1.0f), spec);
 	// t_color_norm speccolor = rt_color_mult(rt_color_to_norm(scene->lights->color), (t_color_norm){1.0, specratio, specratio, specratio}, 0);
 	// ft_printf("%6f %6f %6f\n", spec.r, spec.g, spec.b);
 	// diff.a = ft_fmin(diff.a + ambi.a + spec.a, 1.0f);
@@ -158,7 +164,7 @@ t_color	rt_obj_color(t_rt_scene *scene, t_rt_hit hit, t_rt_ray ray, t_vec3d norm
 	diff.g = ft_fmin(diff.g + ambi.g, 1.0f);
 	diff.b = ft_fmin(diff.b + ambi.b, 1.0f);
 
-	result = rt_color_from_norm(rt_color_mult(diff, hit.hit_object->material.obj_color));
+	result = rt_color_from_norm(rt_color_mult(diff, hit.obj->mat.obj_color));
 
 	return (result);
 }

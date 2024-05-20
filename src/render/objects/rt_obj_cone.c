@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/26 16:01:40 by rgramati          #+#    #+#             */
-/*   Updated: 2024/05/05 19:26:02 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/05/19 18:52:13 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,12 +26,12 @@ void    rt_obj_cone_cut(
 	double      eq_params[4];
 	double      delta_root;
 
-	tmp_vect = ft_vec3d_sub(ray.origin, obj->position);
-	tmps[0] = ft_vec3d_dot(ray.direction, cone->norm);
+	tmp_vect = ft_vec3d_sub(ray.origin, obj->pos);
+	tmps[0] = ft_vec3d_dot(ray.dir, cone->norm);
 	tmps[1] = ft_vec3d_dot(tmp_vect, cone->norm);
 	tmps[2] = ft_fpow(cos(cone->theta), 2);
 	eq_params[0] = ft_fpow(tmps[0], 2) - tmps[2];
-	eq_params[1] = 2.0f * (tmps[0] * tmps[1] - (ft_vec3d_dot(tmp_vect, ray.direction) * tmps[2]));
+	eq_params[1] = 2.0f * (tmps[0] * tmps[1] - (ft_vec3d_dot(tmp_vect, ray.dir) * tmps[2]));
 	eq_params[2] = ft_fpow(tmps[1], 2) - ft_vec3d_dot(tmp_vect, tmp_vect) * tmps[2];
 	eq_params[3] = ft_fpow(eq_params[1], 2) - 4.0 * eq_params[0] * eq_params[2];
 	if (eq_params[3] < 0.0f)
@@ -60,10 +60,10 @@ bool    rt_obj_cone_intersect(
 		rt_swap(t_s, t_s + 1);
 	if (t_s[0] < 0.0f)
 		return (false);
-	hitpos = ft_vec3d_sub(ft_vec3d_add(ray.origin, ft_vec3d_mult(ray.direction, t_s[0])), obj->position);
+	hitpos = ft_vec3d_sub(ft_vec3d_add(ray.origin, ft_vec3d_mult(ray.dir, t_s[0])), obj->pos);
 	if (ft_vec3d_len(hitpos) > (cone->height / cos(cone->theta)))
 		rt_swap(t_s, t_s + 1);
-	hitpos = ft_vec3d_sub(ft_vec3d_add(ray.origin, ft_vec3d_mult(ray.direction, t_s[0])), obj->position);
+	hitpos = ft_vec3d_sub(ft_vec3d_add(ray.origin, ft_vec3d_mult(ray.dir, t_s[0])), obj->pos);
 	if (ft_vec3d_len(hitpos) > (cone->height / cos(cone->theta)))
 		return (false);
 	if (t_s[0] < 0.0f)
@@ -83,17 +83,17 @@ t_vec3d	rt_obj_cone_norm(
 	double			t;
 
 	(void) ray;
-	cone = (t_rt_obj_cone *)hit.hit_object->options;
+	cone = (t_rt_obj_cone *)hit.obj->options;
 	// if (cone->last_hit_on_edge)
 	// {
-	t = ft_vec3d_dot(cone->norm, ft_vec3d_sub(hit.position, hit.hit_object->position));
+	t = ft_vec3d_dot(cone->norm, ft_vec3d_sub(hit.pos, hit.obj->pos));
 	t = -t / ft_vec3d_dot(cone->norm, cone->norm);
-	contact = ft_vec3d_add(hit.hit_object->position, ft_vec3d_mult(cone->norm, -t));
-	norm = ft_vec3d_sub(hit.position, contact);
+	contact = ft_vec3d_add(hit.obj->pos, ft_vec3d_mult(cone->norm, -t));
+	norm = ft_vec3d_sub(hit.pos, contact);
 	// }
 	// else
 	// {
-	// 	if (ft_vec3d_dot(ray.direction, cone->norm) < 0.0)
+	// 	if (ft_vec3d_dot(ray.dir, cone->norm) < 0.0)
 	// 		norm = ft_vec3d_mult(cone->norm, -1.0f);
 	// 	else
 	// 		norm = cone->norm;

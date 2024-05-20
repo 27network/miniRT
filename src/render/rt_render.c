@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 07:51:17 by kiroussa          #+#    #+#             */
-/*   Updated: 2024/05/11 20:37:17 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/05/13 23:40:35 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 #include <rt/error.h>
 #include <rt/renderer.h>
 
-void	rt_start_rendering(t_rt_scene *s, t_rt_mlx_data *m, t_rt_renderer *r)
+void	rt_start_rendering(t_rt_mlx_data *m, t_rt_renderer *r)
 {
 	mlx_on_event(m->rt_mlx, m->rt_win,
 		MLX_WINDOW_EVENT, rt_window_event, m);
@@ -28,12 +28,13 @@ void	rt_start_rendering(t_rt_scene *s, t_rt_mlx_data *m, t_rt_renderer *r)
 	mlx_on_event(m->rt_mlx, m->rt_win,
 		MLX_MOUSEDOWN, rt_mousedown_event, r);
 	mlx_loop_hook(m->rt_mlx, rt_render_update, r);
-	rt_scene_example(s);
 	mlx_loop(m->rt_mlx);
 	mlx_destroy_image(m->rt_mlx, m->rt_imgs[0]);
 	mlx_destroy_image(m->rt_mlx, m->rt_imgs[1]);
 	mlx_destroy_window(m->rt_mlx, m->rt_win);
 	mlx_destroy_display(m->rt_mlx);
+	free(r->calc);
+	free(r->image);
 }
 
 void	rt_do_rendering(t_rt_renderer *renderer)
@@ -43,8 +44,6 @@ void	rt_do_rendering(t_rt_renderer *renderer)
 		rt_render_home(renderer);
 	else if (renderer->status == RT_RS_SCENE)
 		rt_render_scene(renderer);
-	else
-		rt_render_editor(renderer);
 }
 
 t_rt_error	rt_mlx_init(t_rt_scene *s, t_rt_mlx_data *m)
@@ -63,7 +62,7 @@ t_rt_error	rt_mlx_init(t_rt_scene *s, t_rt_mlx_data *m)
 	m->rt_imgs[1] = mlx_new_image(m->rt_mlx, s->width, s->height);
 	for (int i = 0; i < s->width; i++) {
 		for (int j = 0; j < s->height; j++) {
-			mlx_set_image_pixel(m->rt_mlx, m->rt_imgs[0], i, j, -1);
+			mlx_set_image_pixel(m->rt_mlx, m->rt_imgs[0], i, j, 0);
 		}
 	}
 	if (!m->rt_imgs[0] || !m->rt_imgs[1])
@@ -100,10 +99,12 @@ t_rt_error	rt_render(t_rt_scene *scene, t_vec2i size)
 
 	scene->width = size.x;
 	scene->height = size.y;
-	err = rt_mlx_init(scene, &mlx_data);
-	rt_getmlx(0, &mlx_data);
-	err = rt_renderer_init(scene, &mlx_data, &renderer);
+	err = rt_scene_example(scene);
 	if (err.type == RT_OK)
-		rt_start_rendering(scene, &mlx_data, &renderer);
+		err = rt_renderer_init(scene, &mlx_data, &renderer);
+	if (err.type == RT_OK)
+		err = rt_mlx_init(scene, &mlx_data);
+	if (err.type == RT_OK)
+		rt_start_rendering(&mlx_data, &renderer);
 	return (err);
 }

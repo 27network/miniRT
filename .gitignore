@@ -1,6 +1,7 @@
 /miniRT*
 /rt*
 .vscode/
+.cache/
 .direnv/
 *.swp
 valgrind-out.txt
@@ -8,4 +9,5 @@ valgrind-out.txt
 *.so
 *.a
 *.out
+*.json
 build/

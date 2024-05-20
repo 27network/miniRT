@@ -6,7 +6,7 @@
 #    By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/08/06 21:19:50 by kiroussa          #+#    #+#              #
-#    Updated: 2024/05/11 03:17:38 by rgramati         ###   ########.fr        #
+#    Updated: 2024/05/14 18:11:33 by rgramati         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -33,9 +33,10 @@ SRC				=	error/rt_err.c						\
 					render/objects/rt_obj_light.c		\
 					render/objects/rt_obj_plane.c		\
 					render/objects/rt_obj_sphere.c		\
+					render/rays/rt_rays.c				\
+					render/rays/rt_ray_process.c		\
 					render/rt_colors.c					\
 					render/rt_hooks.c					\
-					render/rt_rays.c					\
 					render/rt_render.c					\
 					render/rt_render_utils.c			\
 					render/rt_rendering.c				\
@@ -43,7 +44,6 @@ SRC				=	error/rt_err.c						\
 					scene/rt_scene_free.c				\
 					scene/rt_scene_init.c				\
 					scene/rt_scene_transform.c			\
-					../libattopng/libattopng.c			\
 					main.c
 
 SRC_DIR			=	src
@@ -62,11 +62,11 @@ LIBFT_DIR		=	third-party/libft
 LIBFT			=	$(LIBFT_DIR)/libft.so
 
 CC				=	clang
-CFLAGS			= 	-Wall -Wextra -Werror
+CFLAGS			= 	-Wall -Wextra -Werror -g3 #-static-libsan -fsanitize=address -fno-omit-frame-pointer
 ifeq ($(FUNMODE), 1)
 	CFLAGS		+=	-O3
 endif
-COPTS			= 	-I $(INCLUDE_DIR) -I $(MLX_DIR)/$(INCLUDE_DIR)s -I $(LIBFT_DIR)/$(INCLUDE_DIR) -I libattopng
+COPTS			= 	-I $(INCLUDE_DIR) -I $(MLX_DIR)/$(INCLUDE_DIR)s -I $(LIBFT_DIR)/$(INCLUDE_DIR)
 LDFLAGS			=	-lSDL2 -lm
 
 ifeq ($(DEBUG), 1)

@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 02:33:41 by kiroussa          #+#    #+#             */
-/*   Updated: 2024/05/11 19:47:40 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/05/14 18:09:34 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ typedef bool				t_intersect_fn(t_rt_ray ray, t_rt_object *obj,
 								t_rt_hit *hit);
 typedef t_vec3d				t_hit_norm_fn(t_rt_ray ray, t_rt_hit hit);
 
-typedef struct s_rt_material
+typedef struct s_rt_mat
 {
 	t_color_norm	obj_color;
 	t_color_norm	emi_color;
@@ -69,14 +69,21 @@ typedef struct s_rt_material
 	t_color_norm	spe_color;
 	double			spe_prob;
 	double			smoothness;
-}	t_rt_material;
+}	t_rt_mat;
+
+typedef struct s_rt_skybox
+{
+	t_vec3d	usky;
+	t_vec3d dsky;
+	t_vec3d gcol;
+}	t_rt_skybox;
 
 typedef struct s_rt_object
 {
 	t_rt_object_type	type;
-	t_vec3d				position;
+	t_vec3d				pos;
 	t_vec3d				rotation;
-	t_rt_material		material;
+	t_rt_mat		mat;
 	t_intersect_fn		*intersect;
 	t_hit_norm_fn		*norm;
 	void				*options;
@@ -84,16 +91,17 @@ typedef struct s_rt_object
 
 typedef struct s_rt_scene
 {
-	int			width;
-	int			height;
-	t_rt_object	camera;
-	t_rt_object	ambient;
 	t_rt_object	*objects;
 	t_rt_object	*lights;
-	size_t		objects_size;
-	size_t		lights_size;
 	uint8_t		rt_flags;
 	int			pratio;
+	int			width;
+	int			height;
+	size_t		objects_size;
+	size_t		lights_size;
+	t_rt_object	camera;
+	t_rt_object	ambient;
+	t_rt_skybox	skybox;
 }	t_rt_scene;
 
 t_rt_object	*rt_object_init(t_rt_object *obj, t_rt_object_type type);
@@ -117,9 +125,6 @@ void		rt_obj_set_pos(t_rt_object *obj, double x, double y, double z);
 void		rt_obj_set_rot(t_rt_object *obj, double x, double y, double z);
 
 /* DEBUGGER ***************************************************************** */
-
-void		rt_ray_render(t_rt_scene *scene, t_rt_ray ray, t_rt_hit hit,
-				t_color color);
 
 void		rt_swap(double *a, double *b);
 

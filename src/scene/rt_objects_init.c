@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 19:21:15 by rgramati          #+#    #+#             */
-/*   Updated: 2024/05/13 17:47:41 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/05/19 17:41:55 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,31 +36,35 @@ t_rt_obj_cylinder	*rt_obj_cylinder_init(
 	return (cylinder);
 }
 
+#include <ft/print.h>
+
+t_vec3d	rt_obj_camera_angulation(t_vec3d look)
+{
+	// Chopper les angles a partir du vecteur directeur de la cam.
+	const double	alpha = -acos(look.z / sqrt(pow(look.x, 2.) + pow(look.z, 2.)));
+	const double	beta = atan2(look.y, look.x);
+	// (void)look;
+
+	// const double alpha = 0;
+	// const double beta = RT_PI;
+	ft_printf("a = %6f  b = %6f\n", alpha, beta);
+	return (ft_vec3d(beta, alpha, 0.));
+}
+
 t_rt_obj_camera	*rt_obj_camera_init(
 	char *name,
-	int fov
+	int fov,
+	t_vec3d look
 )	{
 	t_rt_obj_camera	*camera;
-	size_t			i;
-	size_t			j;
 
+	(void) look;
 	camera = ft_calloc(1, sizeof(t_rt_obj_camera));
 	if (!camera)
 		return (NULL);
 	camera->name = name;
 	camera->fov = fov;
-	camera->near_clip = 1.;
-	i = 0;
-	while (i < 4)
-	{
-		j = 0;
-		while (j < 4)
-		{
-			camera->localToWorld[i][j] = ((i == 2) && (j == 2));
-			j++;
-		}
-		i++;
-	}
+	camera->angle = rt_obj_camera_angulation(look);
 	return (camera);
 }
 

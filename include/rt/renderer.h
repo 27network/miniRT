@@ -6,23 +6,34 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 07:50:09 by kiroussa          #+#    #+#             */
-/*   Updated: 2024/05/13 18:16:52 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/05/18 19:59:30 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef RENDERER_H
 # define RENDERER_H
 
+# include <math.h>
 # include <mlx.h>
+# include <ft/math.h>
+# include <ft/mem.h>
 # include <rt/error.h>
 # include <rt/scene.h>
 
-# include "libattopng.h"
-
 # define RENDER_FONT "assets/fonts/menu.ttf"
-# define MAX_BOUNCES 8
-# define MAX_SEQ_PASSES 8
-# define RAY_PER_PIXEL 8
+
+# ifndef MAX_BOUNCES
+#  define MAX_BOUNCES 4
+# endif
+
+# ifndef MAX_SEQ_PASSES
+#  define MAX_SEQ_PASSES 4
+# endif
+
+# ifndef RAY_PER_PIXEL
+#  define RAY_PER_PIXEL 4
+# endif
+
 # define EPSILON 0.00001
 # define RT_PI 3.1415926535
 
@@ -54,8 +65,8 @@ typedef struct s_rt_renderer
 
 typedef struct s_rt_hit
 {
-	t_vec3d		position;
-	t_rt_object	*hit_object;
+	t_vec3d		pos;
+	t_rt_object	*obj;
 	bool		hit;
 	double		dist;
 }	t_rt_hit;
@@ -64,7 +75,7 @@ typedef struct s_rt_ray
 {
 	t_color_norm	color;
 	t_vec3d			origin;
-	t_vec3d			direction;
+	t_vec3d			dir;
 	uint8_t			bounces;
 	// t_rt_hit	*hits; //TODO: Optimiser avec une define constants MAX_REBONDS truc du genre
 }	t_rt_ray;
@@ -77,9 +88,7 @@ void		rt_render_home(t_rt_renderer *renderer);
 
 void		rt_render_scene(t_rt_renderer *renderer);
 
-void		rt_render_editor(t_rt_renderer *renderer);
-
-void		rt_start_rendering(t_rt_scene *s, t_rt_mlx_data *m, t_rt_renderer *r);
+void		rt_start_rendering(t_rt_mlx_data *m, t_rt_renderer *r);
 
 void		rt_setup_rendering(t_rt_scene *scene, t_rt_mlx_data *mlx_data);
 
@@ -103,7 +112,7 @@ int			rt_keyup_event(int key, void *param);
 
 int			rt_mousedown_event(int key, void *param);
 
-
+t_color_norm	rt_ray_loop(t_rt_renderer *renderer, t_rt_ray ray);
 
 
 void		rt_ray_init(t_rt_scene *scene, t_rt_ray *ray, t_vec2i pixs);
@@ -112,7 +121,10 @@ void		rt_ray_cast(t_rt_scene *scene, t_rt_ray *ray, t_rt_hit *hit);
 
 void		rt_ray_cast_debug(t_rt_scene *scene, t_rt_ray *ray, t_rt_hit *hit);
 
-void		rt_trace_line(t_rt_scene *scene, t_vec2i start, t_vec2i end, t_color color);
+void		rt_trace_line(t_rt_renderer *renderer, t_vec2i start, t_vec2i end, t_color color);
+
+void		rt_ray_render(t_rt_renderer *renderer, t_rt_ray ray, t_rt_hit hit,
+				t_color color);
 
 t_color_norm	rt_get_color_debug(t_rt_renderer *renderer, t_vec2i coords);
 

@@ -6,73 +6,80 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 11:10:38 by rgramati          #+#    #+#             */
-/*   Updated: 2024/05/12 19:05:07 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/05/19 18:33:17 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <ft/print.h>
 #include <rt/renderer.h>
+#include <rt/object/camera.h>
 #include <SDL2/SDL_scancode.h>
 
-// static void	rt_obj_rotate_y(t_vec3d *direction, double angle)
+// static void	rt_obj_rotate_y(t_vec3d *dir, double angle)
 // {
 // 	const double	c = cos(angle);
 // 	const double	s = sin(angle);
 	
-// 	direction->x = direction->x * c + direction->z * s;
-// 	direction->z = direction->x * -s + direction->z * c;
+// 	dir->x = dir->x * c + dir->z * s;
+// 	dir->z = dir->x * -s + dir->z * c;
 // }
 
-// static void	rt_obj_rotate_x(t_vec3d *direction, double angle)
+// static void	rt_obj_rotate_x(t_vec3d *dir, double angle)
 // {
 // 	const double	c = cos(angle);
 // 	const double	s = sin(angle);
 	
-// 	direction->x = direction->x * c + direction->y * s;
-// 	direction->y = direction->x * -s + direction->y * c;
+// 	dir->x = dir->x * c + dir->y * s;
+// 	dir->y = dir->x * -s + dir->y * c;
 // }
 
-// static void	rt_obj_rotate_z(t_vec3d *direction, double angle)
+// static void	rt_obj_rotate_z(t_vec3d *dir, double angle)
 // {
 // 	const double	c = cos(angle);
 // 	const double	s = sin(angle);
 	
-// 	direction->y = direction->y * c + direction->z * s;
-// 	direction->z = direction->y * -s + direction->z * c;
+// 	dir->y = dir->y * c + dir->z * s;
+// 	dir->z = dir->y * -s + dir->z * c;
 // }
+#include <ft/print.h>
 
 static void	rt_obj_translate(t_rt_object *obj, t_vec3d move)
 {
-	obj->position.x += move.x;
-	obj->position.y += move.y;
-	obj->position.z += move.z;
-	ft_printf("CAM POS = [%4f %4f %4f]\n", obj->position.x, obj->position.y, obj->position.z);
+	ft_printf("[%6f, %6f, %6f]\n", move.x, move.y, move.z);
+	obj->pos.x += move.x;
+	obj->pos.y += move.y;
+	obj->pos.z += move.z;
+	ft_printf("CAM POS = [%4f %4f %4f], ANGLES = (%4f %4f)\n", obj->pos.x, obj->pos.y, obj->pos.z, ((t_rt_obj_camera *)obj->options)->angle.x, ((t_rt_obj_camera *)obj->options)->angle.y);
 }
+
 
 static void	rt_input_handle(t_rt_renderer *renderer)
 {
 	float	speed;
+	t_vec3d	*cam_angles = &((t_rt_obj_camera *)(renderer->scene->camera.options))->angle;
 
 	speed = 0.1f;
 	if (renderer->input_map[SDL_SCANCODE_LCTRL])
 		speed = 0.4f;
 	if (renderer->input_map[SDL_SCANCODE_D])
-		rt_obj_translate(&(renderer->scene->camera), (t_vec3d){speed, 0.0f, 0.0f});
+		rt_obj_translate(&(renderer->scene->camera), (t_vec3d){speed * cos(cam_angles->y), 0.0f, speed * sin(cam_angles->y)});
 	if (renderer->input_map[SDL_SCANCODE_A])
-		rt_obj_translate(&(renderer->scene->camera), (t_vec3d){-speed, 0.0f, 0.0f});
+		rt_obj_translate(&(renderer->scene->camera), (t_vec3d){-speed * cos(cam_angles->y), 0.0f, -speed * sin(cam_angles->y)});
 	if (renderer->input_map[SDL_SCANCODE_SPACE])
 		rt_obj_translate(&(renderer->scene->camera), (t_vec3d){0.0f, speed, 0.0f});
 	if (renderer->input_map[SDL_SCANCODE_LSHIFT])
 		rt_obj_translate(&(renderer->scene->camera), (t_vec3d){0.0f, -speed, 0.0f});
 	if (renderer->input_map[SDL_SCANCODE_W])
-		rt_obj_translate(&(renderer->scene->camera), (t_vec3d){0.0f, 0.0f, speed});
+		rt_obj_translate(&(renderer->scene->camera), (t_vec3d){-speed * sin(cam_angles->y), 0.0f, speed * cos(cam_angles->y)});
 	if (renderer->input_map[SDL_SCANCODE_S])
-		rt_obj_translate(&(renderer->scene->camera), (t_vec3d){0.0f, 0.0f, -speed});
+		rt_obj_translate(&(renderer->scene->camera), (t_vec3d){speed * sin(cam_angles->y), 0.0f, -speed * cos(cam_angles->y)});
 	if (renderer->input_map[SDL_SCANCODE_E])
-		renderer->scene->camera.rotation.x += 0.1;
+		cam_angles->y -= 0.1;
 	if (renderer->input_map[SDL_SCANCODE_Q])
-		renderer->scene->camera.rotation.x -= 0.1;
-	// renderer->scene->camera.rotation.x = fmod(renderer->scene->camera.rotation.x, RT_PI * 2.);
+		cam_angles->y += 0.1;
+	if (renderer->input_map[SDL_SCANCODE_T])
+		cam_angles->x -= 0.1;
+	if (renderer->input_map[SDL_SCANCODE_G])
+		cam_angles->x += 0.1;
 }
 
 void	rt_clear_image(void *mlx, void *img, t_rt_scene *scene)
@@ -102,6 +109,7 @@ int	rt_render_update(void *render)
 		|| renderer->input_map[SDL_SCANCODE_A]
 		|| renderer->input_map[SDL_SCANCODE_S]
 		|| renderer->input_map[SDL_SCANCODE_D]
+		|| renderer->input_map[SDL_SCANCODE_SPACE]
 		|| renderer->input_map[SDL_SCANCODE_LCTRL]
 		|| renderer->input_map[SDL_SCANCODE_LSHIFT])
 	{
