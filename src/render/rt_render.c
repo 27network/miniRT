@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 07:51:17 by kiroussa          #+#    #+#             */
-/*   Updated: 2024/05/13 23:40:35 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/05/20 18:52:27 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,13 +20,15 @@
 void	rt_start_rendering(t_rt_mlx_data *m, t_rt_renderer *r)
 {
 	mlx_on_event(m->rt_mlx, m->rt_win,
-		MLX_WINDOW_EVENT, rt_window_event, m);
+		MLX_WINDOW_EVENT, rt_window_event, r);
 	mlx_on_event(m->rt_mlx, m->rt_win,
 		MLX_KEYDOWN, rt_keydown_event, r);
 	mlx_on_event(m->rt_mlx, m->rt_win,
 		MLX_KEYUP, rt_keyup_event, r);
 	mlx_on_event(m->rt_mlx, m->rt_win,
 		MLX_MOUSEDOWN, rt_mousedown_event, r);
+	mlx_on_event(m->rt_mlx, m->rt_win,
+		MLX_MOUSEUP, rt_mouseup_event, r);
 	mlx_loop_hook(m->rt_mlx, rt_render_update, r);
 	mlx_loop(m->rt_mlx);
 	mlx_destroy_image(m->rt_mlx, m->rt_imgs[0]);
@@ -91,7 +93,7 @@ t_rt_error	rt_renderer_init(t_rt_scene *s, t_rt_mlx_data *m, t_rt_renderer *r)
 	return (rt_ok());
 }
 
-t_rt_error	rt_render(t_rt_scene *scene, t_vec2i size)
+t_rt_error	rt_render(t_rt_scene *scene, t_toc_vec2i size)
 {
 	t_rt_mlx_data	mlx_data;
 	t_rt_renderer	renderer;

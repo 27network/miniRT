@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 14:43:52 by rgramati          #+#    #+#             */
-/*   Updated: 2024/05/19 10:18:19 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/05/20 18:52:27 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void	rt_render_home(t_rt_renderer *renderer)
 		scene->width / 2 - 330, 200, 0xff80b0ff, "MINI RT");
 }
 
-static t_color_norm	rt_get_color(t_rt_renderer *renderer, t_vec2i coords)
+static t_color_norm	rt_get_color(t_rt_renderer *renderer, t_toc_vec2i coords)
 {
 	static t_color_norm	pixels[1920];
 	t_color_norm		light;
@@ -42,7 +42,7 @@ static t_color_norm	rt_get_color(t_rt_renderer *renderer, t_vec2i coords)
 	{
 		ray.bounces = 0;
 		ray.color = (t_color_norm){1., 1., 1., 1.};
-		rt_ray_init(scene, &ray, (t_vec2i){coords.x, HEIGHT - coords.y});
+		rt_ray_init(scene, &ray, (t_toc_vec2i){coords.x, HEIGHT - coords.y});
 		light = rt_ray_loop(renderer, ray);
 		pixels[coords.y / scene->pratio] = light;
 		return (light);
@@ -50,7 +50,7 @@ static t_color_norm	rt_get_color(t_rt_renderer *renderer, t_vec2i coords)
 	return (pixels[coords.y / scene->pratio]);
 }
 
-void	rt_render_put_pixel(t_rt_renderer *renderer, t_vec2i coords)
+void	rt_render_put_pixel(t_rt_renderer *renderer, t_toc_vec2i coords)
 {
 	const t_rt_mlx_data	*mlx = renderer->mlx;
 	const size_t		index = coords.x * renderer->scene->height + coords.y;
@@ -61,7 +61,7 @@ void	rt_render_put_pixel(t_rt_renderer *renderer, t_vec2i coords)
 	mlx_set_image_pixel(mlx->rt_mlx, mlx->rt_imgs[0], coords.x, coords.y, color_int);
 }
 
-static void	rt_accumulate_pixel(t_rt_renderer *renderer, t_vec2i coords)
+static void	rt_accumulate_pixel(t_rt_renderer *renderer, t_toc_vec2i coords)
 {
 	const int			pos = coords.x * renderer->scene->height + coords.y;
 	const t_color_norm	image_color = (renderer->image)[pos];
@@ -77,7 +77,7 @@ static void	rt_accumulate_pixel(t_rt_renderer *renderer, t_vec2i coords)
 
 static void	rt_accumulate(t_rt_renderer *renderer)
 {
-	t_vec2i			incs;
+	t_toc_vec2i			incs;
 
 	incs.x = 0;
 	while (incs.x < renderer->scene->width)
@@ -94,7 +94,7 @@ static void	rt_accumulate(t_rt_renderer *renderer)
 	renderer->rendered++;
 }
 
-void	rt_render_shoot_pixel(t_rt_renderer *renderer, t_vec2i coords)
+void	rt_render_shoot_pixel(t_rt_renderer *renderer, t_toc_vec2i coords)
 {
 	size_t			i;
 	t_color_norm	accu;
@@ -119,7 +119,7 @@ void	rt_render_shoot_pixel(t_rt_renderer *renderer, t_vec2i coords)
 
 static void	rt_render_shoot_rays(t_rt_renderer *renderer)
 {
-	t_vec2i			coords;
+	t_toc_vec2i			coords;
 
 	coords.x = -1;
 	while (++coords.x < renderer->scene->width)
@@ -136,7 +136,7 @@ static void	rt_render_put_line(t_rt_renderer *renderer, int line_y)
 	
 	i = -1;
 	while (++i < renderer->scene->width)
-		rt_render_put_pixel(renderer, (t_vec2i) {.x = i, .y = line_y});
+		rt_render_put_pixel(renderer, (t_toc_vec2i) {.x = i, .y = line_y});
 }
 
 #include <pthread.h>
@@ -154,11 +154,11 @@ static void *rt_tamere(void *param)
 {
 	t_thread_data 	*data;
 	t_rt_renderer 	*renderer;
-	t_vec2i			coords;
+	t_toc_vec2i			coords;
 
 	data = (t_thread_data *) param;
 	renderer = &(data->renderer);
-	coords = (t_vec2i) {.x = 0, .y = data->line_y};
+	coords = (t_toc_vec2i) {.x = 0, .y = data->line_y};
 	size_t cache2 = renderer->rendered;
 	while (data->nlines > 0 && coords.y < renderer->scene->height) {
 		while (coords.x < renderer->scene->width) 
@@ -182,15 +182,15 @@ static void *rt_tamere(void *param)
 	return NULL;
 }
 
-void	rt_trace_line(t_rt_renderer *renderer, t_vec2i start, t_vec2i end, t_color color)
+void	rt_trace_line(t_rt_renderer *renderer, t_toc_vec2i start, t_toc_vec2i end, t_color color)
 {
-	t_vec2i	deltas;
+	t_toc_vec2i	deltas;
 	t_vec3d	inc;
 	t_vec3d	pos;
 	double	steps;
 	double	i;
 
-	deltas = (t_vec2i){end.x - start.x, end.y - start.y};
+	deltas = (t_toc_vec2i){end.x - start.x, end.y - start.y};
 	if (deltas.x > deltas.y)
 		steps = deltas.x;
 	else
@@ -215,7 +215,7 @@ void	rt_trace_line(t_rt_renderer *renderer, t_vec2i start, t_vec2i end, t_color 
 
 void	rt_render_scene(t_rt_renderer *renderer)
 {
-	static t_vec2i		coords = {.x = 0, .y = 0};
+	static t_toc_vec2i		coords = {.x = 0, .y = 0};
 	t_rt_mlx_data		mlx;
 	size_t				cache_rendered;
 
@@ -268,12 +268,12 @@ void	rt_render_scene(t_rt_renderer *renderer)
 
 	if ((renderer->scene->rt_flags & RT_RAY_DEBUG))
 	{
-		rt_trace_line(renderer, (t_vec2i){0, 0}, (t_vec2i){renderer->scene->width / 4, 0}, rt_color(0xFFFFFFFF));
-		rt_trace_line(renderer, (t_vec2i){renderer->scene->width / 4, 0}, (t_vec2i){renderer->scene->width / 4, renderer->scene->height / 4}, rt_color(0xFFFFFFFF));
-		rt_trace_line(renderer, (t_vec2i){0, renderer->scene->height / 4}, (t_vec2i){renderer->scene->width / 4, renderer->scene->height / 4}, rt_color(0xFFFFFFFF));
-		rt_trace_line(renderer, (t_vec2i){0, 0}, (t_vec2i){0, renderer->scene->height / 4}, rt_color(0xFFFFFFFF));
-		rt_trace_line(renderer, (t_vec2i){0, renderer->scene->height / 4 - renderer->scene->width / 8}, (t_vec2i){renderer->scene->width / 8, renderer->scene->height / 4}, rt_color(0xFFFFFFFF));
-		rt_trace_line(renderer, (t_vec2i){renderer->scene->width / 8, renderer->scene->height / 4}, (t_vec2i){renderer->scene->width / 4, renderer->scene->height / 4 - renderer->scene->width / 8}, rt_color(0xFFFFFFFF));
+		rt_trace_line(renderer, (t_toc_vec2i){0, 0}, (t_toc_vec2i){renderer->scene->width / 4, 0}, rt_color(0xFFFFFFFF));
+		rt_trace_line(renderer, (t_toc_vec2i){renderer->scene->width / 4, 0}, (t_toc_vec2i){renderer->scene->width / 4, renderer->scene->height / 4}, rt_color(0xFFFFFFFF));
+		rt_trace_line(renderer, (t_toc_vec2i){0, renderer->scene->height / 4}, (t_toc_vec2i){renderer->scene->width / 4, renderer->scene->height / 4}, rt_color(0xFFFFFFFF));
+		rt_trace_line(renderer, (t_toc_vec2i){0, 0}, (t_toc_vec2i){0, renderer->scene->height / 4}, rt_color(0xFFFFFFFF));
+		rt_trace_line(renderer, (t_toc_vec2i){0, renderer->scene->height / 4 - renderer->scene->width / 8}, (t_toc_vec2i){renderer->scene->width / 8, renderer->scene->height / 4}, rt_color(0xFFFFFFFF));
+		rt_trace_line(renderer, (t_toc_vec2i){renderer->scene->width / 8, renderer->scene->height / 4}, (t_toc_vec2i){renderer->scene->width / 4, renderer->scene->height / 4 - renderer->scene->width / 8}, rt_color(0xFFFFFFFF));
 		mlx_put_image_to_window(mlx.rt_mlx, mlx.rt_win, mlx.rt_imgs[1], renderer->scene->width - (renderer->scene->width / 4) - 1, 0);
 	}
 }

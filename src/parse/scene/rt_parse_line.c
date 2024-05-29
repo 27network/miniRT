@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 21:15:42 by kiroussa          #+#    #+#             */
-/*   Updated: 2024/04/18 10:20:58 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/05/20 18:52:06 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,13 +33,13 @@ t_rt_error	rt_parse_line(
 	while (line[col] == ' ')
 		col++;
 	if (!line[col])
-		return (rt_parse_error(file, ft_vec2i(line_number, 0), line,
+		return (rt_parse_error(file, toc_vec2i(line_number, 0), line,
 				"Empty line with spaces"));
 	id = ft_strndup(line + col, ft_strchr(line + col, ' ') - (line + col));
 	if (!id || !*id)
 	{
 		free(id);
-		return (rt_parse_error(file, ft_vec2i(line_number, col), line,
+		return (rt_parse_error(file, toc_vec2i(line_number, col), line,
 				"Expected an identifier"));
 	}
 	(void) scene;

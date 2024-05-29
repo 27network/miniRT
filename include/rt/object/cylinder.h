@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 03:20:21 by kiroussa          #+#    #+#             */
-/*   Updated: 2024/04/30 16:39:26 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/05/28 18:27:37 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,13 +21,15 @@ typedef struct s_rt_obj_cylinder
 	double	diameter;
 	double	height;
 	t_vec3d	norm;
+	t_vec3d Onorm;
 	bool	last_hit_on_edge;
 }	t_rt_obj_cylinder;
 
 t_rt_obj_cylinder	*rt_obj_cylinder_init(
 						double diameter,
 						double height,
-						t_vec3d norm);
+						t_vec3d norm,
+						t_vec3d rot);
 
 bool				rt_obj_cylinder_intersect(
 						t_rt_ray ray,

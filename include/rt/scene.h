@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 02:33:41 by kiroussa          #+#    #+#             */
-/*   Updated: 2024/05/14 18:09:34 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/05/25 15:36:08 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@
 # include <rt/error.h>
 # include <stddef.h>
 # include <rt/color.h>
+# include <tocard/ui.h>
 
 typedef struct s_rt_ray		t_rt_ray;
 typedef struct s_rt_object	t_rt_object;
@@ -54,7 +55,8 @@ typedef enum e_rt_object_type
 	RT_OBJ_CONE,
 	RT_OBJ_TRIANGLE,
 	RT_OBJ_LIGHT,
-	RT_OBJ_CAMERA
+	RT_OBJ_CAMERA,
+	RT_OBJ_CUBE
 }	t_rt_object_type;
 
 typedef bool				t_intersect_fn(t_rt_ray ray, t_rt_object *obj,
@@ -83,7 +85,7 @@ typedef struct s_rt_object
 	t_rt_object_type	type;
 	t_vec3d				pos;
 	t_vec3d				rotation;
-	t_rt_mat		mat;
+	t_rt_mat			mat;
 	t_intersect_fn		*intersect;
 	t_hit_norm_fn		*norm;
 	void				*options;

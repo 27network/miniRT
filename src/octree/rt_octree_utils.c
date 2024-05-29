@@ -1,25 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   box.h                                              :+:      :+:    :+:   */
+/*   rt_octree_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/18 19:15:48 by rgramati          #+#    #+#             */
-/*   Updated: 2024/04/18 19:49:10 by rgramati         ###   ########.fr       */
+/*   Created: 2024/05/24 20:31:51 by rgramati          #+#    #+#             */
+/*   Updated: 2024/05/24 21:03:12 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef BOX_H
-# define BOX_H
+#include <ft/math.h>
+#include <stdlib.h>
+#include <rt/octree.h>
 
-# include <ft/math/vector.h>
+t_rt_onode	*rt_onode_init(
+	t_vec3d mid_planes
+)	{
+	t_rt_onode	*new;
+	size_t		i;
 
-typedef struct s_rt_obj_box
-{
-	t_vec3d	size;
-}	t_rt_obj_box;
+	new = malloc(sizeof(t_rt_onode));
+	if (!new)
+		return (NULL);
+	new->mid_planes = mid_planes;
+	new->term = false;
+	i = 0;
+	while (i < 0)
+		new->childs[i++] = NULL;
+	return (new);
+}
 
-t_rt_obj_box	*rt_obj_box_init(double sx, double sy, double sz);
 
-#endif // BOX_H
+// int main(void)
+// {
+// 	return (0);
+// }

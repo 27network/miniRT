@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 07:48:48 by kiroussa          #+#    #+#             */
-/*   Updated: 2024/05/20 16:06:01 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/05/29 12:36:32 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@
 #include <rt/object/sphere.h>
 #include <rt/object/light.h>
 
-#define OBJ_COUNT 1
+#define OBJ_COUNT 2
 #define LIGHTS_COUNT 0
 
 void	rt_swap(double *a, double *b)
@@ -116,6 +116,11 @@ t_rt_object	*rt_object_init(t_rt_object *obj, t_rt_object_type type)
 		obj->intersect = &rt_obj_quad_intersect;
 		obj->norm = &rt_obj_quad_norm;
 	}
+	if (type == RT_OBJ_CUBE)
+	{
+		obj->intersect = &rt_obj_cube_intersect;
+		obj->norm = &rt_obj_quad_norm;
+	}
 	return (obj);
 }
 
@@ -184,12 +189,36 @@ t_rt_error	rt_scene_example(t_rt_scene *scene)
 	ambient->mat.emi_strength = 0.0;
 	ambient->mat.smoothness = 0.0;
 
+	// new_quad(ft_vec3d(-1., -1., 0.), ft_vec3d_norm(ft_vec3d(2., 1., 0.)), ft_vec3d(-1., 2., 0.), ft_vec3d(0., 0., 2.), &scene->objects[0]);
+	// new_quad(ft_vec3d(-1., -1., 0.), ft_vec3d_norm(ft_vec3d(-1., 2., 0.)), ft_vec3d(0., 0., 2.), ft_vec3d(2., 1., 0.), &scene->objects[2]);
+	new_quad(ft_vec3d(-1., 0., -1.), ft_vec3d_norm(ft_vec3d(0., 1., 0.)), ft_vec3d(2., 0., 0.), ft_vec3d(0., 0., 2.), &scene->objects[1]);
+
 	// new_sphere(ft_vec3d(0., 0., 0.), 1., &scene->objects[0]);
-	new_quad(ft_vec3d(-1., 0., -1.), ft_vec3d(0., 1., 0.), ft_vec3d(2., 0., 0.), ft_vec3d(0., 0., 2.), &scene->objects[0]);
+	t_rt_object	*cylinder;
+	cylinder = rt_object_init(&scene->objects[0], RT_OBJ_CYLINDER);
+	rt_obj_set_pos(cylinder, 0., 0., 0.);
+	rt_obj_set_rot(cylinder, 0., 0., 0.);
+	cylinder->options = rt_obj_cylinder_init(2., 5., ft_vec3d(0., 1., 0.), cylinder->rotation);
+	cylinder->mat.obj_color = rt_color_to_norm(rt_color(0xFFFF0000));
+	cylinder->mat.smoothness = 1.0;
+	cylinder->mat.spe_prob = 0.5;
+
+	// new_sphere(ft_vec3d(0., 0., 0.), 1., &scene->objects[0]);
+	// new_sphere(ft_vec3d(1., 0., 0.), 1., &scene->objects[1]);
+	// new_sphere(ft_vec3d(2., 0., 0.), 1., &scene->objects[2]);
+	// new_sphere(ft_vec3d(3., 0., 0.), 1., &scene->objects[3]);
+	// new_sphere(ft_vec3d(4., 0., 0.), 1., &scene->objects[4]);
+	// new_sphere(ft_vec3d(5., 0., 0.), 1., &scene->objects[5]);
+	// new_sphere(ft_vec3d(6., 0., 0.), 1., &scene->objects[6]);
+	// new_sphere(ft_vec3d(7., 0., 0.), 1., &scene->objects[7]);
+
+	// new_quad(ft_vec3d(-2., 4., -2.), ft_vec3d(0., -1., 0.), ft_vec3d(4., 0., 0.), ft_vec3d(0., 0., 4.), &scene->objects[1]);
+	// scene->objects[1].mat.emi_strength = 1.0;
+	// scene->objects[1].mat.emi_color = rt_color_to_norm(rt_color(0xFFFFFFFF));
 
 	t_rt_object	*camera;
 	camera = rt_object_init(&scene->camera, RT_OBJ_CAMERA);
-	rt_obj_set_pos(camera, 0., 2., -5);
+	rt_obj_set_pos(camera, 0., 0., -4.);
 	camera->options = rt_obj_camera_init("Marvin", 90, ft_vec3d(0., 0., 1.));
 	camera->mat.emi_color = rt_color_to_norm(rt_color(0x00000000));
 	camera->mat.emi_strength = 0.0;

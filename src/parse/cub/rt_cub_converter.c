@@ -1,31 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   octree.h                                           :+:      :+:    :+:   */
+/*   rt_cub_converter.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/10 19:40:32 by rgramati          #+#    #+#             */
-/*   Updated: 2024/05/24 21:02:45 by rgramati         ###   ########.fr       */
+/*   Created: 2024/05/29 14:12:34 by rgramati          #+#    #+#             */
+/*   Updated: 2024/05/29 14:38:52 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef OCTREE_H
-# define OCTREE_H
-# undef OCTREE_H
-# ifndef __OCTREE_H__
-#  define __OCTREE_H__
+#include <unistd.h>
+#include <fcntl.h>
+#include <ft/string/parse.h>
+#include <rt/parse/parser.h>
+#include <rt/parse/cub_parser.h>
+#include <ft/print.h>
+#include <ft/string.h>
+#include <ft/io.h>
 
-#  include <rt/scene.h>
-#  include <ft/math.h>
-
-typedef struct	s_rt_octree_node
+t_rt_error	rt_cub_check_map(t_cub_map *map, char *file)
 {
-	struct s_rt_octree_node	*childs[8];
-	t_vec3d					mid_planes;
-	bool					term;
-}	t_rt_onode;
+	t_rt_error	err;
+	t_clist		*current;
+	size_t		len;
+	size_t		count;
 
-# endif // __OCTREE_H__
-#endif // OCTREE_H
-
+	current = map->map_list;
+	count = 0;
+	while (current->next)
+	{
+		
+	}
+	return (err);
+}

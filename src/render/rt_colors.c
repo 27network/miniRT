@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 21:05:47 by rgramati          #+#    #+#             */
-/*   Updated: 2024/05/13 23:24:01 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/05/28 17:43:55 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,46 @@ t_color_norm	rt_color_fact(t_color_norm c1, double f)
 	// result.b = c1.b * f;
 	return (result);
 }
+
+typedef struct s_vec3
+{
+    float    x;
+    float    y;
+    float    z;
+    float    w;
+} __attribute__((aligned(16))) t_vec3;
+
+double	map(double start, double end, double min, double max, double val)
+{
+	return (start + (end - start) * ((val - min) / (max - min)));
+}
+
+// 0 -> 0xFF0000FF
+
+//1000 -> 0xFFFF0000
+
+// static unsigned int rast_get_color(t_vec3 center, t_vec3 point)
+// {
+// 	const float			distance = sqrtf(powf(point.x - center.x, 2.) + powf(point.y - center.y, 2.) + powf(point.z - center.z, 2.));
+// 	const float			ratio = 255 * distance / 1000;
+// 	const unsigned int	color = 0 + ((int)ratio << 16) + ((int)ratio);
+	
+// 	return (color);
+// }
+
+#include <ft/math.h>
+#include <ft/math/matrix.h>
+
+// int main(void)
+// {
+// 	t_mat3d	mat = ft_mat3d_rot(0. ,RT_PI / 2. ,0.);
+
+// 	ft_printf("%4f %4f %4f\n%4f %4f %4f\n%4f %4f %4f\n\n", mat.m[0][0], mat.m[0][1], mat.m[0][2], mat.m[1][0], mat.m[1][1], mat.m[1][2], mat.m[2][0], mat.m[2][1], mat.m[2][2]);
+// 	// ft_mat3d_mult(mat, ft_mat3d_rot_z(1.2));
+// 	// ft_printf("%4f %4f %4f\n%4f %4f %4f\n%4f %4f %4f\n", mat.m[0][0], mat.m[0][1], mat.m[0][2], mat.m[1][0], mat.m[1][1], mat.m[1][2], mat.m[2][0], mat.m[2][1], mat.m[2][2]);
+// 	// rast_get_color((t_vec3){0., 0., 0., 0.}, (t_vec3){456., 24., 0., 0.});
+// }
+
 
 // bool	rt_color_occlusion(t_rt_scene *scene, t_rt_hit hit, t_vec3d light_dir, t_vec3d norm)
 // {

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kiroussa <oss@xtrm.me>                     +#+  +:+       +#+        */
+/*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 07:37:43 by kiroussa          #+#    #+#             */
-/*   Updated: 2024/02/23 04:14:14 by kiroussa         ###   ########.fr       */
+/*   Updated: 2024/05/20 18:54:55 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ t_rt_error	rt_parse_scene(t_rt_scene *scene, const char *path);
 t_rt_error	rt_parse_line(t_rt_scene *scene, const char *file,
 				const char *line, int line_number);
 
-t_rt_error	rt_parse_error(const char *file, t_vec2i pos,
+t_rt_error	rt_parse_error(const char *file, t_toc_vec2i pos,
 				const char *line, const char *message);
 
 //void		rt_parser_register_type(const char *id, t_rt_parser_type type);

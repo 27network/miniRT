@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   rt_error_print.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kiroussa <oss@xtrm.me>                     +#+  +:+       +#+        */
+/*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 07:52:04 by kiroussa          #+#    #+#             */
-/*   Updated: 2024/02/23 00:32:32 by kiroussa         ###   ########.fr       */
+/*   Updated: 2024/05/26 22:22:03 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,8 @@
 
 static void	rt_error_printd(t_rt_error error)
 {
-	ft_putstr_fd(2, ": ");
-	ft_putstr_fd(2, (char *) error.data);
+	ft_putstr_fd( ": ", 2);
+	ft_putstr_fd( (char *) error.data, 2);
 	if (error.type == RT_ERROR_SCENE_PARSE)
 		free(error.data);
 }
@@ -37,12 +37,12 @@ void	rt_error_print(t_rt_error error)
 
 	if (error.type == RT_OK)
 		return ;
-	ft_putstr_fd(2, "Error\n");
+	ft_putstr_fd( "Error\n", 2);
 	if (error.type < RT_OK || error.type > RT_ERROR_NULLPTR)
-		ft_putstr_fd(2, "Unknown error type\n");
+		ft_putstr_fd( "Unknown error type\n", 2);
 	else
-		ft_putstr_fd(2, error_messages[error.type]);
+		ft_putstr_fd( error_messages[error.type], 2);
 	if (error.data)
 		rt_error_printd(error);
-	ft_putstr_fd(2, "\n");
+	ft_putstr_fd( "\n", 2);
 }

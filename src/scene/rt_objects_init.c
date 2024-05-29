@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 19:21:15 by rgramati          #+#    #+#             */
-/*   Updated: 2024/05/19 17:41:55 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/05/28 18:30:58 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,8 @@
 t_rt_obj_cylinder	*rt_obj_cylinder_init(
 	double diameter,
 	double height,
-	t_vec3d norm
+	t_vec3d norm,
+	t_vec3d rot
 )	{
 	t_rt_obj_cylinder	*cylinder;
 
@@ -31,23 +32,16 @@ t_rt_obj_cylinder	*rt_obj_cylinder_init(
 		return (NULL);
 	cylinder->diameter = diameter;
 	cylinder->height = height;
-	cylinder->norm = norm;
+	cylinder->norm = ft_vec3d_norm(ft_vec3d_mult_mat3d(norm, ft_mat3d_rot(rot.x, rot.y, rot.z)));
 	cylinder->last_hit_on_edge = false;
 	return (cylinder);
 }
 
-#include <ft/print.h>
-
 t_vec3d	rt_obj_camera_angulation(t_vec3d look)
 {
-	// Chopper les angles a partir du vecteur directeur de la cam.
 	const double	alpha = -acos(look.z / sqrt(pow(look.x, 2.) + pow(look.z, 2.)));
 	const double	beta = atan2(look.y, look.x);
-	// (void)look;
 
-	// const double alpha = 0;
-	// const double beta = RT_PI;
-	ft_printf("a = %6f  b = %6f\n", alpha, beta);
 	return (ft_vec3d(beta, alpha, 0.));
 }
 
@@ -137,4 +131,36 @@ t_rt_obj_quad	*rt_obj_quad_init(
 	quad->wvect = wvect;
 	quad->hvect = hvect;
 	return (quad);
+}
+
+t_rt_obj_quad	*rt_obj_cube_init(
+	t_vec3d xvect, // (1, 0, 0)
+	t_vec3d yvect, // (0, 1, 0)
+	t_vec3d zvect  // (0, 0, 1)
+)	{
+	t_rt_obj_quad	*cube;
+
+	cube = ft_calloc(6, sizeof(t_rt_obj_quad));
+	if (!cube)
+		return (NULL);
+	cube[0].norm = ft_vec3d_norm(xvect);;
+	cube[0].wvect = zvect;
+	cube[0].hvect = yvect;
+	cube[1].norm = ft_vec3d_norm(yvect);
+	cube[1].wvect = zvect;
+	cube[1].hvect = xvect;
+	cube[2].norm = ft_vec3d_norm(zvect);
+	cube[2].wvect = xvect;
+	cube[2].hvect = yvect;
+	
+	cube[3].norm = ft_vec3d_norm(xvect);
+	cube[3].wvect = ft_vec3d_mult(zvect, -1.);
+	cube[3].hvect = ft_vec3d_mult(yvect, -1.);
+	cube[4].norm = ft_vec3d_norm(yvect);
+	cube[4].wvect = ft_vec3d_mult(zvect, -1.);
+	cube[4].hvect = ft_vec3d_mult(xvect, -1.);
+	cube[5].norm = ft_vec3d_norm(zvect);
+	cube[5].wvect = ft_vec3d_mult(xvect, -1.);
+	cube[5].hvect = ft_vec3d_mult(yvect, -1.);
+	return (cube);
 }

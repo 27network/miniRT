@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 14:08:19 by rgramati          #+#    #+#             */
-/*   Updated: 2024/05/20 16:03:38 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/05/28 14:15:56 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,13 +25,13 @@ int	mapy(t_vec3d cam, double y, int start, int end)
 
 void	rt_ray_render(t_rt_renderer *renderer, t_rt_ray ray, t_rt_hit hit, t_color color)
 {
-	t_vec2i	start;
-	t_vec2i end;
+	t_toc_vec2i	start;
+	t_toc_vec2i end;
 
-	start = (t_vec2i){WIDTH / 8, HEIGHT / 4};
+	start = (t_toc_vec2i){WIDTH / 8, HEIGHT / 4};
 	if (ray.bounces == 1 && renderer->scene->rt_flags & RT_RAY_DEBUG && hit.hit && hit.obj)
 	{
-		end = (t_vec2i){.x = mapx(renderer->scene->camera.pos, hit.pos.x, 0, WIDTH),
+		end = (t_toc_vec2i){.x = mapx(renderer->scene->camera.pos, hit.pos.x, 0, WIDTH),
 						.y = mapy(renderer->scene->camera.pos, hit.pos.z, 0, HEIGHT)};
 		rt_trace_line(renderer, end, start, color);
 	}

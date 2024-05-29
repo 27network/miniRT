@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/19 15:03:08 by rgramati          #+#    #+#             */
-/*   Updated: 2024/05/19 17:02:06 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/05/28 17:43:41 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ void	rt_ray_cast(t_rt_scene *scene, t_rt_ray *ray, t_rt_hit *hit)
 	t_rt_hit	closest;
 
 	i = -1;
+	closest = (t_rt_hit){.dist = INFINITY, .hit = false, .obj = NULL, .pos = ft_vec3d(0., 0., 0.)};
 	while (++i < scene->objects_size)
 	{
 		if (scene->objects[i].options \
@@ -42,7 +43,34 @@ void	rt_ray_cast(t_rt_scene *scene, t_rt_ray *ray, t_rt_hit *hit)
 	}
 }
 
-void	rt_ray_init(t_rt_scene *scene, t_rt_ray *ray, t_vec2i pixs)
+void	DEBUG_rt_ray_cast(t_rt_scene *scene, t_rt_ray *ray, t_rt_hit *hit)
+{
+	size_t		i;
+	t_rt_hit	closest;
+
+	i = -1;
+	closest = (t_rt_hit){.dist = INFINITY, .hit = false, .obj = NULL, .pos = ft_vec3d(0., 0., 0.)};
+	while (++i < scene->objects_size)
+	{
+		ft_printf("Testing intersection on object [%d] %p\n", i + 1, scene->objects[i]);
+		if (scene->objects[i].options \
+		&& scene->objects[i].intersect(*ray, &scene->objects[i], &closest))
+		{
+			ft_printf("\tHIT on object %p : hit point (%4f, %4f, %4f) : dist = %10f\n", scene->objects[i], closest.pos.x, closest.pos.y, closest.pos.z, closest.dist);
+			hit->hit = true;
+			if (closest.dist < hit->dist)
+			{
+				hit->obj = &scene->objects[i];
+				hit->dist = closest.dist;
+				ft_printf("\t\tNEW closest HIT ! updating closest distance to %10f\n", hit->dist);
+				hit->pos = ft_vec3d_add(ray->origin, ft_vec3d_mult(ray->dir, closest.dist));
+			}
+		}
+	}
+	ft_printf("\n");
+}
+
+void	rt_ray_init(t_rt_scene *scene, t_rt_ray *ray, t_toc_vec2i pixs)
 {
 	const t_rt_obj_camera	*cam = (t_rt_obj_camera *)scene->camera.options;
 	const double			ratio = tan(cam->fov * 0.5 * RT_PI / 180);

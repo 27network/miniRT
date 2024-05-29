@@ -10,3 +10,7 @@ git pull origin main
 make fclean
 popd
 
+pushd ./tocard-ui
+git pull origin main
+make fclean
+popd
