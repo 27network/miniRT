@@ -6,13 +6,20 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 22:34:50 by rgramati          #+#    #+#             */
-/*   Updated: 2024/05/28 17:52:34 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/06/01 15:45:14 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "ft/math/vector.h"
+#include "ft/print.h"
+#include "mlx.h"
+#include "rt/color.h"
+#include "rt/scene.h"
 #include <ft/string/parse.h>
+#include <math.h>
 #include <rt/renderer.h>
 #include <rt/object/quad.h>
+#include <stdbool.h>
 
 static t_color_norm	rt_get_skybox(
 	t_rt_renderer *renderer,
@@ -35,6 +42,22 @@ static t_color_norm	rt_get_skybox(
 	return ((t_color_norm){.a = 1., .r = comp.x, .g = comp.y, .b = comp.z});
 }
 
+static void rt_ray_colorize_checker(t_vec3d norm, t_color_norm *color)
+{
+	const double	theta = atan2(norm.x, norm.z);
+	const double	phi = acos(norm.y);
+	const double	raw_u = theta / (RT_PI * 2);
+	t_vec3d			uv;
+	
+	uv = ft_vec3d(1 - (raw_u + 0.5), 1 - (phi / RT_PI), 0.);
+	if ((fmod(uv.x, 0.1) < 0.05) ^ (fmod(uv.y, 0.1) < 0.05))
+		*color = rt_color_mult(*color, rt_color_to_norm(rt_color(0xFFFFFFFF)));
+	else
+		*color = rt_color_mult(*color, rt_color_to_norm(rt_color(0xFF000000)));
+	// uv = ft_vec3d(uv.x * ltouzali_size.x, ltouzali_size.y - (uv.y * ltouzali_size.y), 0.);
+	// *color = rt_color_mult(*color, rt_color_to_norm(rt_color(mlx_get_image_pixel(LAMLX, ltouzali, uv.x, uv.y))));
+}
+
 static void	rt_ray_colorize(
 	t_rt_ray *ray,
 	t_rt_hit *hit,
@@ -47,30 +70,18 @@ static void	rt_ray_colorize(
 	emittedlight = rt_color_fact(hit_mat.emi_color, hit_mat.emi_strength);
 	const t_color_norm		\
 	raylight = rt_color_mult(ray->color, emittedlight);
+	const t_vec3d	\
+	norm = hit->obj->norm(*ray, *hit);
 
 	*light = rt_color_add(*light, raylight);
-	
-	if (spec_bounce)
-		ray->color = rt_color_mult(ray->color, hit_mat.spe_color);
+	if ((hit_mat.flags & RT_MAT_CHECKER) && hit->obj->type == RT_OBJ_SPHERE)
+		rt_ray_colorize_checker(norm, &ray->color);
 	else
 	{
-		if (hit->obj->type != RT_OBJ_CUBE)
-			ray->color = rt_color_mult(ray->color, hit_mat.obj_color);
+		if (spec_bounce)
+			ray->color = rt_color_mult(ray->color, hit_mat.spe_color);
 		else
-		{
-			if (((t_rt_obj_quad *)hit->obj->options)->face == 0)
-				ray->color = rt_color_mult(ray->color, rt_color_to_norm(rt_color(0xFFFF0000)));
-			else if (((t_rt_obj_quad *)hit->obj->options)->face == 1)
-				ray->color = rt_color_mult(ray->color, rt_color_to_norm(rt_color(0xFF00FF00)));
-			else if (((t_rt_obj_quad *)hit->obj->options)->face == 2)
-				ray->color = rt_color_mult(ray->color, rt_color_to_norm(rt_color(0xFF0000FF)));
-			else if (((t_rt_obj_quad *)hit->obj->options)->face == 3)
-				ray->color = rt_color_mult(ray->color, rt_color_to_norm(rt_color(0xFFFFFF00)));
-			else if (((t_rt_obj_quad *)hit->obj->options)->face == 4)
-				ray->color = rt_color_mult(ray->color, rt_color_to_norm(rt_color(0xFF00FFFF)));
-			else if (((t_rt_obj_quad *)hit->obj->options)->face == 5)
-				ray->color = rt_color_mult(ray->color, rt_color_to_norm(rt_color(0xFFFF00FF)));
-		}
+			ray->color = rt_color_mult(ray->color, hit_mat.obj_color);
 	}
 }
 
@@ -102,15 +113,15 @@ static void	rt_ray_update(
 
 t_color_norm	rt_ray_loop(
 	t_rt_renderer *renderer,
-	t_rt_ray ray
+	t_rt_ray ray,
+	long long *rng
 )	{
 	t_rt_hit			hit;
 	t_color_norm		light;
-	static long long	rng = 0;
 	bool				sbounce;
 
-	if (rng == 0)
-		rng = ft_atoll(__TIME__);
+	if (*rng == 0)
+		*rng = ft_atoll(__TIME__);
 	light = (t_color_norm){.a = 1., .r = 0., .g = 0., .b = 0.};
 	while (ray.bounces++ < MAX_BOUNCES)
 	{
@@ -118,14 +129,13 @@ t_color_norm	rt_ray_loop(
 		rt_ray_cast(renderer->scene, &ray, &hit);
 		if (hit.hit && hit.obj && hit.dist < 100.)
 		{
-			sbounce = hit.obj->mat.spe_prob >= (double) ft_random_value(&rng);
+			sbounce = hit.obj->mat.spe_prob >= (double) ft_random_value(rng);
 			rt_ray_render(renderer, ray, hit, rt_color_from_norm(hit.obj->mat.obj_color));
 			rt_ray_colorize(&ray, &hit, &light, sbounce);
 			rt_ray_update(renderer, &ray, &hit, sbounce);
 		}
 		else
-			light = rt_color_add(light, rt_color_mult(ray.color, \
-			rt_get_skybox(renderer, &ray)));
+			light = rt_color_add(light, rt_color_mult(ray.color, rt_get_skybox(renderer, &ray)));
 		if (!hit.hit || !hit.obj || hit.obj->mat.emi_strength >= 1.)
 			break ;
 	}

@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 14:43:52 by rgramati          #+#    #+#             */
-/*   Updated: 2024/05/20 18:52:27 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/06/01 17:53:41 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,16 +36,17 @@ static t_color_norm	rt_get_color(t_rt_renderer *renderer, t_toc_vec2i coords)
 	t_color_norm		light;
 	t_rt_ray			ray;
 	t_rt_scene			*scene;
+	static long long	rng = 0;
 
 	scene = renderer->scene;
 	if (!(coords.x % scene->pratio) && !(coords.y % scene->pratio))
 	{
 		ray.bounces = 0;
 		ray.color = (t_color_norm){1., 1., 1., 1.};
-		rt_ray_init(scene, &ray, (t_toc_vec2i){coords.x, HEIGHT - coords.y});
-		light = rt_ray_loop(renderer, ray);
+		rt_ray_init(scene, &ray, (t_toc_vec2i){coords.x, HEIGHT - coords.y}, &rng);
+		light = rt_ray_loop(renderer, ray, &rng);
 		pixels[coords.y / scene->pratio] = light;
-		return (light);
+		return (pixels[coords.y / scene->pratio]);
 	}
 	return (pixels[coords.y / scene->pratio]);
 }
@@ -230,7 +231,7 @@ void	rt_render_scene(t_rt_renderer *renderer)
 		else
 		{
 			(void) rt_render_put_line;
-			int nthreads = 16;
+			int nthreads = 24;
 			int init_threads = 0;
 			int lines_per_thread = 1;
 			cache_rendered = renderer->rendered;

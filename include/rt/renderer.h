@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 07:50:09 by kiroussa          #+#    #+#             */
-/*   Updated: 2024/05/29 12:42:43 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/06/01 17:53:50 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,11 +26,11 @@
 # define RENDER_FONT "assets/fonts/menu.ttf"
 
 # ifndef MAX_BOUNCES
-#  define MAX_BOUNCES 200
+#  define MAX_BOUNCES 4
 # endif
 
 # ifndef MAX_SEQ_PASSES
-#  define MAX_SEQ_PASSES 20
+#  define MAX_SEQ_PASSES 4
 # endif
 
 # ifndef RAY_PER_PIXEL
@@ -52,7 +52,7 @@ typedef struct s_rt_mlx_data
 {
 	void	*rt_mlx;
 	void	*rt_win;
-	void	*rt_imgs[2];
+	void	*rt_imgs[3];
 }	t_rt_mlx_data;
 
 typedef struct s_rt_renderer
@@ -117,10 +117,10 @@ int			rt_mousedown_event(int key, void *param);
 
 int			rt_mouseup_event(int key, void *param);
 
-t_color_norm	rt_ray_loop(t_rt_renderer *renderer, t_rt_ray ray);
+t_color_norm	rt_ray_loop(t_rt_renderer *renderer, t_rt_ray ray, long long *rng);
 
 
-void		rt_ray_init(t_rt_scene *scene, t_rt_ray *ray, t_toc_vec2i pixs);
+void		rt_ray_init(t_rt_scene *scene, t_rt_ray *ray, t_toc_vec2i pixs, long long *rng);
 
 void		rt_ray_cast(t_rt_scene *scene, t_rt_ray *ray, t_rt_hit *hit);
 

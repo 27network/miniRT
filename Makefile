@@ -6,7 +6,7 @@
 #    By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/08/06 21:19:50 by kiroussa          #+#    #+#              #
-#    Updated: 2024/05/29 13:40:27 by rgramati         ###   ########.fr        #
+#    Updated: 2024/05/30 18:32:19 by rgramati         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -47,6 +47,7 @@ SRC				=	error/rt_err.c						\
 					parse/rt_parse_error.c 				\
 					parse/cub/rt_parse_cub.c			\
 					parse/cub/rt_parse_cub_file.c		\
+					parse/cub/rt_cub_converter.c		\
 					render/color/rt_color.c				\
 					render/color/rt_color_argb.c		\
 					render/debug/rt_ray_debugger.c		\

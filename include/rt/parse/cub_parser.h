@@ -6,12 +6,13 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/26 20:26:57 by rgramati          #+#    #+#             */
-/*   Updated: 2024/05/29 14:09:57 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/06/01 16:15:38 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CUB_PARSER_H
 # define CUB_PARSER_H
+#include "rt/scene.h"
 # undef CUB_PARSER_H
 # ifndef __CUB_PARSER_H__
 #  define __CUB_PARSER_H__
@@ -21,7 +22,7 @@
 #  define NOATTR "Excepted one of {\"NO\",\"SO\",\"EA\",\"WE\",\"F\",\"C\"}"
 #  define NOCHAR "Unexcepted character"
 
-#  include <rt/object/quad.h>
+#  include <rt/renderer.h>
 
 typedef enum e_cub_wall_mask
 {
@@ -44,6 +45,7 @@ typedef struct s_cub_map
 {
 	t_clist		*map_list;
 	char		**map;
+	int			wall_count;
 	int			width;
 	int			height;
 	char		*textures[4];
@@ -51,22 +53,30 @@ typedef struct s_cub_map
 	int			fd;
 }	t_cub_map;
 
-typedef struct s_cub_wall
-{
-	t_rt_object			*wall;
-	struct s_cub_wall	*next;
-}	t_cub_wall;
-
 typedef struct s_cub_parser
 {
 	t_wall_mask	mask;
-	t_cub_wall	*walls;
+	t_rt_object	*walls;
 	t_toc_vec2i	pos;
 }	t_cub_parser;
 
-t_clist		*rt_clist_new(char *line);
+t_clist		*rt_clist_new(
+				char *line
+				);
 
-void		rt_clist_add_back(t_clist **list, t_clist *new);
+void		rt_clist_add_back(
+				t_clist **list,
+				t_clist *new
+				);
+
+void		rt_clist_del(
+				t_clist *list
+				);
+
+t_rt_error	rt_cub_parse_file(
+				t_cub_map *map,
+				const char *file
+				);
 
 t_rt_error	rt_cub_parse_map_line(
 				t_cub_map *map,
@@ -80,6 +90,21 @@ t_rt_error	rt_cub_parse_attribute(
 				char **line,
 				const char *filename,
 				int *lc
+				);
+
+t_rt_error	rt_cub_check_map(
+				t_cub_map *map
+				);
+
+t_rt_error	rt_cub_convert_map(
+				t_cub_map *map,
+				t_rt_object **objects
+				);
+
+t_rt_error	rt_cub_map_error(
+				t_cub_map *map,
+				const char *msg,
+				t_rt_error err
 				);
 
 # endif // __CUB_PARSER_H__

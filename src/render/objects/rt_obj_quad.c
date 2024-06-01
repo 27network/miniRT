@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/27 19:45:57 by rgramati          #+#    #+#             */
-/*   Updated: 2024/05/28 16:02:09 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/06/01 18:06:00 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,8 @@ t_vec3d	rt_obj_quad_norm(
 	t_rt_obj_quad	*quad;
 
 	quad = ((t_rt_obj_quad *)hit.obj->options);
-	quad += quad->face;
+	if (quad->face)
+		quad += quad->face;
 	return (quad->norm);
 }
 
@@ -96,7 +97,6 @@ bool	rt_obj_cube_intersect(
 	const t_vec3d	opp = ft_vec3d_add(obj->rotation, ft_vec3d_add(((t_rt_obj_quad *)obj->options)->hvect, ft_vec3d_add(((t_rt_obj_quad *)obj->options)->wvect, obj->pos)));
 
 	faces = (t_rt_obj_quad *)obj->options - 1;
-	// ((t_rt_obj_quad *)obj->options)->face = 0;
 	while (++faces - (t_rt_obj_quad *)obj->options < 6)
 	{
 		d_t[0] = ft_vec3d_dot(faces->norm, ray.dir);

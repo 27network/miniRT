@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/10 19:40:32 by rgramati          #+#    #+#             */
-/*   Updated: 2024/05/24 21:02:45 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/06/01 19:10:14 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,21 @@
 # ifndef __OCTREE_H__
 #  define __OCTREE_H__
 
-#  include <rt/scene.h>
+#  include <ft/mem.h>
 #  include <ft/math.h>
+#  include <rt/scene.h>
+
+#  define RT_OCTREE_MIN_OBJS 16
+#  define RT_OCTREE_MAX_DEPTH 10
 
 typedef struct	s_rt_octree_node
 {
 	struct s_rt_octree_node	*childs[8];
-	t_vec3d					mid_planes;
+	t_aabb					aabb;
+	t_rt_object				**objects;
+	short					capacity;
+	short					n_obj;
+	short					depth;
 	bool					term;
 }	t_rt_onode;
 

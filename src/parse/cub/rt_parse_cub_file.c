@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 12:51:57 by rgramati          #+#    #+#             */
-/*   Updated: 2024/05/29 14:10:16 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/06/01 17:02:41 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ static t_rt_error	rt_cub_parse_color(t_cub_map *map, char *l, const char *file, 
 	if (!ft_isspace(*l))
 		l = NULL;
 	err = rt_err(RT_OK);
-	map->colors[id] = toc_color_rgba(0, 0, 255, 0);
+	map->colors[*lstart == 'C'] = toc_color_rgba(0, 0, 255, 0);
 	while (l && *l && ft_isspace(*l))
 		l++;
 	if (!l)

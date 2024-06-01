@@ -6,13 +6,14 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 02:33:41 by kiroussa          #+#    #+#             */
-/*   Updated: 2024/05/25 15:36:08 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/06/01 19:10:25 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef SCENE_H
 # define SCENE_H
 
+#include <stdint.h>
 # ifdef WIDTH
 #  undef WIDTH
 # endif
@@ -59,16 +60,28 @@ typedef enum e_rt_object_type
 	RT_OBJ_CUBE
 }	t_rt_object_type;
 
+typedef enum e_rt_mat_flags
+{
+	RT_MAT_CHECKER = 1,
+}	t_rt_mat_flags;
+
 typedef bool				t_intersect_fn(t_rt_ray ray, t_rt_object *obj,
 								t_rt_hit *hit);
 typedef t_vec3d				t_hit_norm_fn(t_rt_ray ray, t_rt_hit hit);
+
+typedef struct s_aabb
+{
+	t_vec3d	min;
+	t_vec3d max;
+}	t_aabb;
 
 typedef struct s_rt_mat
 {
 	t_color_norm	obj_color;
 	t_color_norm	emi_color;
-	double			emi_strength;
 	t_color_norm	spe_color;
+	t_rt_mat_flags	flags;		
+	double			emi_strength;
 	double			spe_prob;
 	double			smoothness;
 }	t_rt_mat;
@@ -83,12 +96,13 @@ typedef struct s_rt_skybox
 typedef struct s_rt_object
 {
 	t_rt_object_type	type;
+	void				*options;
+	t_aabb				aabb;
 	t_vec3d				pos;
 	t_vec3d				rotation;
 	t_rt_mat			mat;
 	t_intersect_fn		*intersect;
 	t_hit_norm_fn		*norm;
-	void				*options;
 }	t_rt_object;
 
 typedef struct s_rt_scene
@@ -130,8 +144,8 @@ void		rt_obj_set_rot(t_rt_object *obj, double x, double y, double z);
 
 void		rt_swap(double *a, double *b);
 
-float	ft_random_value(long long *state);
+float		ft_random_value(long long *state);
 
-void	rt_color_ambient(t_rt_scene *scene, t_color_norm *c);
+void		rt_color_ambient(t_rt_scene *scene, t_color_norm *c);
 
 #endif // SCENE_H

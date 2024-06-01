@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 11:10:38 by rgramati          #+#    #+#             */
-/*   Updated: 2024/05/27 20:58:16 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/06/01 16:10:00 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -248,6 +248,10 @@ int	rt_keydown_event(int key, void *render)
 		renderer->scene->rt_flags ^= RT_NO_RENDER;
 	if (key == SDL_SCANCODE_G)
 		renderer->scene->rt_flags ^= RT_COL_GAMMA;
+
+	if (key == SDL_SCANCODE_P)
+		ft_printf("Cam position: {%6f, %6f, %6f}\n", renderer->scene->camera.pos.x, renderer->scene->camera.pos.y, renderer->scene->camera.pos.z);
+
 	return (0);
 }
 
@@ -282,7 +286,7 @@ int rt_mousedown_event(int key, void *render)
 	{
 		g_debug = true;
 		dhit = (t_rt_hit){(t_vec3d){0.0, 0.0, 0.0}, NULL, false, INFINITY};
-		rt_ray_init(renderer->scene, &dray, (t_toc_vec2i){coords.x, HEIGHT - coords.y});
+		rt_ray_init(renderer->scene, &dray, (t_toc_vec2i){coords.x, HEIGHT - coords.y}, NULL);
 		DEBUG_rt_ray_cast(renderer->scene, &dray, &dhit);
 		g_debug = false;
 	}

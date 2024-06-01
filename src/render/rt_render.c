@@ -6,10 +6,11 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 07:51:17 by kiroussa          #+#    #+#             */
-/*   Updated: 2024/05/20 18:52:27 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/05/31 20:36:07 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "mlx.h"
 #include <errno.h>
 #include <string.h>
 #include <ft/print.h>
