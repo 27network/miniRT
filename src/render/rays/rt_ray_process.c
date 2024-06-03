@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/13 22:34:50 by rgramati          #+#    #+#             */
-/*   Updated: 2024/06/01 15:45:14 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/06/03 17:16:54 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,8 +54,6 @@ static void rt_ray_colorize_checker(t_vec3d norm, t_color_norm *color)
 		*color = rt_color_mult(*color, rt_color_to_norm(rt_color(0xFFFFFFFF)));
 	else
 		*color = rt_color_mult(*color, rt_color_to_norm(rt_color(0xFF000000)));
-	// uv = ft_vec3d(uv.x * ltouzali_size.x, ltouzali_size.y - (uv.y * ltouzali_size.y), 0.);
-	// *color = rt_color_mult(*color, rt_color_to_norm(rt_color(mlx_get_image_pixel(LAMLX, ltouzali, uv.x, uv.y))));
 }
 
 static void	rt_ray_colorize(
@@ -130,7 +128,6 @@ t_color_norm	rt_ray_loop(
 		if (hit.hit && hit.obj && hit.dist < 100.)
 		{
 			sbounce = hit.obj->mat.spe_prob >= (double) ft_random_value(rng);
-			rt_ray_render(renderer, ray, hit, rt_color_from_norm(hit.obj->mat.obj_color));
 			rt_ray_colorize(&ray, &hit, &light, sbounce);
 			rt_ray_update(renderer, &ray, &hit, sbounce);
 		}

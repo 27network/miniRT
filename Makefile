@@ -6,7 +6,7 @@
 #    By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/08/06 21:19:50 by kiroussa          #+#    #+#              #
-#    Updated: 2024/05/30 18:32:19 by rgramati         ###   ########.fr        #
+#    Updated: 2024/06/03 17:16:10 by rgramati         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -50,7 +50,6 @@ SRC				=	error/rt_err.c						\
 					parse/cub/rt_cub_converter.c		\
 					render/color/rt_color.c				\
 					render/color/rt_color_argb.c		\
-					render/debug/rt_ray_debugger.c		\
 					render/objects/rt_obj_box.c			\
 					render/objects/rt_obj_camera.c		\
 					render/objects/rt_obj_cone.c		\
@@ -62,7 +61,8 @@ SRC				=	error/rt_err.c						\
 					render/rays/rt_rays.c				\
 					render/rays/rt_ray_process.c		\
 					render/rt_colors.c					\
-					render/rt_hooks.c					\
+					render/events/rt_hooks.c			\
+					render/events/rt_cam_transform.c	\
 					render/rt_render.c					\
 					render/rt_render_utils.c			\
 					render/rt_rendering.c				\

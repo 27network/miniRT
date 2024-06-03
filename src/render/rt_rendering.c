@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 14:43:52 by rgramati          #+#    #+#             */
-/*   Updated: 2024/06/01 17:53:41 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/06/02 19:13:50 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -231,7 +231,7 @@ void	rt_render_scene(t_rt_renderer *renderer)
 		else
 		{
 			(void) rt_render_put_line;
-			int nthreads = 24;
+			int nthreads = 16;
 			int init_threads = 0;
 			int lines_per_thread = 1;
 			cache_rendered = renderer->rendered;

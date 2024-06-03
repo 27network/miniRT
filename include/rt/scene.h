@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 02:33:41 by kiroussa          #+#    #+#             */
-/*   Updated: 2024/06/01 19:10:25 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/06/03 16:27:45 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 #  undef WIDTH
 # endif
 # ifndef WIDTH
-#  define WIDTH 1366
+#  define WIDTH 1368
 # endif
 
 # ifdef HEIGHT
@@ -40,10 +40,11 @@ typedef struct s_rt_hit		t_rt_hit;
 
 typedef enum e_rt_flag
 {
-	RT_RAY_DEBUG = 0b0001,
-	RT_COL_GAMMA = 0b0010,
-	RT_NO_RENDER = 0b0100,
+	RT_RAY_DEBUG = 0b1,
+	RT_COL_GAMMA = 0b10,
+	RT_NO_RENDER = 0b100,
 	RT_SEQ_RENDER = 0b1000,
+	RT_CLICKED = 0b10000
 }	t_rt_flag;
 
 typedef enum e_rt_object_type

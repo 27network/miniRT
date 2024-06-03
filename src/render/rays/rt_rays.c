@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/19 15:03:08 by rgramati          #+#    #+#             */
-/*   Updated: 2024/06/01 16:04:57 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/06/03 16:35:35 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ void	rt_ray_cast(t_rt_scene *scene, t_rt_ray *ray, t_rt_hit *hit)
 	t_rt_hit	closest;
 
 	i = -1;
+	hit->dist = INFINITY;
 	closest = (t_rt_hit){.dist = INFINITY, .hit = false, .obj = NULL, .pos = ft_vec3d(0., 0., 0.)};
 	while (++i < scene->objects_size)
 	{
@@ -50,7 +51,7 @@ void	DEBUG_rt_ray_cast(t_rt_scene *scene, t_rt_ray *ray, t_rt_hit *hit)
 	t_rt_hit	closest;
 
 	i = -1;
-	closest = (t_rt_hit){.dist = INFINITY, .hit = false, .obj = NULL, .pos = ft_vec3d(0., 0., 0.)};
+	closest = (t_rt_hit){.dist = -1., .hit = false, .obj = NULL, .pos = ft_vec3d(0., 0., 0.)};
 	while (++i < scene->objects_size)
 	{
 		ft_printf("Testing intersection on object [%d] %p\n", i + 1, &scene->objects[i]);
@@ -59,6 +60,7 @@ void	DEBUG_rt_ray_cast(t_rt_scene *scene, t_rt_ray *ray, t_rt_hit *hit)
 		{
 			ft_printf("\tHIT on object %p : hit point (%4f, %4f, %4f) : dist = %10f\n", scene->objects[i], closest.pos.x, closest.pos.y, closest.pos.z, closest.dist);
 			hit->hit = true;
+			ft_printf("%f :: %f\n", closest.dist, hit->dist);
 			if (closest.dist < hit->dist)
 			{
 				hit->obj = &scene->objects[i];

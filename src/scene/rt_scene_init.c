@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 07:48:48 by kiroussa          #+#    #+#             */
-/*   Updated: 2024/06/01 18:11:32 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/06/03 15:13:52 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@
 #include <rt/object/sphere.h>
 #include <rt/object/light.h>
 
-#define OBJ_COUNT 34
+#define OBJ_COUNT 5
 #define LIGHTS_COUNT 0
 
 void	rt_swap(double *a, double *b)
@@ -204,6 +204,21 @@ t_rt_error	rt_scene_example(t_rt_scene *scene)
 	t_rt_object	*ground;
 	ground = rt_object_init(&scene->objects[map.wall_count], RT_OBJ_PLANE);
 	ground->options = rt_obj_plane_init(ft_vec3d(0, 1, 0));
+	ground->mat.obj_color = rt_color_to_norm(rt_color(0xFFD7D9D2));
+	ground->mat.spe_color = rt_color_to_norm(rt_color(0xFFD7D9D2));
+	ground->mat.emi_color = rt_color_to_norm(rt_color(0xFFD7D9D2));
+	ground->mat.smoothness = 0.95;
+	ground->mat.spe_prob = 0.9;
+	
+	// t_rt_object	*floor;
+	// floor = rt_object_init(&scene->objects[map.wall_count + 1], RT_OBJ_PLANE);
+	// rt_obj_set_pos(floor, 0, 2, 0);
+	// floor->options = rt_obj_plane_init(ft_vec3d(0, -1, 0));
+	// floor->mat.obj_color = rt_color_to_norm(rt_color(0xFFD7D9D2));
+	// floor->mat.spe_color = rt_color_to_norm(rt_color(0xFFD7D9D2));
+	// floor->mat.emi_color = rt_color_to_norm(rt_color(0xFFD7D9D2));
+	// floor->mat.smoothness = 0.95;
+	// floor->mat.spe_prob = 0.9;
 
 	t_color_norm	sky[3] = {rt_color_to_norm(rt_color(0xFFFFFFFF)),
 								rt_color_to_norm(rt_color(0xFF87CEEB)),
@@ -213,15 +228,6 @@ t_rt_error	rt_scene_example(t_rt_scene *scene)
 	scene->skybox.dsky = ft_vec3d(sky[1].r, sky[1].g, sky[1].b);
 	scene->skybox.gcol = ft_vec3d(sky[2].r, sky[2].g, sky[2].b);
 
-	t_rt_object	*lamp;
-	lamp = rt_object_init(&scene->objects[map.wall_count + 1], RT_OBJ_QUAD);
-	rt_obj_set_pos(lamp, 0, 0, 0);
-	lamp->options = rt_obj_quad_init(ft_vec3d(0, 0, 1.), ft_vec3d(0, 0, 1), ft_vec3d(0, 1, 0));
-	lamp->mat.emi_strength = 0.0;
-	lamp->mat.emi_color = rt_color_to_norm(rt_color(0xFFFFFFFF));
-	lamp->mat.obj_color = rt_color_to_norm(rt_color(0xFFFFFFFF));
-	lamp->mat.spe_color = rt_color_to_norm(rt_color(0xFFFFFFFF));
-	lamp->mat.spe_prob = 0.;
 	// t_rt_object	*ambient;
 	// ambient = rt_object_init(&scene->ambient, RT_OBJ_LIGHT);
 	// rt_obj_set_pos(ambient, 100., 100., 100.);
@@ -235,8 +241,8 @@ t_rt_error	rt_scene_example(t_rt_scene *scene)
 
 	t_rt_object	*camera;
 	camera = rt_object_init(&scene->camera, RT_OBJ_CAMERA);
-	rt_obj_set_pos(camera, 2.257311, 0.390120, 2.255253);
-	camera->options = rt_obj_camera_init("Marvin", 90, ft_vec3d(1., 0., 1.));
+	rt_obj_set_pos(camera, 1.651299, 1.351914, 3.901742);
+	camera->options = rt_obj_camera_init("Marvin", 90, ft_vec3d(0, 0, 1));
 	camera->mat.emi_color = rt_color_to_norm(rt_color(0x00000000));
 	camera->mat.emi_strength = 0.0;
 
