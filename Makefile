@@ -6,7 +6,7 @@
 #    By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/08/06 21:19:50 by kiroussa          #+#    #+#              #
-#    Updated: 2024/06/03 17:16:10 by rgramati         ###   ########.fr        #
+#    Updated: 2024/06/03 19:02:09 by kiroussa         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -86,7 +86,7 @@ MLX_DIR			=	third-party/MacroLibX
 MLX				=	$(MLX_DIR)/libmlx.so
 
 LIBFT_DIR		=	third-party/libft
-LIBFT			=	$(LIBFT_DIR)/libft.so
+LIBFT			=	$(LIBFT_DIR)/build/output/libft.so
 
 TOC_DIR			=	third-party/tocard-ui
 TOC				=	$(TOC_DIR)/build/libtocard.so
@@ -136,17 +136,17 @@ $(NAME_BONUS):	$(LIBFT) $(MLX) $(TOC) $(OBJ_BONUS)
 	@printf "$(LINE_CLR)  ⭐$(BOLD)$(WHITE) $(NAME):\t BONUS READY !$(RESET)\n\n"
 
 $(LIBFT):
-	$(MAKE_CMD) -j -C $(LIBFT_DIR) CFLAGS="$(CFLAGS)" all DEBUG="$(DEBUG)"
+	$(MAKE_CMD) -j$(shell nproc) -C $(LIBFT_DIR) CFLAGS="$(CFLAGS)" all DEBUG="$(DEBUG)"
 
 $(MLX):
 ifeq ($(DEBUG), 1)
-	$(MAKE_CMD) -j -C $(MLX_DIR) DEBUG="true" all
+	$(MAKE_CMD) -j$(shell nproc) -C $(MLX_DIR) DEBUG="true" all
 else
-	$(MAKE_CMD) -j -C $(MLX_DIR) all
+	$(MAKE_CMD) -j$(shell nproc) -C $(MLX_DIR) all
 endif
 
 $(TOC):
-	$(MAKE_CMD) -j -C $(TOC_DIR) all MLX_DIR=../MacroLibX
+	$(MAKE_CMD) -j$(shell nproc) -C $(TOC_DIR) all MLX_DIR=../MacroLibX
 
 $(OBJ_DIR)/%.o:	$(SRC_DIR)/%.c
 	@mkdir -p $(@D)
