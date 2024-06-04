@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 02:29:41 by kiroussa          #+#    #+#             */
-/*   Updated: 2024/06/01 19:30:09 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/06/04 13:13:11 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,16 +17,19 @@
 #include <rt/renderer.h>
 #include <rt/scene.h>
 
-
-static void	init(t_toc_screen *screen)
-{
+static void	init(
+	t_toc_screen *screen
+)	{
 	const t_toc_vec2i	buttons_size = toc_vec2i(250, 30);
 
-	toc_screen_add(screen, toc_button(1, toc_vec2i(WIDTH / 2 - buttons_size.x / 2, HEIGHT / 2), buttons_size, "Exit"));
+	toc_screen_add(screen, toc_button(1, toc_vec2i(WIDTH / 2 - buttons_size.x / 2, (5 * HEIGHT / 8)), buttons_size, "Render"));
+	toc_screen_add(screen, toc_button(2, toc_vec2i(WIDTH / 2 - buttons_size.x / 2, (5 * HEIGHT / 8.) + (buttons_size.y * 1.5)), buttons_size, "Exit"));
 }
 
-static bool	render(t_toc_screen *screen, __attribute__((unused)) t_toc_vec2i mouse_pos)
-{
+static bool	render(
+	t_toc_screen *screen,
+	__attribute__((unused)) t_toc_vec2i mouse_pos
+)	{
 	static t_toc_vec2i	origin = {0, 0};
 	const t_toc_vec2i	size = toc_vec2i(screen->width, screen->height);
 	t_toc_color			color;
@@ -42,8 +45,10 @@ static bool	render(t_toc_screen *screen, __attribute__((unused)) t_toc_vec2i mou
 static void	action_performed(
 	t_toc_screen *screen,
 	t_toc_elem *elem
-) {
+)	{
 	if (elem->id == 1)
+		ft_printf("FAUT RENDER POULET\n");
+	if (elem->id == 2)
 		toc_engine_exit(screen->window->engine);
 }
 

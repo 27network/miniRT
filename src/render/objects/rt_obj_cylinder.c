@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 13:39:30 by rgramati          #+#    #+#             */
-/*   Updated: 2024/05/29 12:45:46 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/06/04 15:19:04 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,7 @@
 #include <ft/print.h>
 #include <rt/object/cylinder.h>
 
-
- #if 1
+#if 1
 void	rt_obj_cylinder_delta(
 	t_rt_obj_cylinder *cyl,
 	t_rt_hit *hit,
@@ -93,7 +92,6 @@ bool	rt_obj_cylinder_intersect(
 	return (t_s[4] > 0);
 }
 #else
-extern bool g_debug;
 
 bool	rt_obj_cylinder_intersect(
 	t_rt_ray ray,

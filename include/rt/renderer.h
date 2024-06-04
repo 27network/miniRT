@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 07:50:09 by kiroussa          #+#    #+#             */
-/*   Updated: 2024/06/03 17:12:34 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/06/04 13:36:43 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,11 +30,11 @@
 # endif
 
 # ifndef MAX_SEQ_PASSES
-#  define MAX_SEQ_PASSES 1
+#  define MAX_SEQ_PASSES 2
 # endif
 
 # ifndef RAY_PER_PIXEL
-#  define RAY_PER_PIXEL 4
+#  define RAY_PER_PIXEL 2
 # endif
 
 # define EPSILON 0.00001
@@ -140,5 +140,7 @@ double		ft_smoothstep(double start, double end, double x);
 t_vec3d		ft_vec3d_lerp(t_vec3d a, t_vec3d b, double t);
 
 // void		rt_render_shoot_pixel(t_rt_renderer *renderer, t_toc_vec2i coords);
+
+t_vec3d		rt_obj_camera_angulation(t_vec3d look);
 
 #endif // RENDERER_H

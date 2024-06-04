@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/22 02:33:41 by kiroussa          #+#    #+#             */
-/*   Updated: 2024/06/03 16:27:45 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/06/04 13:18:39 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,8 @@ typedef enum e_rt_flag
 	RT_COL_GAMMA = 0b10,
 	RT_NO_RENDER = 0b100,
 	RT_SEQ_RENDER = 0b1000,
-	RT_CLICKED = 0b10000
+	RT_CLICKED = 0b10000,
+	RT_OTHER_MOVES = 0b100000
 }	t_rt_flag;
 
 typedef enum e_rt_object_type

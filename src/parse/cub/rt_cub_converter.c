@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 14:12:34 by rgramati          #+#    #+#             */
-/*   Updated: 2024/06/03 14:54:10 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/06/04 14:25:38 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,19 +158,19 @@ t_rt_error	rt_cub_convert_map(t_cub_map *map, t_rt_object **objects)
 				{
 					rt_obj_set_pos(last_wall, parser.pos.x, 0, map->height - parser.pos.y - 1);
 					last_wall->options = rt_obj_quad_init(ft_vec3d(0, 0, -1), ft_vec3d(1, 0, 0), ft_vec3d(0, 2, 0));
-					last_wall->mat.obj_color = rt_color_to_norm(rt_color(0xFF550527));
-					last_wall->mat.spe_color = rt_color_to_norm(rt_color(0xFF550527));
-					last_wall->mat.spe_prob = 1;
-					last_wall->mat.smoothness = 0.95;
+					last_wall->mat.obj_color = rt_color_to_norm(rt_color(0xFFFFFFFF));
+					last_wall->mat.emi_color = rt_color_to_norm(rt_color(0xFFFFFFFF));
+					// last_wall->mat.spe_prob = 1;
+					// last_wall->mat.smoothness = 0.95;
+					last_wall->mat.emi_strength = 10.0;
 					last_wall++;
 				}
 				if (parser.mask & CUB_WES)
 				{
 					rt_obj_set_pos(last_wall, parser.pos.x + 1, 0, map->height - parser.pos.y - 1);
 					last_wall->options = rt_obj_quad_init(ft_vec3d(1, 0, 0), ft_vec3d(0, 0, 1), ft_vec3d(0, 2, 0));
-					last_wall->mat.obj_color = rt_color_to_norm(rt_color(0xFFFFFFFF));
-					last_wall->mat.emi_color = rt_color_to_norm(rt_color(0xFFFFFFFF));
-					last_wall->mat.emi_strength = 4.0;
+					last_wall->mat.obj_color = rt_color_to_norm(rt_color(0xFF550527));
+					last_wall->mat.spe_color = rt_color_to_norm(rt_color(0xFF550527));
 					last_wall++;
 				}
 				if (parser.mask & CUB_SOU)
@@ -189,8 +189,8 @@ t_rt_error	rt_cub_convert_map(t_cub_map *map, t_rt_object **objects)
 					last_wall->options = rt_obj_quad_init(ft_vec3d(-1, 0, 0), ft_vec3d(0, 0, -1), ft_vec3d(0, 2, 0));
 					last_wall->mat.obj_color = rt_color_to_norm(rt_color(0xFFF44708));
 					last_wall->mat.spe_color = rt_color_to_norm(rt_color(0xFFF44708));
-					last_wall->mat.spe_prob = 1;
-					last_wall->mat.smoothness = 0.95;
+					// last_wall->mat.spe_prob = 1;
+					// last_wall->mat.smoothness = 0.95;
 					last_wall++;
 				}
 			}

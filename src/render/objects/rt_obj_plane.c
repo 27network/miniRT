@@ -6,7 +6,7 @@
 /*   By: rgramati <rgramati@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/19 19:18:01 by rgramati          #+#    #+#             */
-/*   Updated: 2024/06/03 15:27:37 by rgramati         ###   ########.fr       */
+/*   Updated: 2024/06/04 14:28:45 by rgramati         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,9 +46,9 @@ t_vec3d	rt_obj_plane_norm(
 	t_rt_obj_plane	*plane;
 
 	plane = ((t_rt_obj_plane *)hit.obj->options);
-	if (ft_vec3d_dot(ray.dir, plane->norm) > 0.0)
-		norm = ft_vec3d(0.0f, 0.0f, 0.0f);
-	else
-		norm = plane->norm;
+	// if (ft_vec3d_dot(ray.dir, plane->norm) > 0.0)
+	// 	norm = ft_vec3d(0.0f, 0.0f, 0.0f);
+	// else
+	norm = plane->norm;
 	return (norm);
 }
